@@ -263,6 +263,34 @@ table.qtable td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-al
 .back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft);margin-top:18px;font-weight:600;}
 .back-link:hover{color:var(--ink);}
 
+/* DAC criteria grid */
+.dac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0 16px;}
+@media (max-width:640px){.dac-grid{grid-template-columns:repeat(2,1fr);}}
+.dac-item{display:flex;align-items:center;gap:6px;font-size:12.5px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--paper-sunk);color:var(--ink-soft);}
+.dac-item.active{background:var(--c-tools-bg);border-color:var(--c-tools);color:var(--ink);font-weight:600;}
+.dac-item .check{font-size:13px;width:16px;text-align:center;}
+
+/* Collection methods */
+.method-list{display:flex;flex-direction:column;gap:6px;}
+.method-item{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45;}
+.method-item .badge{flex-shrink:0;margin-top:1px;}
+
+/* Collapsible blocks */
+.block collapsible{position:relative;}
+.block .collapsible-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;}
+.block .collapsible-header::after{content:'▸';font-size:12px;color:var(--ink-faint);transition:transform .15s;}
+.block.open .collapsible-header::after{transform:rotate(90deg);}
+.block .collapsible-body{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+.block.open .collapsible-body{max-height:2000px;}
+
+/* Truncated text */
+.truncated{position:relative;max-height:120px;overflow:hidden;transition:max-height .25s ease;}
+.truncated.expanded{max-height:none;}
+.truncated::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,var(--paper-raised));pointer-events:none;}
+.truncated.expanded::after{display:none;}
+.truncated-toggle{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--navy);cursor:pointer;margin-top:6px;border:none;background:none;padding:0;font-family:var(--font-body);}
+.truncated-toggle:hover{text-decoration:underline;}
+
 /* faq */
 .faq-group{margin-bottom:26px;}
 .faq-group h3{font-size:14px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;font-family:var(--font-mono);margin-bottom:10px;font-weight:600;}
@@ -408,6 +436,15 @@ const CASES = [
   questions:['КОВ 1. Какие изменения произошли в знаниях, навыках, отношении подростков и молодёжи к истории завода и к музею, и если да, то каким образом? И благодаря чему?','КОВ 2. В какой степени сотрудники музея ощутили личный профессиональный рост, приобрели новые практические навыки, мотивацию к реализации новых инициатив?','КОВ 3. Удалось ли выставке «Д/З. Мой завод» стать резонансным событием и изменить внешнее восприятие музея?','КОВ 4. Вызвал ли проект интерес и намерение к адаптации его модели среди музеев городов-заводов?'],
   effects:['Изменение отношения и ценностей','Формирование сообществ','Развитие компетенций'],
   values:['historical-memory','patriotism'],
+  collectionMethods:[
+    {type:'Интервью',detail:'КОВ 1 (подростки и молодёжь) — три волны селфи-интервью: входное, выходное, итоговое (n = 31 участник, всего 40 интервью)'},
+    {type:'Анкета',detail:'КОВ 1 — онлайн-опрос кураторов арт-резиденции (n = 6)'},
+    {type:'Анализ док.',detail:'КОВ 1 — анализ описаний 13 арт-объектов выставки'},
+    {type:'Анкета',detail:'КОВ 2 (сотрудники музея) — онлайн-опрос сотрудников музея (n = 7)'},
+    {type:'Анкета',detail:'КОВ 3 (жители города) — уличный опрос, стихийная выборка (n = 307)'},
+    {type:'Анкета',detail:'КОВ 4 (профессиональное сообщество) — онлайн-опрос представителей музеев городов-заводов (n = 10)'}
+  ],
+  analysisMethodsDesc:'Оценка выполнена в логике теоретически обоснованной оценки (theory-based evaluation). Качественные данные (селфи-интервью, ответы на открытые вопросы анкет, описания арт-объектов) анализировались методом тематического анализа: выделено 30 кодов, сгруппированных в 14 аналитических тем. Количественные данные обрабатывались методами описательной статистики и частотного анализа. На заключительном этапе для каждого уточняющего оценочного вопроса проведена триангуляция данных из разных источников.',
   findings:[
     {q:'КОВ 1 — подростки и молодёжь',text:'Подростки расширили знания о городе и заводе, получили новый опыт (в том числе командной работы), а отношение к истории и музею стало эмоционально позитивным и подкреплённым знаниями. Доля подростков, отметивших позитивное отношение к истории города и завода, выросла с 10% до 90% при сравнении «до/после» арт-резиденции.'},
     {q:'КОВ 2 — сотрудники музея',text:'Все 7 опрошенных сотрудников музея отметили профессиональный рост и рост мотивации к новым инициативам (средняя оценка 3,86 из 5). Ключевым фактором изменений стала предоставленная свобода экспериментировать и право на ошибку.'},
@@ -1193,6 +1230,24 @@ function renderCaseDetail(id){
   const relatedTools = c.relatedTools.map(tid=>byId(TOOLS,tid)).filter(Boolean);
   const findingsHtml = c.findings ? c.findings.map(f=>`<div style="margin-bottom:14px;"><div style="font-weight:700;font-size:13.5px;margin-bottom:4px;">${f.q}</div><p style="font-size:13.5px;color:var(--ink-soft);line-height:1.55;">${f.text}</p></div>`).join('') : '';
   const keyConclusionHtml = c.keyConclusion ? `<div style="background:var(--navy-soft);border-left:3px solid var(--navy);padding:14px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;"><div style="font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--navy);margin-bottom:6px;">Ключевой вывод</div><p style="font-size:13.5px;line-height:1.55;">${c.keyConclusion}</p></div>` : '';
+
+  const DAC_ALL = ['Актуальность','Согласованность','Эффективность','Результативность','Воздействие','Устойчивость'];
+  const dacHtml = `<div class="dac-grid">${DAC_ALL.map(d=>`<div class="dac-item ${c.criteria.includes(d)?'active':''}"><span class="check">${c.criteria.includes(d)?'✓':'—'}</span>${d}</div>`).join('')}</div>`;
+
+  const methodsHtml = c.collectionMethods ? `<div class="method-list">${c.collectionMethods.map(m=>`<div class="method-item"><span class="badge" style="background:var(--paper-sunk);color:var(--ink-soft);font-size:10.5px;">${m.type}</span><span>${m.detail}</span></div>`).join('')}</div>` : '';
+
+  const evalGoalTruncated = c.evalGoal.length > 200;
+  const evalGoalHtml = evalGoalTruncated
+    ? `<div class="truncated" id="evalGoalBlock"><p style="font-size:13.5px;line-height:1.55;">${c.evalGoal}</p></div><button class="truncated-toggle" onclick="this.previousElementSibling.classList.toggle('expanded');this.textContent=this.textContent==='Показать полностью ▾'?'Свернуть ▴':'Показать полностью ▾'">Показать полностью ▾</button>`
+    : `<p style="font-size:13.5px;line-height:1.55;">${c.evalGoal}</p>`;
+
+  const analysisHtml = c.analysisMethodsDesc ? `<div class="block"><h2>Описание методов анализа</h2><div class="truncated" id="analysisBlock"><p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);">${c.analysisMethodsDesc}</p></div><button class="truncated-toggle" onclick="this.previousElementSibling.classList.toggle('expanded');this.textContent=this.textContent==='Показать полностью ▾'?'Свернуть ▴':'Показать полностью ▾'">Показать полностью ▾</button></div>` : '';
+
+  const quickDownloads = [];
+  if(c.docs.reporting[0]) quickDownloads.push(c.docs.reporting[0]);
+  if(c.docs.planning[0]) quickDownloads.push(c.docs.planning[0]);
+  const quickDownloadHtml = quickDownloads.length ? `<div class="sidebar-box"><h4>Скачать быстро</h4><div style="display:flex;flex-direction:column;gap:6px;">${quickDownloads.map(f=>`<a class="filerow" href="#" onclick="alert('Демо-прототип: файл ещё не прикреплён');return false;" style="text-decoration:none;color:inherit;"><div class="name"><span class="ext">${f.ext}</span>${f.name}</div></a>`).join('')}</div></div>` : '';
+
   app.innerHTML = `
   <div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/cases">Кейсы проектов</a><span class="sep">/</span><span>${c.title}</span></div>
@@ -1209,7 +1264,7 @@ function renderCaseDetail(id){
     </div>
     <div class="detail-grid">
       <div>
-        <div class="block"><h2><span class="n">Блок 1</span> · О проекте</h2>
+        <div class="block"><h2>О проекте</h2>
           <dl class="kv">
             <dt>Организация</dt><dd>${c.org}</dd>
             <dt>Период реализации</dt><dd>${c.period}</dd>
@@ -1218,10 +1273,12 @@ function renderCaseDetail(id){
             <dt>Теги</dt><dd>${c.tags.map(t=>`<span class="tag">${t}</span>`).join(' ')}</dd>
           </dl>
         </div>
-        <div class="block"><h2><span class="n">Блок 2</span> · Оценка проекта</h2>
-          <dl class="kv">
-            <dt>Цель оценки</dt><dd>${c.evalGoal}</dd>
-            <dt>Критерии оценки</dt><dd>${fmtList(c.criteria)}</dd>
+        <div class="block"><h2>Оценка проекта</h2>
+          <div class="subhead">Цель оценки</div>
+          ${evalGoalHtml}
+          <div class="subhead" style="margin-top:14px;">Критерии ОЭСР-DAC</div>
+          ${dacHtml}
+          <dl class="kv" style="margin-top:12px;">
             <dt>Соц.-культ. эффекты</dt><dd>${fmtList(c.effects)}</dd>
           </dl>
           <div class="subhead">Ключевые оценочные вопросы</div>
@@ -1229,7 +1286,9 @@ function renderCaseDetail(id){
           ${findingsHtml ? `<div class="subhead">Выводы по вопросам оценки</div>${findingsHtml}` : ''}
           ${keyConclusionHtml}
         </div>
-        <div class="block"><h2><span class="n">Блок 3</span> · Документация</h2>
+        ${methodsHtml ? `<div class="block"><h2>Методы сбора данных</h2>${methodsHtml}</div>` : ''}
+        ${analysisHtml}
+        <div class="block"><h2>Документация</h2>
           <div class="subhead">Планирование оценки</div>
           <div class="filelist">${c.docs.planning.map(fileRow).join('') || '<span style="font-size:13px;color:var(--ink-faint);">Нет файлов</span>'}</div>
           <div class="subhead">Инструментарий</div>
@@ -1240,7 +1299,7 @@ function renderCaseDetail(id){
           <div class="filelist">${c.docs.reporting.map(fileRow).join('')}</div>
           ${c.docs.media.length? `<div class="subhead">Медиа</div><div class="filelist">${c.docs.media.map(fileRow).join('')}</div>` : ''}
         </div>
-        <div class="block"><h2><span class="n">Блок 4</span> · Уроки и выводы</h2>
+        <div class="block"><h2>Уроки и выводы</h2>
           <div class="lesson-cols">
             <div class="lesson-col good"><h4>Что сработало</h4><ul class="plain">${c.lessons.good.map(x=>`<li>${x}</li>`).join('')}</ul></div>
             <div class="lesson-col bad"><h4>Что не сработало</h4><ul class="plain">${c.lessons.bad.map(x=>`<li>${x}</li>`).join('')}</ul></div>
@@ -1248,7 +1307,7 @@ function renderCaseDetail(id){
           <div class="subhead">Рекомендации для будущих проектов</div>
           <ul class="plain">${c.lessons.reco.map(x=>`<li>${x}</li>`).join('')}</ul>
         </div>
-        <div class="block"><h2><span class="n">Блок 5</span> · Контакты</h2>
+        <div class="block"><h2>Контакты</h2>
           <dl class="kv">
             <dt>Контакт</dt><dd>${typeof c.contact === 'object' ? c.contact.name : c.contact}</dd>
             <dt>Email</dt><dd>${typeof c.contact === 'object' ? c.contact.email : ''}</dd>
@@ -1257,6 +1316,7 @@ function renderCaseDetail(id){
       </div>
       <div>
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${c.updated}</div></div>
+        ${quickDownloadHtml}
         ${relatedBlockHtml('Использованные инструменты', c.relatedTools, 'tool')}
         ${relatedBlockHtml('Методология', c.relatedMethodology, 'methodology')}
         ${relatedBlockHtml('Шаблоны', c.relatedTemplates, 'template')}
