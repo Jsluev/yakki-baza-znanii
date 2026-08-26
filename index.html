@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>База знаний ЯККИ — прототип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF8F2; --paper-raised:#FFFFFF; --paper-sunk:#F3EEE3;
+  --ink:#2B271F; --ink-soft:#716C60; --ink-faint:#A29C8C;
+  --line:#E9E2D3; --line-strong:#D9CFB8;
+  --navy:#2B3868; --navy-deep:#181F3B; --navy-soft:#eef0f6;
+  --c-cases:#3568E8; --c-cases-bg:#EAF0FD;
+  --c-tools:#249368; --c-tools-bg:#E6F5ED;
+  --c-method:#CE7A22; --c-method-bg:#FBEEDD;
+  --c-templates:#C94A54; --c-templates-bg:#FBE9E9;
+  --c-learning:#7862CE; --c-learning-bg:#EFEAFB;
+  --c-values:#BB3A78; --c-values-bg:#FBE7F0;
+  --c-results:#1C8798; --c-results-bg:#E4F3F5;
+  --c-faq:#6D6858; --c-faq-bg:#EFEBE0;
+  --c-glossary:#976E2B; --c-glossary-bg:#F5ECDA;
+  --radius:16px; --radius-sm:10px;
+  --shadow:0 2px 4px rgba(43,39,31,.04), 0 10px 28px -14px rgba(43,39,31,.14);
+  --font-display:'Unbounded',sans-serif; --font-body:'Manrope',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.5;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0;letter-spacing:-.005em;}
+h1{font-weight:600;}
+.item-card h3, .sec-card h3, .value-card h3{font-weight:600;}
+p{margin:0;}
+a{color:inherit;text-decoration:none;}
+button{font-family:var(--font-body);cursor:pointer;}
+:focus-visible{outline:2.5px solid var(--navy);outline-offset:2px;border-radius:4px;}
+::selection{background:#F4D9AE;}
+img{max-width:100%;display:block;}
+.mono{font-family:var(--font-mono);}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+@media (max-width:640px){.wrap{padding:0 16px;}}
+
+/* ---------- header ---------- */
+.topbar{background:var(--navy-deep);color:#F3F0E8;font-family:var(--font-mono);font-size:12px;padding:6px 0;}
+.topbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.topbar .tag{background:#3A4570;color:#fff;padding:2px 8px;border-radius:20px;font-size:11px;}
+header.main{background:var(--paper-raised);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;}
+header.main .wrap{display:flex;align-items:center;gap:24px;padding-top:14px;padding-bottom:14px;}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0;cursor:pointer;}
+.brand .mark{width:34px;height:34px;border-radius:8px;background:conic-gradient(from 200deg,var(--c-cases),var(--c-tools),var(--c-method),var(--c-templates),var(--c-values),var(--c-cases));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.brand .mark span{width:14px;height:14px;background:var(--paper-raised);border-radius:3px;}
+.brand .word{line-height:1.1;}
+.brand .word b{font-family:var(--font-display);font-size:17px;font-weight:700;display:block;}
+.brand .word small{font-size:11px;color:var(--ink-soft);}
+nav.mainnav{display:flex;align-items:center;gap:2px;flex:1;}
+nav.mainnav a, nav.mainnav .dd-btn{font-size:14px;font-weight:500;color:var(--ink-soft);padding:8px 12px;border-radius:8px;white-space:nowrap;border:none;background:none;font-family:var(--font-body);}
+nav.mainnav a:hover, nav.mainnav .dd-btn:hover{background:var(--paper-sunk);color:var(--ink);}
+nav.mainnav a.active{color:var(--ink);background:var(--paper-sunk);}
+.dd{position:relative;}
+.dd-menu{display:none;position:absolute;top:110%;left:0;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow);min-width:210px;padding:6px;z-index:60;}
+.dd:hover .dd-menu, .dd:focus-within .dd-menu{display:block;}
+.dd-menu a{display:flex;align-items:center;gap:8px;padding:8px 10px;font-size:13.5px;border-radius:6px;}
+.dd-menu a:hover{background:var(--paper-sunk);}
+.swatch{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.searchbox{display:flex;align-items:center;background:var(--paper-sunk);border:1px solid var(--line);border-radius:24px;padding:4px 6px 4px 14px;gap:6px;min-width:230px;}
+.searchbox input{border:none;background:none;font-family:var(--font-body);font-size:13.5px;outline:none;width:150px;color:var(--ink);}
+.searchbox button{background:var(--navy);color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;}
+@media (max-width:980px){nav.mainnav{display:none;}.searchbox{flex:1;}}
+
+/* ---------- buttons/chips ---------- */
+.btn{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:24px;border:1px solid transparent;}
+.btn-primary{background:var(--navy);color:#fff;}
+.btn-primary:hover{background:var(--navy-deep);}
+.btn-ghost{background:transparent;border-color:var(--line-strong);color:var(--ink);}
+.btn-ghost:hover{background:var(--paper-sunk);}
+.btn-sm{padding:6px 12px;font-size:12.5px;}
+.pill-toggle{display:inline-flex;background:var(--paper-sunk);border:1px solid var(--line);border-radius:24px;padding:3px;}
+.pill-toggle button{border:none;background:none;padding:8px 16px;border-radius:20px;font-size:13.5px;font-weight:600;color:var(--ink-soft);}
+.pill-toggle button.active{background:var(--paper-raised);color:var(--ink);box-shadow:var(--shadow);}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.03em;padding:4px 9px;border-radius:6px;}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;padding:6px 12px;border-radius:20px;border:1px solid var(--line-strong);background:var(--paper-raised);color:var(--ink-soft);font-weight:500;}
+.chip.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.tag{font-size:12px;background:var(--paper-sunk);padding:3px 9px;border-radius:6px;color:var(--ink-soft);}
+
+/* ---------- breadcrumbs ---------- */
+.crumbs{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12.5px;color:var(--ink-faint);font-family:var(--font-mono);padding:16px 0 0;}
+.crumbs a{color:var(--ink-soft);}
+.crumbs a:hover{text-decoration:underline;}
+.crumbs .sep{opacity:.5;}
+
+/* ---------- generic sections ---------- */
+main{min-height:60vh;}
+.section-pad{padding:44px 0 64px;}
+.hr{height:1px;background:var(--line);width:100%;}
+
+/* ---------- home hero ---------- */
+.hero{background:
+  radial-gradient(ellipse 700px 340px at 12% -10%, var(--c-cases-bg), transparent 60%),
+  radial-gradient(ellipse 600px 320px at 100% 0%, var(--c-values-bg), transparent 60%),
+  var(--paper);border-bottom:1px solid var(--line);}
+.hero-inner{padding:56px 0 40px;}
+.hero .eyebrow{margin-bottom:16px;}
+.hero h1{font-size:38px;line-height:1.28;max-width:740px;font-weight:600;}
+.hero h1 em{font-style:normal;color:var(--navy);}
+.hero p.lead{margin-top:18px;font-size:16.5px;max-width:600px;color:var(--ink-soft);line-height:1.6;}
+@media (max-width:640px){.hero h1{font-size:27px;line-height:1.32;}}
+
+.unisearch{margin-top:28px;display:flex;background:var(--paper-raised);border:1.5px solid var(--line-strong);border-radius:16px;box-shadow:var(--shadow);padding:6px;gap:6px;max-width:720px;}
+.unisearch select{border:none;background:var(--paper-sunk);border-radius:10px;padding:0 14px;font-family:var(--font-body);font-size:13.5px;font-weight:600;color:var(--ink);}
+.unisearch input{flex:1;border:none;outline:none;font-family:var(--font-body);font-size:15px;padding:0 12px;background:transparent;}
+.unisearch button{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:0 22px;font-weight:700;font-size:14px;}
+@media (max-width:640px){.unisearch{flex-wrap:wrap;}.unisearch select{order:1;width:calc(50% - 3px);}.unisearch button{order:2;width:calc(50% - 3px);}.unisearch input{order:0;width:100%;padding:10px 12px;}}
+
+.stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:40px;padding-top:28px;border-top:1px solid var(--line);}
+.stat{padding:6px 20px 6px 0;border-right:1px solid var(--line);}
+.stat:last-child{border-right:none;}
+.stat b{font-family:var(--font-display);font-weight:700;font-size:24px;display:block;line-height:1.2;color:var(--ink);}
+.stat span{font-size:12px;color:var(--ink-soft);display:block;margin-top:6px;line-height:1.4;}
+@media (max-width:860px){.stat-row{grid-template-columns:repeat(3,1fr);row-gap:22px;}.stat:nth-child(3n){border-right:none;}}
+@media (max-width:560px){.stat-row{grid-template-columns:repeat(2,1fr);gap:20px 16px;margin-top:32px;padding-top:22px;}.stat{border-right:none;padding:0;}.stat b{font-size:21px;}}
+
+/* audience toggle block */
+.audience-block{padding:34px 0 8px;}
+.audience-block .head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
+.audience-note{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;font-size:14px;color:var(--ink-soft);margin-top:4px;}
+.audience-note b{color:var(--ink);}
+
+/* section catalog grid on home */
+.grid-sections{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;}
+@media (max-width:900px){.grid-sections{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:600px){.grid-sections{grid-template-columns:1fr;}}
+.sec-card{position:relative;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;overflow:hidden;transition:transform .15s ease, box-shadow .15s ease;}
+.sec-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--line-strong);}
+.sec-card .spine{position:absolute;left:0;top:0;bottom:0;width:5px;}
+.sec-card .top{display:flex;justify-content:space-between;align-items:flex-start;}
+.sec-card .ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.sec-card h3{font-size:17px;margin-top:12px;}
+.sec-card p{font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.45;}
+.sec-card .count{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);margin-top:10px;}
+.sec-card.pinned{outline:2px solid; outline-offset:-2px;}
+
+/* scenarios */
+.scenario-list{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px;}
+@media (max-width:900px){.scenario-list{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.scenario-list{grid-template-columns:1fr;}}
+.scenario{border-top:2px solid var(--ink);padding-top:12px;}
+.scenario .num{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);}
+.scenario h4{font-size:15px;margin-top:6px;}
+.scenario p{font-size:13px;color:var(--ink-soft);margin-top:6px;}
+
+/* featured */
+.featured{margin-top:40px;background:var(--navy-deep);color:#EDEBE3;border-radius:16px;padding:34px;display:grid;grid-template-columns:1.3fr 1fr;gap:24px;}
+@media (max-width:800px){.featured{grid-template-columns:1fr;}}
+.featured .eyebrow{color:#9AA3C9;}
+.featured h3{color:#fff;font-size:24px;margin-top:8px;}
+.featured p{color:#C7CBE0;font-size:14px;margin-top:10px;line-height:1.55;}
+.featured .meta-list{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;}
+.featured .meta-list span{font-size:11.5px;font-family:var(--font-mono);background:#232C50;padding:4px 9px;border-radius:6px;color:#C7CBE0;}
+.featured-side{background:#1C2444;border-radius:12px;padding:18px;font-size:13px;}
+.featured-side .row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #2B3560;color:#C7CBE0;}
+.featured-side .row:last-child{border:none;}
+.featured-side .row b{color:#fff;font-weight:600;}
+
+/* ---------- catalog / section page ---------- */
+.catalog-head{padding:28px 0 4px;}
+.catalog-head h1{font-size:30px;}
+.catalog-head p{margin-top:10px;color:var(--ink-soft);font-size:14.5px;max-width:640px;}
+.catalog-body{display:grid;grid-template-columns:250px 1fr;gap:32px;margin-top:26px;align-items:start;}
+@media (max-width:860px){.catalog-body{grid-template-columns:1fr;}}
+.filters{position:sticky;top:84px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;}
+.filters h4{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-family:var(--font-mono);color:var(--ink-faint);margin-bottom:12px;}
+.filter-group{margin-bottom:18px;}
+.filter-group:last-of-type{margin-bottom:10px;}
+.filter-group label{display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;color:var(--ink);}
+.filter-group select{width:100%;padding:9px 10px;border:1px solid var(--line-strong);border-radius:8px;font-family:var(--font-body);font-size:13px;background:var(--paper-sunk);color:var(--ink);}
+.filters .actions{display:flex;gap:8px;margin-top:14px;}
+.filters .actions .btn{flex:1;justify-content:center;padding:9px 0;}
+.crosslink-note{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-faint);line-height:1.5;}
+
+.results-topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.results-topline .count{font-size:13px;color:var(--ink-soft);}
+.local-search{display:flex;border:1px solid var(--line-strong);border-radius:10px;overflow:hidden;max-width:340px;}
+.local-search input{flex:1;border:none;padding:8px 12px;font-size:13px;outline:none;background:var(--paper-raised);}
+.local-search button{border:none;background:var(--paper-sunk);padding:0 12px;font-size:13px;}
+
+.card-list{display:flex;flex-direction:column;gap:12px;}
+.item-card{position:relative;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px 16px 22px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .15s, border-color .15s;}
+.item-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong);}
+.item-card .spine{position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:2px;}
+.item-card .row1{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;}
+.item-card h3{font-size:16.5px;}
+.item-card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.5;}
+.item-card .metarow{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
+.item-card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-size:11.5px;color:var(--ink-faint);font-family:var(--font-mono);}
+.empty-state{padding:50px 20px;text-align:center;background:var(--paper-raised);border:1px dashed var(--line-strong);border-radius:var(--radius);}
+.empty-state h3{font-size:16px;margin-bottom:6px;}
+.empty-state p{font-size:13.5px;color:var(--ink-soft);}
+
+/* ---------- detail / card page ---------- */
+.detail-head{padding:20px 0 0;}
+.detail-titlebar{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-top:14px;}
+.detail-titlebar h1{font-size:30px;max-width:760px;}
+.detail-sub{color:var(--ink-soft);font-size:14.5px;margin-top:10px;max-width:760px;}
+.detail-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.detail-actions{display:flex;gap:10px;flex-shrink:0;}
+.detail-grid{display:grid;grid-template-columns:1fr 300px;gap:32px;margin-top:32px;align-items:start;}
+@media (max-width:900px){.detail-grid{grid-template-columns:1fr;}}
+.block{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:16px;}
+.block h2{font-size:13px;text-transform:uppercase;letter-spacing:.04em;font-family:var(--font-mono);color:var(--ink-faint);margin-bottom:16px;font-weight:600;}
+.block h2 .n{color:var(--ink);}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:8px 16px;font-size:13.5px;}
+.kv dt{color:var(--ink-faint);}
+.kv dd{margin:0;}
+.subhead{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft);margin:14px 0 8px;}
+.subhead:first-child{margin-top:0;}
+.filelist{display:flex;flex-direction:column;gap:8px;}
+.filerow{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--paper-sunk);border-radius:8px;font-size:13px;}
+.filerow .name{display:flex;align-items:center;gap:8px;}
+.filerow .ext{font-family:var(--font-mono);font-size:10.5px;background:var(--paper-raised);border:1px solid var(--line-strong);padding:1px 6px;border-radius:4px;color:var(--ink-soft);}
+.filerow button{border:1px solid var(--line-strong);background:var(--paper-raised);border-radius:6px;padding:5px 10px;font-size:12px;font-weight:600;}
+.filerow button:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+ul.plain{margin:0;padding-left:18px;font-size:13.5px;line-height:1.6;}
+ul.plain li{margin-bottom:4px;}
+table.qtable{width:100%;border-collapse:collapse;font-size:13px;}
+table.qtable th{text-align:left;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--ink-faint);padding:6px 10px;border-bottom:1px solid var(--line-strong);}
+table.qtable td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+.lesson-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:640px){.lesson-cols{grid-template-columns:1fr;}}
+.lesson-col h4{font-size:12.5px;margin-bottom:8px;}
+.lesson-col.good h4{color:var(--c-tools);}
+.lesson-col.bad h4{color:var(--c-templates);}
+.sidebar-box{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px;}
+.sidebar-box h4{font-size:11px;text-transform:uppercase;font-family:var(--font-mono);color:var(--ink-faint);margin-bottom:10px;}
+.related-item{display:block;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;}
+.related-item:last-child{border:none;}
+.related-item .t{font-size:11px;font-family:var(--font-mono);text-transform:uppercase;margin-bottom:3px;display:block;}
+.related-item:hover .rt{text-decoration:underline;}
+.updated-note{font-size:12px;color:var(--ink-faint);font-family:var(--font-mono);margin-top:4px;}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft);margin-top:18px;font-weight:600;}
+.back-link:hover{color:var(--ink);}
+
+/* faq */
+.faq-group{margin-bottom:26px;}
+.faq-group h3{font-size:14px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;font-family:var(--font-mono);margin-bottom:10px;font-weight:600;}
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:16px 4px;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:600;font-family:var(--font-body);color:var(--ink);gap:12px;}
+.faq-q .plus{font-family:var(--font-mono);font-size:18px;color:var(--ink-faint);transition:transform .18s;flex-shrink:0;}
+.faq-item.open .faq-q .plus{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .22s ease;}
+.faq-item.open .faq-a{max-height:400px;}
+.faq-a p{padding:0 4px 16px;font-size:13.5px;color:var(--ink-soft);line-height:1.6;max-width:640px;}
+
+/* glossary */
+.alpha-nav{display:flex;flex-wrap:wrap;gap:4px;margin:18px 0 24px;}
+.alpha-nav a{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:13px;font-weight:600;background:var(--paper-raised);border:1px solid var(--line);color:var(--ink-soft);}
+.alpha-nav a:hover, .alpha-nav a.has{color:var(--ink);border-color:var(--line-strong);}
+.gloss-letter{font-family:var(--font-display);font-size:24px;color:var(--c-glossary);margin:26px 0 10px;}
+.gloss-row{display:flex;justify-content:space-between;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line);gap:16px;}
+.gloss-row .term{font-weight:600;font-size:15px;}
+.gloss-row .def{font-size:13px;color:var(--ink-soft);max-width:480px;text-align:right;}
+@media (max-width:640px){.gloss-row{flex-direction:column;align-items:flex-start;}.gloss-row .def{text-align:left;}}
+
+/* values grid */
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;}
+@media (max-width:860px){.values-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.values-grid{grid-template-columns:1fr;}}
+.value-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;border-top:3px solid var(--c-values);}
+.value-card h3{font-size:16px;}
+.value-card p{font-size:13px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
+.value-card .n{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);}
+.value-card .link-count{margin-top:12px;font-size:12px;font-weight:600;color:var(--c-values);}
+
+/* results tree */
+.tree-cols{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:0;margin-top:22px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper-raised);min-height:360px;}
+@media (max-width:800px){.tree-cols{grid-template-columns:1fr;}}
+.tree-col{border-right:1px solid var(--line);}
+.tree-col:last-child{border-right:none;}
+.tree-col-h{padding:12px 16px;font-family:var(--font-mono);font-size:11px;text-transform:uppercase;color:var(--ink-faint);border-bottom:1px solid var(--line);background:var(--paper-sunk);}
+.tree-opt{display:block;width:100%;text-align:left;padding:12px 16px;border:none;background:none;font-size:13.5px;border-bottom:1px solid var(--line);color:var(--ink);}
+.tree-opt:hover{background:var(--paper-sunk);}
+.tree-opt.sel{background:var(--c-results-bg);color:var(--c-results);font-weight:600;}
+.tree-opt .cnt{float:right;font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);}
+.result-line{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.5;}
+.result-line .ind{display:block;font-size:11.5px;color:var(--ink-faint);margin-top:4px;font-family:var(--font-mono);}
+
+/* footer */
+footer{background:var(--navy-deep);color:#B9BEDA;margin-top:60px;}
+footer .wrap{padding:44px 28px 30px;}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px;}
+@media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;}}
+footer h4{color:#fff;font-size:12px;text-transform:uppercase;font-family:var(--font-mono);letter-spacing:.04em;margin-bottom:14px;}
+footer a{display:block;font-size:13.5px;color:#B9BEDA;margin-bottom:9px;}
+footer a:hover{color:#fff;}
+.foot-bottom{border-top:1px solid #2A3260;margin-top:30px;padding-top:18px;display:flex;justify-content:space-between;font-size:12px;color:#7C82A8;flex-wrap:wrap;gap:8px;}
+
+/* helper nav button */
+.helper-fab{position:fixed;bottom:22px;right:22px;background:var(--navy);color:#fff;border-radius:30px;padding:12px 18px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow);z-index:70;display:flex;align-items:center;gap:8px;}
+.helper-fab:hover{background:var(--navy-deep);}
+
+.fade-in{animation:fadeIn .25s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>creative-industries.su · раздел «База знаний»</span><span class="tag">кликабельный прототип · навигация и структура</span></div></div>
+
+<header class="main">
+  <div class="wrap">
+    <div class="brand" data-nav="#/">
+      <div class="mark"><span></span></div>
+      <div class="word"><b>ЯККИ</b><small>База знаний</small></div>
+    </div>
+    <nav class="mainnav" id="mainnav"></nav>
+    <div class="searchbox">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="headerSearchInput" placeholder="Искать в базе знаний…" onkeydown="if(event.key==='Enter')doHeaderSearch()">
+      <button onclick="doHeaderSearch()">Найти</button>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>ЯККИ</h4>
+        <p style="font-size:13px;line-height:1.6;max-width:260px;">Межрегиональный форум «Яркие краски креативных индустрий» — база знаний по планированию и оценке творческих проектов.</p>
+      </div>
+      <div>
+        <h4>Разделы</h4>
+        <a href="#/section/cases">Кейсы проектов</a>
+        <a href="#/section/tools">Инструменты сбора данных</a>
+        <a href="#/section/methodology">Методология</a>
+        <a href="#/section/templates">Шаблоны</a>
+      </div>
+      <div>
+        <h4>Справочно</h4>
+        <a href="#/values">Ценности</a>
+        <a href="#/results">Банк результатов</a>
+        <a href="#/glossary">Глоссарий</a>
+        <a href="#/faq">FAQ</a>
+      </div>
+      <div>
+        <h4>О прототипе</h4>
+        <a href="#/start">С чего начать новичку</a>
+        <a href="https://creative-industries.su/" target="_blank" rel="noopener">Основной сайт ЯККИ ↗</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>Макет для обсуждения — данные примерные, вёрстка иллюстративная</span>
+      <span>© ООО «ЯККИ»</span>
+    </div>
+  </div>
+</footer>
+
+<div class="helper-fab" data-nav="#/start">💡 Не знаю, с чего начать</div>
+
+<script>
+/* ============================================================
+   ДАННЫЕ (демонстрационное наполнение)
+   ============================================================ */
+const SECTIONS = {
+  cases:      {label:'Кейсы проектов', short:'Кейсы', color:'var(--c-cases)', bg:'var(--c-cases-bg)', icon:'▣', desc:'Реальные примеры оценки творческих проектов: контекст, методы, документация, выводы.'},
+  tools:      {label:'Инструменты сбора данных', short:'Инструменты', color:'var(--c-tools)', bg:'var(--c-tools-bg)', icon:'✎', desc:'Анкеты, гайды интервью, чек-листы наблюдений — готовые к применению без методолога.'},
+  methodology:{label:'Методология и подходы', short:'Методология', color:'var(--c-method)', bg:'var(--c-method-bg)', icon:'◐', desc:'Подходы к оценке, критерии ОЭСР-DAC, типы эффектов и методы анализа — простым языком.'},
+  templates:  {label:'Шаблоны и образцы', short:'Шаблоны', color:'var(--c-templates)', bg:'var(--c-templates-bg)', icon:'▭', desc:'Пустографки документов: план оценки, ЛМП, ТЗ на инструментарий, отчёт, презентация.'},
+  learning:   {label:'Обучающие материалы', short:'Обучение', color:'var(--c-learning)', bg:'var(--c-learning-bg)', icon:'✺', desc:'Статьи и чек-листы по ключевым темам планирования и оценки — для тех, кто учится.'},
+  values:     {label:'Ценности', short:'Ценности', color:'var(--c-values)', bg:'var(--c-values-bg)', icon:'♦', desc:'Ценностная рамка как постоянный фильтр: выберите ценность — увидьте связанные материалы.'},
+  results:    {label:'Банк результатов', short:'Результаты', color:'var(--c-results)', bg:'var(--c-results-bg)', icon:'◫', desc:'Область → область влияния → результат. Готовые формулировки для теории изменений.'},
+  faq:        {label:'Часто задаваемые вопросы', short:'FAQ', color:'var(--c-faq)', bg:'var(--c-faq-bg)', icon:'?', desc:'Быстрые ответы на типовые вопросы команд и оценщиков.'},
+  glossary:   {label:'Глоссарий', short:'Глоссарий', color:'var(--c-glossary)', bg:'var(--c-glossary-bg)', icon:'A', desc:'Словарь ключевых терминов оценки — простым, неакадемическим языком.'}
+};
+const CATALOG_SECTIONS = ['cases','tools','methodology','templates','learning'];
+
+const CASES = [
+ {id:'muzeinyi-eksperiment', title:'«Музейный эксперимент»', org:'АНО «Эволюция и Филантропия»', projectType:'Музейные проекты', stage:'Зрелые (повторяющиеся)', evalStage:'Формирующая', period:'2023–2024', geo:'Москва', audience:'Посетители музея 16–35 лет', tags:['музей','вовлечение','пилот инструментов'],
+  shortDesc:'Оценка экспериментальной программы вовлечения молодой аудитории в постоянную экспозицию музея.',
+  evalGoal:'Понять, меняется ли отношение молодых посетителей к музею после серии интерактивных форматов, и скорректировать программу на ходу.',
+  criteria:['Актуальность','Эффективность','Результативность'],
+  questions:['Изменилось ли отношение аудитории к музею как к «месту для меня»?','Какие форматы удерживают внимание дольше 20 минут?'],
+  effects:['Изменение отношения и ценностей','Формирование сообществ'],
+  values:['identity','creative-work'],
+  docs:{
+    planning:[{name:'План оценки', ext:'DOCX'},{name:'Дерево результатов', ext:'PDF'},{name:'Логическая модель программы (ЛМП)', ext:'PDF'}],
+    toolkit:[{name:'Список инструментов проекта', ext:'DOCX'},{name:'ТЗ на разработку инструментария', ext:'DOCX'}],
+    analysis:[{name:'ТЗ на анализ данных', ext:'DOCX'},{name:'Описание методов анализа', ext:'PDF'}],
+    reporting:[{name:'Краткий отчёт об оценке', ext:'PDF'},{name:'Полный отчёт об оценке', ext:'PDF'},{name:'Презентация отчёта', ext:'PPTX'}],
+    media:[{name:'Видео о проекте', ext:'MP4'},{name:'Фотоотчёт', ext:'ZIP'}]
+  },
+  lessons:{good:['Анкета «до/после» на входе и выходе дала сравнимые данные без лишней нагрузки на посетителя','Короткие интервью с смотрителями зала оказались неожиданно ценным источником'],
+  bad:['Фокус-группа с подростками потребовала отдельного модератора — формат не сработал «с наскока»'],
+  reco:['Закладывать пилот инструмента на 2 недели раньше основного сбора данных']},
+  contact:'evaluation@example-fund.ru',
+  relatedTools:['anketa-do-posle','nabl-checklist'], relatedMethodology:['theory-of-change'], relatedTemplates:['tpl-plan'],
+  updated:'12.08.2026'},
+ {id:'stsena-budushchego', title:'«Сцена будущего»', org:'Театральный проект-резидент ПФКИ', projectType:'Театральные проекты', stage:'Инновационные (новые)', evalStage:'Предварительная (ex-ante)', period:'2025', geo:'Регион РФ', audience:'Молодые драматурги и труппа театра', tags:['театр','новые форматы','экспертная оценка'],
+  shortDesc:'Оценка на старте нового театрального формата перед запуском: соответствие целям и рискам проекта.',
+  evalGoal:'Проверить реалистичность целей проекта и определить, какие эффекты и по каким индикаторам можно будет измерить после премьеры.',
+  criteria:['Согласованность','Актуальность'],
+  questions:['Соответствуют ли заявленные цели проекта потребностям целевой аудитории?','Какие риски могут помешать реализации в срок?'],
+  effects:['Развитие компетенций','Общественный резонанс'],
+  values:['creative-work','dignity'],
+  docs:{
+    planning:[{name:'План оценки (черновик)', ext:'DOCX'},{name:'Дерево результатов', ext:'PDF'}],
+    toolkit:[{name:'ТЗ на разработку инструментария', ext:'DOCX'}],
+    analysis:[{name:'ТЗ на анализ данных', ext:'DOCX'}],
+    reporting:[{name:'Презентация отчёта', ext:'PPTX'}],
+    media:[{name:'Тизер проекта', ext:'MP4'}]
+  },
+  lessons:{good:['Экспертная оценка на этапе замысла помогла переформулировать одну из целей проекта'],
+  bad:['Не хватило времени на пилотирование анкеты для труппы — пришлось использовать неапробированную версию'],
+  reco:['Для ex-ante оценки закладывать минимум одну итерацию экспертного обсуждения целей']},
+  contact:'info@example-theatre.ru',
+  relatedTools:['expert-form'], relatedMethodology:['logframe'], relatedTemplates:['tpl-tree'],
+  updated:'03.07.2026'},
+ {id:'aktyerskaya-birzha', title:'Онлайн-платформа «Всероссийская актёрская биржа»', org:'Медиапроект-резидент ПФКИ', projectType:'Медиа и онлайн-проекты', stage:'Масштабирование', evalStage:'Итоговая', period:'2024–2025', geo:'Россия (онлайн)', audience:'Актёры и кастинг-директора', tags:['онлайн-платформа','масштабирование','смешанные методы'],
+  shortDesc:'Итоговая оценка платформы после года работы: удалось ли обеспечить регионам равный доступ к кастингам.',
+  evalGoal:'Оценить, насколько платформа снизила барьеры для актёров из регионов при поиске работы.',
+  criteria:['Результативность','Воздействие','Устойчивость'],
+  questions:['Выросла ли доля откликов из регионов вне Москвы и Петербурга?','Планируют ли пользователи продолжать пользоваться платформой без грантовой поддержки?'],
+  effects:['Институциональные изменения','Формирование сообществ'],
+  values:['unity','creative-work'],
+  docs:{
+    planning:[{name:'План оценки', ext:'DOCX'},{name:'ЛМП', ext:'PDF'}],
+    toolkit:[{name:'Список инструментов', ext:'DOCX'}],
+    analysis:[{name:'ТЗ на анализ данных (веб-аналитика + опрос)', ext:'DOCX'}],
+    reporting:[{name:'Краткий отчёт', ext:'PDF'},{name:'Полный отчёт', ext:'PDF'}],
+    media:[]
+  },
+  lessons:{good:['Совмещение веб-аналитики и онлайн-анкеты дало и количественную, и качественную картину'],
+  bad:['Низкий отклик на анкету пользователей из регионов — пришлось продлевать сбор на месяц'],
+  reco:['Встраивать короткий опрос прямо в интерфейс платформы, а не отправлять отдельным письмом']},
+  contact:'team@aktyor-birzha.example',
+  relatedTools:['anketa-do-posle'], relatedMethodology:['impact-eval'], relatedTemplates:['tpl-report'],
+  updated:'28.06.2026'},
+ {id:'azbuka-druzhby', title:'«Азбука дружбы народов» со Смешариками', org:'Образовательный медиапроект', projectType:'Образовательные программы', stage:'Зрелые (повторяющиеся)', evalStage:'Формирующая', period:'2024', geo:'Россия, несколько регионов', audience:'Дети 6–10 лет и педагоги', tags:['дети','межкультурный диалог','фокус-группы'],
+  shortDesc:'Оценка образовательной анимационной программы о культурах народов России для младших школьников.',
+  evalGoal:'Понять, помогает ли программа детям запоминать и с интересом обсуждать традиции других народов России.',
+  criteria:['Эффективность','Результативность'],
+  questions:['Могут ли дети после просмотра назвать 2–3 традиции, не относящиеся к их региону?','Как реагируют педагоги на встраивание материалов в урок?'],
+  effects:['Развитие компетенций','Изменение отношения и ценностей'],
+  values:['unity','historical-memory'],
+  docs:{
+    planning:[{name:'План оценки', ext:'DOCX'},{name:'Дерево результатов', ext:'PDF'}],
+    toolkit:[{name:'Список инструментов', ext:'DOCX'}],
+    analysis:[{name:'Описание методов анализа (качественные)', ext:'PDF'}],
+    reporting:[{name:'Краткий отчёт об оценке', ext:'PDF'},{name:'Презентация отчёта', ext:'PPTX'}],
+    media:[{name:'Серия для показа на сессии', ext:'MP4'}]
+  },
+  lessons:{good:['Рисуночный метод (нарисуй, что запомнилось) сработал лучше устного опроса детей'],
+  bad:['Фокус-группа с педагогами из разных регионов онлайн — часть не смогла подключиться из-за связи'],
+  reco:['Для регионов с нестабильным интернетом дублировать сбор данных бумажной анкетой']},
+  contact:'edu@example-media.ru',
+  relatedTools:['fg-guide'], relatedMethodology:['content-analysis'], relatedTemplates:['tpl-tree'],
+  updated:'15.05.2026'},
+ {id:'ekb-pablik-art', title:'Екатеринбургская паблик-арт программа «ЧÖ»', org:'Арт-инициатива', projectType:'Другое', stage:'Завершённые', evalStage:'Ретроспективная', period:'2022–2023', geo:'Екатеринбург', audience:'Жители городских районов', tags:['паблик-арт','городская среда','ретроспектива'],
+  shortDesc:'Ретроспективная оценка программы паблик-арт объектов спустя год после завершения: что осталось в городской среде.',
+  evalGoal:'Понять долгосрочное восприятие горожанами объектов паблик-арта и их влияние на локальную идентичность района.',
+  criteria:['Устойчивость','Воздействие'],
+  questions:['Ассоциируют ли жители район с конкретными объектами спустя год?','Появились ли низовые инициативы вокруг объектов?'],
+  effects:['Изменение отношения и ценностей','Общественный резонанс'],
+  values:['creative-work','dignity'],
+  docs:{
+    planning:[{name:'План ретроспективной оценки', ext:'DOCX'}],
+    toolkit:[{name:'Список инструментов', ext:'DOCX'}],
+    analysis:[{name:'ТЗ на анализ данных (интервью)', ext:'DOCX'}],
+    reporting:[{name:'Полный отчёт об оценке', ext:'PDF'}],
+    media:[{name:'Фотофиксация объектов', ext:'ZIP'}]
+  },
+  lessons:{good:['Прогулочные интервью прямо у объектов дали более живые ответы, чем кабинетные'],
+  bad:['Часть объектов демонтирована — пришлось опираться на архивные фото при интервью'],
+  reco:['Планировать ретроспективную оценку не позднее чем через 6–8 месяцев после завершения']},
+  contact:'art@example-city.ru',
+  relatedTools:['doc-analysis'], relatedMethodology:['realist-eval'], relatedTemplates:['tpl-report'],
+  updated:'02.04.2026'}
+];
+
+const TOOLS = [
+ {id:'anketa-do-posle', title:'Анкета «до / после»', type:'Анкета', audience:'Посетители/участники проекта', dataType:'Количественные', stage:'До и после мероприятия', status:'Протестирован', values:['identity'], criteria:['Эффективность','Результативность'],
+  shortDesc:'Короткая парная анкета для замера изменения отношения или знаний участников до и после программы.',
+  fullDesc:'Инструмент подходит для форматов с чётким «входом» и «выходом»: экскурсия, мастер-класс, серия занятий. Состоит из 6–8 пунктов по шкале Лайкерта и 1–2 открытых вопросов.',
+  instructions:['Раздавайте анкету «до» не позже чем за 10 минут до начала программы','Используйте одинаковые формулировки в частях «до» и «после», меняя только время глагола','Не проводите «после»-анкету сразу в последнюю минуту мероприятия — люди спешат уходить'],
+  limitations:['Не подходит для программ длиннее нескольких месяцев — эффект «до/после» размывается','Требует минимум 15–20 заполненных пар анкет для осмысленного сравнения'],
+  table:[['Изменилось ли отношение к теме?','Индекс отношения (шкала 1–5)','На сколько по шкале от 1 до 5 вы согласны с утверждением…'],['Выросли ли знания?','Доля верных ответов','Сколько из перечисленного относится к теме программы?']],
+  file:{name:'Анкета до-после.docx', ext:'DOCX'},
+  examples:['muzeinyi-eksperiment','aktyerskaya-birzha'], related:['nabl-checklist'], updated:'10.08.2026'},
+ {id:'interview-guide', title:'Гайд глубинного интервью с руководителем проекта', type:'Интервью (глубинное)', audience:'Руководители/команда проекта', dataType:'Качественные', stage:'После мероприятия', status:'Протестирован', values:['creative-work'], criteria:['Согласованность','Устойчивость'],
+  shortDesc:'Полуструктурированный гайд для интервью с руководителем о замысле, трудностях и уроках проекта.',
+  fullDesc:'Гайд построен по хронологии проекта: замысел → реализация → результаты → уроки. Рассчитан на 45–60 минут.',
+  instructions:['Начинайте с открытого вопроса о замысле, не с оценки результатов','Оставляйте паузы — не торопите с ответом на вопрос об «уроках»','Записывайте интервью с согласия и делайте расшифровку в течение недели'],
+  limitations:['Даёт одну (управленческую) точку зрения — не заменяет интервью с командой и аудиторией'],
+  table:[['Что сработало и что нет?','Наличие рефлексии в команде','Что бы вы сделали иначе, если начать сначала?']],
+  file:{name:'Гайд интервью с руководителем.docx', ext:'DOCX'},
+  examples:['stsena-budushchego'], related:['expert-form'], updated:'22.07.2026'},
+ {id:'nabl-checklist', title:'Чек-лист наблюдения на мероприятии', type:'Наблюдение', audience:'Посетители мероприятия', dataType:'Смешанные', stage:'Во время мероприятия', status:'Протестирован', values:['identity'], criteria:['Эффективность'],
+  shortDesc:'Структурированный лист для фиксации поведения и вовлечённости аудитории прямо во время события.',
+  fullDesc:'Наблюдатель фиксирует заранее определённые индикаторы каждые 15 минут: заполненность зала, вовлечённость, вопросы из зала.',
+  instructions:['Проведите пробное наблюдение заранее, чтобы откалибровать интервалы','Используйте двух независимых наблюдателей на крупных площадках'],
+  limitations:['Субъективность оценки «вовлечённости» без чёткой шкалы — важно заранее согласовать критерии'],
+  table:[['Держится ли внимание аудитории?','Доля вовлечённых по залу','Отметка каждые 15 минут: сколько % зала вовлечено']],
+  file:{name:'Чек-лист наблюдения.xlsx', ext:'XLSX'},
+  examples:['muzeinyi-eksperiment'], related:['anketa-do-posle'], updated:'01.06.2026'},
+ {id:'fg-guide', title:'Гайд фокус-группы с молодёжной аудиторией', type:'Фокус-группа', audience:'Подростки и молодёжь', dataType:'Качественные', stage:'После мероприятия', status:'Черновик', values:['unity'], criteria:['Актуальность'],
+  shortDesc:'Гайд для группового обсуждения с подростками — с разогревом и проективными вопросами.',
+  fullDesc:'Рассчитан на группу 6–8 человек и модератора. Включает разогревающее упражнение, так как прямые вопросы подростки часто закрывают короткими ответами.',
+  instructions:['Используйте проективные вопросы («если бы твой друг…») вместо прямых оценочных','Приглашайте знакомых друг другу подростков — так снижается напряжение'],
+  limitations:['Требует опытного модератора — статус «черновик», не пилотировался с разными группами'],
+  table:[['Что запомнилось из программы?','Спонтанное упоминание тем','Что бы ты рассказал другу, который не был на программе?']],
+  file:{name:'Гайд фокус-группы.docx', ext:'DOCX'},
+  examples:['azbuka-druzhby'], related:['interview-guide'], updated:'19.05.2026'},
+ {id:'expert-form', title:'Форма экспертной оценки художественного качества', type:'Экспертная оценка', audience:'Отраслевые эксперты', dataType:'Смешанные', stage:'До мероприятия', status:'Протестирован', values:['creative-work'], criteria:['Согласованность','Актуальность'],
+  shortDesc:'Структурированная форма для двух-трёх независимых экспертов, оценивающих замысел до запуска.',
+  fullDesc:'Каждый эксперт заполняет форму независимо, затем результаты сверяются на коротком созвоне модератора с экспертами.',
+  instructions:['Не показывайте экспертам оценки друг друга до завершения всех форм','Формулируйте шкалы с описанием каждого балла, а не только цифрой'],
+  limitations:['Результат сильно зависит от подбора экспертов — фиксируйте критерии отбора отдельно'],
+  table:[['Соответствует ли замысел целям конкурса?','Балл соответствия (1–5) по экспертам','Насколько, на ваш взгляд, реализуема заявленная идея?']],
+  file:{name:'Форма экспертной оценки.docx', ext:'DOCX'},
+  examples:['stsena-budushchego'], related:['interview-guide'], updated:'30.04.2026'},
+ {id:'doc-analysis', title:'Протокол анализа документов проекта', type:'Анализ документов', audience:'Не применимо (кабинетный метод)', dataType:'Качественные', stage:'В любой момент', status:'Протестирован', values:['creative-work'], criteria:['Согласованность'],
+  shortDesc:'Протокол для систематического анализа заявок, отчётов и переписки проекта без опроса людей.',
+  fullDesc:'Полезен, когда нужно восстановить логику проекта постфактум — например, при ретроспективной оценке.',
+  instructions:['Фиксируйте не только содержание документа, но и дату/версию — логика проекта часто менялась'],
+  limitations:['Не отражает то, что не попало в документы — дополняйте интервью с командой'],
+  table:[['Менялись ли цели проекта со временем?','Число версий ключевых формулировок','Сравнение заявки, отчётов и презентаций по датам']],
+  file:{name:'Протокол анализа документов.docx', ext:'DOCX'},
+  examples:['ekb-pablik-art'], related:['interview-guide'], updated:'11.03.2026'},
+ {id:'part-map', title:'Партисипативная карта сообщества', type:'Творческие/партисипативные методы', audience:'Жители района/сообщество', dataType:'Качественные', stage:'До и во время проекта', status:'Черновик', values:['unity'], criteria:['Актуальность'],
+  shortDesc:'Метод совместного картирования, где участники сами отмечают значимые места и связи на карте района.',
+  fullDesc:'Групповое упражнение с бумажной или онлайн-картой: участники наносят места, важные для идентичности района, и обсуждают их вместе.',
+  instructions:['Начинайте с личных историй участников о конкретных местах, а не с абстрактного вопроса «что важно для района»'],
+  limitations:['Требует модерации 1,5–2 часа — сложно уложить в короткое мероприятие'],
+  table:[['Какие места значимы для жителей?','Число и плотность отметок на карте','Отметьте на карте 3 места, которые важны лично для вас']],
+  file:{name:'Партисипативная карта — инструкция.pdf', ext:'PDF'},
+  examples:['ekb-pablik-art'], related:['doc-analysis'], updated:'05.02.2026'},
+ {id:'quest-lite', title:'Короткая онлайн-анкета обратной связи', type:'Анкета', audience:'Онлайн-аудитория', dataType:'Количественные', stage:'После мероприятия', status:'Протестирован', values:['creative-work'], criteria:['Эффективность'],
+  shortDesc:'Анкета на 3–4 вопроса для встраивания прямо в интерфейс сайта или платформы проекта.',
+  fullDesc:'Создана специально для онлайн- и медиапроектов, где длинная анкета по почте даёт низкий отклик.',
+  instructions:['Показывайте анкету сразу после целевого действия пользователя, а не при входе'],
+  limitations:['Короткий формат не даёт глубины — используйте вместе с интервью для полноты картины'],
+  table:[['Довольны ли пользователи платформой?','Индекс удовлетворённости','Насколько вероятно, что вы порекомендуете платформу коллеге?']],
+  file:{name:'Онлайн-анкета лайт.docx', ext:'DOCX'},
+  examples:['aktyerskaya-birzha'], related:['anketa-do-posle'], updated:'14.01.2026'}
+];
+
+const METHODOLOGY = [
+ {id:'theory-of-change', sub:'Подходы к оценке', title:'Теория изменений (Theory of Change)', shortDesc:'Как выстроить цепочку «что делаем → что меняется → зачем» перед тем, как оценивать результат.',
+  explain:'Теория изменений — это объяснение того, почему выбранные действия должны привести к желаемым результатам, шаг за шагом, а не «сами по себе».',
+  steps:['Сформулируйте конечное долгосрочное изменение, которого хотите добиться','Опишите промежуточные результаты, которые должны произойти по пути','Для каждого шага явно укажите допущение — почему вы верите, что он сработает','Проверьте цепочку с командой: нет ли «магических» скачков без объяснения'],
+  mistakes:['Начинают с мероприятий, а не с изменения — получается список активностей, а не теория','Пропускают допущения — тогда неясно, что именно проверять при оценке'],
+  tips:['Рисуйте теорию изменений как схему слева направо, а не текстом — так виднее пробелы'],
+  related:{tools:['interview-guide'], cases:['stsena-budushchego'], templates:['tpl-tree']}, updated:'20.07.2026'},
+ {id:'logframe', sub:'Подходы к оценке', title:'Логико-структурный подход', shortDesc:'Классическая матрица «цель — результаты — мероприятия — индикаторы — допущения» для проектов с донорами.',
+  explain:'Логическая матрица (logframe) — таблица, которая связывает цели проекта с измеримыми индикаторами и внешними условиями успеха.',
+  steps:['Заполните столбец «Цель» и «Результаты» сверху вниз','Для каждого результата подберите 1–2 индикатора','Укажите источники проверки для каждого индикатора','Отдельно пропишите риски и допущения'],
+  mistakes:['Индикатор формулируют как активность («проведено мероприятий»), а не как изменение'],
+  tips:['Если индикатор нельзя измерить имеющимися средствами — переформулируйте его, а не оставляйте «для галочки»'],
+  related:{tools:['expert-form'], cases:['stsena-budushchego'], templates:['tpl-lmp']}, updated:'18.07.2026'},
+ {id:'impact-eval', sub:'Подходы к оценке', title:'Оценка воздействия (Impact Evaluation)', shortDesc:'Как понять, что изменения произошли именно благодаря проекту, а не сами по себе.',
+  explain:'Оценка воздействия старается выделить эффект именно проекта на фоне других факторов, которые могли повлиять на результат.',
+  steps:['Определите, что бы произошло без проекта (контрфактуал), хотя бы приблизительно','Соберите данные и «до», и «после», а по возможности — и у похожей группы без проекта','Обсуждайте результат с осторожностью там, где строгий контрфактуал недоступен'],
+  mistakes:['Приписывают любое изменение проекту без проверки альтернативных объяснений'],
+  tips:['Для небольших культурных проектов часто достаточно «мягкой» оценки воздействия — с интервью о том, что изменилось «именно из-за» проекта, по мнению участников'],
+  related:{tools:['anketa-do-posle'], cases:['aktyerskaya-birzha'], templates:['tpl-analysis-tz']}, updated:'02.07.2026'},
+ {id:'realist-eval', sub:'Подходы к оценке', title:'Реалистическая оценка (Realist Evaluation)', shortDesc:'Ищет ответ не «сработало или нет», а «что, для кого и при каких условиях сработало».',
+  explain:'Реалистическая оценка описывает результат через формулу «механизм + контекст → эффект», а не просто «до/после».',
+  steps:['Сформулируйте гипотезу: какой механизм должен сработать в каком контексте','Проверяйте гипотезу отдельно для разных групп участников/условий','Уточняйте гипотезу по ходу сбора данных, а не только в конце'],
+  mistakes:['Ищут единый универсальный вывод там, где эффект принципиально разный в разных условиях'],
+  tips:['Особенно полезна для ретроспективной оценки долгоживущих или повторяющихся программ'],
+  related:{tools:['doc-analysis'], cases:['ekb-pablik-art'], templates:['tpl-report']}, updated:'25.06.2026'},
+ {id:'oecd-dac', sub:'Критерии оценки', title:'Критерии ОЭСР-DAC для культурных проектов', shortDesc:'Шесть критериев — актуальность, согласованность, эффективность, результативность, воздействие, устойчивость — и как их адаптировать.',
+  explain:'Критерии ОЭСР-DAC — международный стандарт вопросов, которые стоит задать о любом проекте, адаптированный здесь под специфику культурной сферы.',
+  steps:['Актуальность — отвечает ли проект на реальную потребность аудитории/сферы','Согласованность — не противоречит ли проект другим инициативам в этой области','Эффективность — рационально ли использованы ресурсы','Результативность — достигнуты ли заявленные результаты','Воздействие — что изменилось в более широком смысле','Устойчивость — продолжится ли эффект после завершения финансирования'],
+  mistakes:['Пытаются оценить все шесть критериев одинаково глубоко при любом бюджете оценки'],
+  tips:['Для небольшого проекта выберите 2–3 приоритетных критерия, а не все шесть'],
+  related:{tools:[], cases:['muzeinyi-eksperiment','aktyerskaya-birzha'], templates:['tpl-plan']}, updated:'28.05.2026'},
+ {id:'content-analysis', sub:'Методы анализа данных', title:'Контент-анализ как метод', shortDesc:'Как систематически анализировать открытые ответы, интервью и посты без «на глазок».',
+  explain:'Контент-анализ превращает большой объём текста (ответы, интервью, посты) в структурированные категории, которые можно посчитать и сравнить.',
+  steps:['Прочитайте часть данных без кодирования, чтобы почувствовать материал','Составьте черновой список категорий (кодов)','Закодируйте выборку данных и проверьте, не пропущены ли важные темы','Закодируйте весь массив и посчитайте частоты по категориям'],
+  mistakes:['Меняют категории по ходу кодирования без пересмотра уже закодированных данных'],
+  tips:['Кодируйте вдвоём хотя бы часть массива и сверяйте расхождения — это заметно повышает надёжность'],
+  related:{tools:['fg-guide'], cases:['azbuka-druzhby'], templates:['tpl-analysis-tz']}, updated:'09.05.2026'}
+];
+
+const TEMPLATES = [
+ {id:'tpl-plan', title:'Шаблон плана оценки', shortDesc:'Пустографка документа, где фиксируются цель, вопросы, методы и график оценки.', when:'На старте проекта, до начала сбора данных.', formats:['DOCX','PDF'], related:{methodology:['oecd-dac'],cases:['muzeinyi-eksperiment']}, updated:'11.08.2026'},
+ {id:'tpl-tree', title:'Шаблон дерева результатов', shortDesc:'Визуальная структура для связи мероприятий с промежуточными и конечными результатами.', when:'При планировании проекта или пересборке теории изменений.', formats:['PDF','PPTX'], related:{methodology:['theory-of-change'],cases:['stsena-budushchego']}, updated:'11.08.2026'},
+ {id:'tpl-lmp', title:'Шаблон логической модели программы (ЛМП)', shortDesc:'Таблица «ресурсы — активности — результаты — эффекты» в едином формате.', when:'При подготовке заявки на грант или согласовании подхода с донором.', formats:['DOCX','XLSX'], related:{methodology:['logframe'],cases:[]}, updated:'05.08.2026'},
+ {id:'tpl-toolkit-tz', title:'Шаблон ТЗ на разработку инструментария', shortDesc:'Структура задания для методолога или подрядчика на разработку анкет/гайдов.', when:'Когда инструменты разрабатывает не сама команда, а внешний специалист.', formats:['DOCX'], related:{methodology:[],cases:['stsena-budushchego']}, updated:'01.08.2026'},
+ {id:'tpl-analysis-tz', title:'Шаблон ТЗ на анализ данных', shortDesc:'Структура задания на анализ собранных данных — вопросы, методы, формат результата.', when:'После сбора данных, перед передачей их аналитику.', formats:['DOCX'], related:{methodology:['content-analysis','impact-eval'],cases:[]}, updated:'28.07.2026'},
+ {id:'tpl-tool-card', title:'Шаблон карточки инструмента', shortDesc:'Единый формат описания нового инструмента сбора данных для базы знаний.', when:'Когда команда хочет добавить собственный инструмент в базу.', formats:['DOCX'], related:{methodology:[],cases:[]}, updated:'20.07.2026'},
+ {id:'tpl-report', title:'Шаблон отчёта об оценке', shortDesc:'Структура краткого и полного отчёта: выводы, данные, рекомендации.', when:'По завершении сбора и анализа данных.', formats:['DOCX','PDF'], related:{methodology:['realist-eval'],cases:['ekb-pablik-art']}, updated:'15.07.2026'},
+ {id:'tpl-presentation', title:'Шаблон презентации отчёта', shortDesc:'Слайды для презентации результатов оценки донору или команде проекта.', when:'Для устной презентации итогов оценки.', formats:['PPTX'], related:{methodology:[],cases:['aktyerskaya-birzha']}, updated:'15.07.2026'}
+];
+
+const LEARNING = [
+ {id:'lrn-plan', title:'Как составить план оценки', shortDesc:'Пошаговое объяснение, с чего начать проектирование оценки — на примере культурного проекта.', when:'Для тех, кто впервые пишет план оценки.', updated:'10.08.2026', related:{templates:['tpl-plan'],methodology:['oecd-dac']}},
+ {id:'lrn-tree', title:'Как построить дерево результатов', shortDesc:'Разбор частых ошибок при построении дерева результатов на реальных примерах.', when:'После первого черновика теории изменений.', updated:'06.08.2026', related:{templates:['tpl-tree'],methodology:['theory-of-change']}},
+ {id:'lrn-choose-method', title:'Как выбрать метод сбора данных', shortDesc:'Короткий гид: когда анкета, когда интервью, а когда наблюдение или фокус-группа.', when:'На этапе планирования инструментария.', updated:'30.07.2026', related:{templates:['tpl-toolkit-tz'],methodology:[]}},
+ {id:'lrn-pilot', title:'Как провести пилотирование инструмента', shortDesc:'Зачем нужен пилот даже для «простой» анкеты и как его провести за 2–3 дня.', when:'Перед основным этапом сбора данных.', updated:'22.07.2026', related:{templates:[],methodology:[]}},
+ {id:'lrn-qual-analysis', title:'Как анализировать качественные данные', shortDesc:'Введение в контент- и тематический анализ без специального софта.', when:'После сбора интервью или открытых ответов анкеты.', updated:'12.07.2026', related:{templates:['tpl-analysis-tz'],methodology:['content-analysis']}},
+ {id:'lrn-readiness', title:'Чек-лист «Готовность к оценке»', shortDesc:'12 пунктов, чтобы проверить, готова ли команда начинать оценку прямо сейчас.', when:'В самом начале работы с базой знаний.', updated:'01.07.2026', related:{templates:['tpl-plan'],methodology:[]}}
+];
+
+const FAQ = [
+ {group:'Планирование оценки', items:[
+   {q:'С чего вообще начать оценку проекта?', a:'Начните с формулировки цели оценки и 2–3 ключевых вопросов, на которые вы хотите получить ответ. Шаблон плана оценки и статья «Как составить план оценки» проведут через этот процесс шаг за шагом.'},
+   {q:'Нужно ли оценивать проект по всем шести критериям ОЭСР-DAC сразу?', a:'Нет. Для небольшого проекта разумно выбрать 2–3 приоритетных критерия — подробнее в материале про критерии ОЭСР-DAC в разделе «Методология».'}
+ ]},
+ {group:'Инструментарий и сбор данных', items:[
+   {q:'Можно ли использовать готовый инструмент из базы без изменений?', a:'Да, но перед использованием стоит проверить блок «Ограничения и риски» в карточке инструмента — там указано, для каких ситуаций он не подходит.'},
+   {q:'Обязательно ли пилотировать инструмент перед основным сбором данных?', a:'Мы рекомендуем пилот даже для короткой анкеты — это часто выявляет неясные формулировки. Подробнее — в обучающем материале «Как провести пилотирование инструмента».'}
+ ]},
+ {group:'Анализ данных', items:[
+   {q:'Что делать, если данных мало для статистического анализа?', a:'Небольшие выборки — обычное дело в культурных проектах. В этом случае акцент лучше делать на качественном анализе (интервью, открытые ответы), а не на статистической значимости.'}
+ ]},
+ {group:'Отчётность', items:[
+   {q:'В чём разница между кратким и полным отчётом об оценке?', a:'Краткий отчёт (2–4 страницы) — для донора и презентации, полный — для команды и архива проекта, с методологией и полными данными.'}
+ ]},
+ {group:'Технические вопросы по базе знаний', items:[
+   {q:'Как найти материалы, связанные с конкретной ценностью?', a:'Откройте раздел «Ценности», выберите нужную — и увидите список кейсов и инструментов, где эта ценность фигурировала при оценке.'},
+   {q:'Почему поиск показывает материалы разных типов вместе?', a:'Единый поиск ищет сразу по всем разделам базы, а тип материала (кейс, инструмент, методология и т.д.) отмечен рядом с каждым результатом — сверху можно оставить только нужный тип.'}
+ ]}
+];
+
+const GLOSSARY = [
+ {term:'Валидность инструмента', def:'Насколько инструмент действительно измеряет то, что должен измерять, а не что-то другое.', seeAlso:['Пилотирование']},
+ {term:'Дерево результатов', def:'Визуальная схема связи мероприятий проекта с промежуточными и конечными результатами.', seeAlso:['Логическая модель программы (ЛМП)','Теория изменений']},
+ {term:'Индикатор', def:'Конкретный измеримый признак, по которому судят о достижении результата.', seeAlso:['Логическая модель программы (ЛМП)']},
+ {term:'Критерии ОЭСР-DAC', def:'Шесть международно признанных вопросов об оценке проекта: актуальность, согласованность, эффективность, результативность, воздействие, устойчивость.', seeAlso:[]},
+ {term:'Логическая модель программы (ЛМП)', def:'Таблица, связывающая ресурсы, активности, результаты и эффекты проекта в единую логику.', seeAlso:['Дерево результатов']},
+ {term:'Пилотирование', def:'Пробное применение инструмента на небольшой группе перед основным сбором данных, чтобы выявить неясности.', seeAlso:['Валидность инструмента']},
+ {term:'Социокультурный эффект', def:'Изменение в отношении, ценностях, компетенциях или сообществе, которое произошло благодаря проекту.', seeAlso:['Теория изменений']},
+ {term:'Теория изменений', def:'Объяснение того, почему выбранные действия проекта должны привести к желаемому долгосрочному изменению.', seeAlso:['Дерево результатов','Логическая модель программы (ЛМП)']},
+ {term:'Триангуляция', def:'Сверка данных из нескольких источников или методов, чтобы повысить надёжность выводов.', seeAlso:[]},
+ {term:'Целевая аудитория', def:'Люди, на которых направлен проект и чьи изменения в первую очередь интересуют оценку.', seeAlso:[]}
+];
+
+const VALUES = [
+ {id:'life', title:'Жизнь', desc:'Ценность человеческой жизни как основа, на которую опирается работа с любой аудиторией проекта.'},
+ {id:'dignity', title:'Достоинство', desc:'Уважительное отношение к участникам и аудитории проекта на всех этапах — от сбора данных до отчёта.'},
+ {id:'patriotism', title:'Патриотизм', desc:'Связь проекта с любовью к своей стране, региону, малой родине.'},
+ {id:'strong-family', title:'Крепкая семья', desc:'Проекты, укрепляющие семейные связи и совместный опыт поколений в семье.'},
+ {id:'creative-work', title:'Созидательный труд', desc:'Ценность творческого и профессионального труда как источника смысла и самореализации.'},
+ {id:'historical-memory', title:'Историческая память и преемственность поколений', desc:'Передача опыта, традиций и памяти между поколениями через культурные проекты.'},
+ {id:'humanism', title:'Гуманизм', desc:'Внимание к человеку и его благополучию как приоритет проектной деятельности.'},
+ {id:'unity', title:'Единство народов России', desc:'Проекты, поддерживающие диалог и взаимопонимание между разными народами и культурами страны.'}
+];
+
+const RESULTS_TREE = [
+ {area:'Личность', influence:[
+   {name:'Изменение отношения и ценностей', results:[
+     {text:'Выросла доля участников, положительно оценивающих культурное разнообразие своего города', ind:'индикатор: доля согласных с утверждением в анкете «после»'},
+     {text:'Участники стали чаще упоминать проект как повлиявший на их взгляды', ind:'индикатор: доля спонтанных упоминаний в интервью'}
+   ]},
+   {name:'Развитие компетенций', results:[
+     {text:'Участники освоили базовые навыки работы с конкретной техникой/материалом', ind:'индикатор: доля прошедших практическую проверку навыка'},
+     {text:'Молодые специалисты получили опыт публичного представления своей работы', ind:'индикатор: число публичных презентаций на участника'}
+   ]}
+ ]},
+ {area:'Сообщество', influence:[
+   {name:'Формирование сообществ', results:[
+     {text:'Сложилась устойчивая группа участников, продолжающая общение после завершения проекта', ind:'индикатор: активность группы спустя 3 месяца'},
+     {text:'Возникли низовые инициативы вокруг темы или места проекта', ind:'индикатор: число задокументированных инициатив'}
+   ]},
+   {name:'Общественный резонанс', results:[
+     {text:'Проект стал предметом обсуждения в местных и профессиональных медиа', ind:'индикатор: число упоминаний в СМИ и соцсетях'}
+   ]}
+ ]},
+ {area:'Институции', influence:[
+   {name:'Институциональные изменения', results:[
+     {text:'Организация внедрила элементы программы в постоянную деятельность', ind:'индикатор: наличие элемента в плане на следующий год'},
+     {text:'У организации появился апробированный инструмент оценки для будущих проектов', ind:'индикатор: повторное использование инструмента'}
+   ]}
+ ]},
+ {area:'Территория', influence:[
+   {name:'Изменение отношения и ценностей', results:[
+     {text:'Жители района стали иначе воспринимать общественное пространство, где проходил проект', ind:'индикатор: доля позитивных упоминаний места в интервью'}
+   ]},
+   {name:'Общественный резонанс', results:[
+     {text:'Территория/объект стали точкой притяжения для новых культурных инициатив', ind:'индикатор: число новых мероприятий на площадке после проекта'}
+   ]}
+ ]}
+];
+
+const PROJECT_TYPES = ['Музейные проекты','Театральные проекты','Фестивали и события','Арт-резиденции','Образовательные программы','Медиа и онлайн-проекты','Другое'];
+const STAGES = ['Инновационные (новые)','Зрелые (повторяющиеся)','Масштабирование','Завершённые'];
+const EVAL_STAGES = ['Предварительная (ex-ante)','Формирующая','Итоговая','Ретроспективная'];
+const CRITERIA = ['Актуальность','Согласованность','Эффективность','Результативность','Воздействие','Устойчивость'];
+const TOOL_TYPES = ['Анкета','Интервью (глубинное)','Наблюдение','Фокус-группа','Экспертная оценка','Анализ документов','Творческие/партисипативные методы'];
+const DATA_TYPES = ['Количественные','Качественные','Смешанные'];
+
+/* ============================================================
+   СОСТОЯНИЕ И МАРШРУТИЗАЦИЯ
+   ============================================================ */
+const state = { audience:'all', filters:{cases:{}, tools:{}}, resultsSel:{area:null, infl:null} };
+
+function byId(arr,id){return arr.find(x=>x.id===id);}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function fmtList(arr){return (arr&&arr.length)? arr.join(' · ') : '—';}
+
+function parseHash(){
+  let h = location.hash.slice(1) || '/';
+  let [path, qs] = h.split('?');
+  let parts = path.split('/').filter(Boolean);
+  let query = {};
+  if(qs){ new URLSearchParams(qs).forEach((v,k)=>query[k]=v); }
+  return {parts, query};
+}
+function go(hash){ location.hash = hash; }
+function doHeaderSearch(){
+  const v = document.getElementById('headerSearchInput').value.trim();
+  go('#/search?q='+encodeURIComponent(v)+'&type=all');
+}
+
+window.addEventListener('hashchange', render);
+document.addEventListener('DOMContentLoaded', render);
+document.addEventListener('click', function(e){
+  const navEl = e.target.closest('[data-nav]');
+  if(navEl){ go(navEl.getAttribute('data-nav')); }
+});
+
+function buildNav(activeKey){
+  const primary = ['cases','tools','methodology','templates'];
+  let html = '';
+  primary.forEach(k=>{
+    html += `<a href="#/section/${k}" class="${activeKey===k?'active':''}">${SECTIONS[k].short}</a>`;
+  });
+  html += `<div class="dd">
+    <button class="dd-btn">Ещё ▾</button>
+    <div class="dd-menu">
+      ${['learning','values','results','faq','glossary'].map(k=>`<a href="#${k==='values'?'/values':k==='results'?'/results':k==='faq'?'/faq':k==='glossary'?'/glossary':'/section/learning'}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
+    </div>
+  </div>`;
+  document.getElementById('mainnav').innerHTML = html;
+}
+
+/* ============================================================
+   РЕНДЕР: ГЛАВНАЯ
+   ============================================================ */
+function renderHome(){
+  buildNav(null);
+  const order = state.audience==='new' ? ['cases','methodology','glossary','faq','values','learning','tools','templates','results']
+             : state.audience==='pro' ? ['tools','templates','methodology','results','cases','values','learning','faq','glossary']
+             : Object.keys(SECTIONS);
+  const featured = byId(CASES,'muzeinyi-eksperiment');
+  document.getElementById('app').innerHTML = `
+  <div class="hero"><div class="wrap hero-inner fade-in">
+    <div class="eyebrow">creative-industries.su · база знаний</div>
+    <h1>Опыт культурных проектов,<br>собранный <em>в одну систему</em></h1>
+    <p class="lead">Кейсы, инструменты оценки, методология и шаблоны — чтобы команда сама планировала и оценивала результаты, не дожидаясь консультации методолога.</p>
+    <div class="unisearch">
+      <select id="homeSearchType">
+        <option value="all">Везде</option>
+        ${Object.keys(SECTIONS).map(k=>`<option value="${k}">${SECTIONS[k].short}</option>`).join('')}
+      </select>
+      <input id="homeSearchInput" placeholder="Например: анкета обратной связи, теория изменений, критерии ОЭСР…" onkeydown="if(event.key==='Enter')homeDoSearch()">
+      <button onclick="homeDoSearch()">Искать</button>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><b>${CASES.length}</b><span>кейсов проектов</span></div>
+      <div class="stat"><b>${TOOLS.length}</b><span>инструментов сбора данных</span></div>
+      <div class="stat"><b>${METHODOLOGY.length}</b><span>методологических материалов</span></div>
+      <div class="stat"><b>${TEMPLATES.length}</b><span>шаблонов документов</span></div>
+      <div class="stat"><b>${VALUES.length}</b><span>ценностей (из 17, Указ №809)</span></div>
+    </div>
+  </div></div>
+
+  <div class="wrap audience-block fade-in">
+    <div class="head">
+      <h2 style="font-size:20px;">С чего начать</h2>
+      <div class="pill-toggle">
+        <button class="${state.audience==='all'?'active':''}" onclick="setAudience('all')">Все разделы</button>
+        <button class="${state.audience==='new'?'active':''}" onclick="setAudience('new')">Я новичок</button>
+        <button class="${state.audience==='pro'?'active':''}" onclick="setAudience('pro')">Я оценщик</button>
+      </div>
+    </div>
+    ${state.audience==='new' ? `<div class="audience-note"><b>Новичку.</b> Начните со страницы <a href="#/start" style="text-decoration:underline">«С чего начать новичку»</a> — четыре стадии оценки простыми словами. Затем посмотрите готовый кейс и загляните в глоссарий, если встретится незнакомый термин.</div>`
+    : state.audience==='pro' ? `<div class="audience-note"><b>Специалисту.</b> Разделы ниже отсортированы под вашу задачу: инструменты и шаблоны — сверху, методология и банк результатов — рядом. Используйте фильтры по критериям ОЭСР-DAC и ценностям внутри разделов.</div>`
+    : `<div class="audience-note">Выберите, кто вы — и порядок разделов ниже подстроится под типичный путь: новичку ближе кейсы и объяснения, специалисту — инструменты, шаблоны и банк результатов.</div>`}
+
+    <div class="grid-sections">
+      ${order.map(k=>{
+        const s=SECTIONS[k];
+        const route = k==='values'?'#/values':k==='results'?'#/results':k==='faq'?'#/faq':k==='glossary'?'#/glossary':`#/section/${k}`;
+        const count = {cases:CASES.length,tools:TOOLS.length,methodology:METHODOLOGY.length,templates:TEMPLATES.length,learning:LEARNING.length,values:VALUES.length,results:RESULTS_TREE.reduce((a,x)=>a+x.influence.reduce((b,y)=>b+y.results.length,0),0),faq:FAQ.reduce((a,g)=>a+g.items.length,0),glossary:GLOSSARY.length}[k];
+        return `<a class="sec-card" data-nav="${route}" style="text-decoration:none;">
+          <div class="spine" style="background:${s.color}"></div>
+          <div class="top"><div class="ico" style="background:${s.bg};color:${s.color}">${s.icon}</div></div>
+          <h3>${s.label}</h3>
+          <p>${s.desc}</p>
+          <div class="count">${count} материал${count===1?'':count<5?'а':'ов'}</div>
+        </a>`;
+      }).join('')}
+    </div>
+  </div>
+
+  <div class="wrap fade-in" style="padding:8px 0 0;">
+    <div class="hr"></div>
+    <div style="padding-top:40px;">
+      <div class="eyebrow">Типичный путь пользователя</div>
+      <h2 style="font-size:22px;margin-top:8px;">Как это использовать</h2>
+      <div class="scenario-list">
+        <div class="scenario"><div class="num">01</div><h4>Найти похожий проект</h4><p>Отфильтруйте кейсы по типу проекта или аудитории, откройте карточку и посмотрите, как проект оценивали.</p></div>
+        <div class="scenario"><div class="num">02</div><h4>Взять готовый инструмент</h4><p>Найдите анкету или гайд под свою аудиторию, скачайте файл и инструкцию по применению.</p></div>
+        <div class="scenario"><div class="num">03</div><h4>Разобраться в термине</h4><p>Откройте глоссарий, посмотрите определение и перейдите к методологии, где термин раскрыт подробнее.</p></div>
+        <div class="scenario"><div class="num">04</div><h4>Скачать шаблон и применить у себя</h4><p>Возьмите шаблон плана оценки, ЛМП или отчёта — и адаптируйте под свой проект.</p></div>
+      </div>
+    </div>
+
+    <div class="featured">
+      <div>
+        <div class="eyebrow">Кейс дня</div>
+        <h3>${featured.title}</h3>
+        <p>${featured.shortDesc}</p>
+        <div class="meta-list">
+          <span>${featured.projectType}</span><span>${featured.evalStage}</span><span>${featured.geo}</span>
+        </div>
+        <div style="margin-top:20px;"><a class="btn btn-primary" data-nav="#/card/case/${featured.id}">Открыть кейс →</a></div>
+      </div>
+      <div class="featured-side">
+        <div class="row"><span>Организация</span><b>${featured.org}</b></div>
+        <div class="row"><span>Период</span><b>${featured.period}</b></div>
+        <div class="row"><span>Использованных инструментов</span><b>2</b></div>
+        <div class="row"><span>Обновлено</span><b>${featured.updated}</b></div>
+      </div>
+    </div>
+  </div>
+  `;
+}
+function setAudience(a){ state.audience=a; renderHome(); }
+function homeDoSearch(){
+  const v = document.getElementById('homeSearchInput').value.trim();
+  const t = document.getElementById('homeSearchType').value;
+  go('#/search?q='+encodeURIComponent(v)+'&type='+t);
+}
+
+/* ============================================================
+   РЕНДЕР: СТРАНИЦА «С ЧЕГО НАЧАТЬ»
+   ============================================================ */
+function renderStart(){
+  buildNav(null);
+  document.getElementById('app').innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>С чего начать</span></div>
+    <div class="catalog-head">
+      <div class="eyebrow">Для новичков</div>
+      <h1>Четыре стадии оценки — простыми словами</h1>
+      <p>Если вы впервые оцениваете культурный проект, не обязательно сразу разбираться во всей базе. Достаточно понимать четыре стадии — и знать, какие материалы нужны на каждой.</p>
+    </div>
+    <div class="scenario-list" style="margin-top:28px;grid-template-columns:repeat(4,1fr);">
+      <div class="scenario"><div class="num">01</div><h4>Планирование</h4><p>Определяете цель и вопросы оценки. Полезны: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline">шаблон плана оценки</a>, <a data-nav="#/card/methodology/oecd-dac" style="text-decoration:underline">критерии ОЭСР-DAC</a>.</p></div>
+      <div class="scenario"><div class="num">02</div><h4>Сбор данных</h4><p>Выбираете и, если нужно, пилотируете инструмент. Смотрите раздел <a data-nav="#/section/tools" style="text-decoration:underline">«Инструменты сбора данных»</a>.</p></div>
+      <div class="scenario"><div class="num">03</div><h4>Анализ</h4><p>Обрабатываете собранные ответы. Начните со статьи <a data-nav="#/card/learning/lrn-qual-analysis" style="text-decoration:underline">«Как анализировать качественные данные»</a>.</p></div>
+      <div class="scenario"><div class="num">04</div><h4>Отчётность</h4><p>Оформляете выводы. Возьмите <a data-nav="#/card/template/tpl-report" style="text-decoration:underline">шаблон отчёта об оценке</a>.</p></div>
+    </div>
+    <div class="audience-note" style="margin-top:30px;max-width:640px;">Не перегружайте себя сразу всеми деталями — на каждой стадии открывайте только те материалы, которые нужны прямо сейчас. Если встретится незнакомое слово — загляните в <a data-nav="#/glossary" style="text-decoration:underline">глоссарий</a>.</div>
+    <div style="margin:36px 0 60px;"><a class="btn btn-primary" data-nav="#/card/case/muzeinyi-eksperiment">Посмотреть готовый пример кейса →</a></div>
+  </div>`;
+}
+
+/* ============================================================
+   РЕНДЕР: КАТАЛОГ РАЗДЕЛА (cases, tools, methodology, templates, learning)
+   ============================================================ */
+function renderSection(key){
+  buildNav(key);
+  const s = SECTIONS[key];
+  const app = document.getElementById('app');
+  const f = state.filters[key] || {};
+  let items = [];
+  if(key==='cases') items = filterCases();
+  else if(key==='tools') items = filterTools();
+  else items = {methodology:METHODOLOGY, templates:TEMPLATES, learning:LEARNING}[key];
+
+  app.innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>${s.label}</span></div>
+    <div class="catalog-head">
+      <span class="badge" style="background:${s.bg};color:${s.color}">${s.short}</span>
+      <h1 style="margin-top:12px;">${s.label}</h1>
+      <p>${s.desc}</p>
+    </div>
+    <div class="catalog-body">
+      <div class="filters">
+        <h4>Фильтры</h4>
+        ${key==='cases'?filterPanelCases():key==='tools'?filterPanelTools():`<div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Для этого раздела в MVP фильтры не предусмотрены — материалов немного, используйте поиск по названию.</div>`}
+        <div class="crosslink-note">Связанные материалы (кейсы, методология, шаблоны) показаны внутри каждой карточки — переходите к ним оттуда.</div>
+      </div>
+      <div>
+        <div class="results-topline">
+          <span class="count">Показано: ${items.length}</span>
+          <div class="local-search">
+            <input id="localSearch" placeholder="Искать в разделе «${s.short}»…" oninput="localSearchFilter('${key}')">
+            <button onclick="localSearchFilter('${key}')">Найти</button>
+          </div>
+        </div>
+        <div class="card-list" id="cardList">${renderCardList(key, items)}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function filterCases(){
+  const f = state.filters.cases;
+  return CASES.filter(c=>
+    (!f.projectType || c.projectType===f.projectType) &&
+    (!f.stage || c.stage===f.stage) &&
+    (!f.evalStage || c.evalStage===f.evalStage) &&
+    (!f.value || c.values.includes(f.value)) &&
+    (!f.q || (c.title+c.shortDesc+c.org).toLowerCase().includes(f.q.toLowerCase()))
+  );
+}
+function filterTools(){
+  const f = state.filters.tools;
+  return TOOLS.filter(t=>
+    (!f.type || t.type===f.type) &&
+    (!f.dataType || t.dataType===f.dataType) &&
+    (!f.status || t.status===f.status) &&
+    (!f.value || t.values.includes(f.value)) &&
+    (!f.q || (t.title+t.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
+  );
+}
+function localSearchFilter(key){
+  state.filters[key].q = document.getElementById('localSearch').value;
+  let items = key==='cases'?filterCases():key==='tools'?filterTools():[];
+  document.getElementById('cardList').innerHTML = renderCardList(key, items);
+  document.querySelector('.results-topline .count').textContent = 'Показано: '+items.length;
+}
+
+function filterPanelCases(){
+  const f = state.filters.cases;
+  return `
+  <div class="filter-group"><label>Тип проекта</label>
+    <select onchange="state.filters.cases.projectType=this.value||null;renderSection('cases')">
+      <option value="">Все типы</option>
+      ${PROJECT_TYPES.map(t=>`<option ${f.projectType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Стадия проекта</label>
+    <select onchange="state.filters.cases.stage=this.value||null;renderSection('cases')">
+      <option value="">Любая стадия</option>
+      ${STAGES.map(t=>`<option ${f.stage===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Этап оценки</label>
+    <select onchange="state.filters.cases.evalStage=this.value||null;renderSection('cases')">
+      <option value="">Любой этап</option>
+      ${EVAL_STAGES.map(t=>`<option ${f.evalStage===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Ценность (сквозной фильтр)</label>
+    <select onchange="state.filters.cases.value=this.value||null;renderSection('cases')">
+      <option value="">Любая ценность</option>
+      ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
+    </select></div>
+  <div class="actions">
+    <button class="btn btn-ghost btn-sm" onclick="state.filters.cases={};renderSection('cases')">Сбросить</button>
+  </div>`;
+}
+function filterPanelTools(){
+  const f = state.filters.tools;
+  return `
+  <div class="filter-group"><label>Тип инструмента</label>
+    <select onchange="state.filters.tools.type=this.value||null;renderSection('tools')">
+      <option value="">Все типы</option>
+      ${TOOL_TYPES.map(t=>`<option ${f.type===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Тип данных</label>
+    <select onchange="state.filters.tools.dataType=this.value||null;renderSection('tools')">
+      <option value="">Любой</option>
+      ${DATA_TYPES.map(t=>`<option ${f.dataType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Статус</label>
+    <select onchange="state.filters.tools.status=this.value||null;renderSection('tools')">
+      <option value="">Любой</option>
+      <option ${f.status==='Протестирован'?'selected':''}>Протестирован</option>
+      <option ${f.status==='Черновик'?'selected':''}>Черновик</option>
+    </select></div>
+  <div class="filter-group"><label>Ценность (сквозной фильтр)</label>
+    <select onchange="state.filters.tools.value=this.value||null;renderSection('tools')">
+      <option value="">Любая ценность</option>
+      ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
+    </select></div>
+  <div class="actions">
+    <button class="btn btn-ghost btn-sm" onclick="state.filters.tools={};renderSection('tools')">Сбросить</button>
+  </div>`;
+}
+
+function renderCardList(key, items){
+  if(!items.length) return `<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте сбросить фильтры или изменить запрос.</p></div>`;
+  const color = SECTIONS[key].color;
+  return items.map(it=>{
+    if(key==='cases') return `<a class="item-card" data-nav="#/card/case/${it.id}" style="text-decoration:none;">
+      <div class="spine" style="background:${color}"></div>
+      <div class="row1"><h3>${it.title}</h3><span class="tag">${it.evalStage}</span></div>
+      <div class="desc">${it.shortDesc}</div>
+      <div class="metarow"><span class="tag">${it.projectType}</span><span class="tag">${it.stage}</span><span class="tag">${it.audience}</span></div>
+      <div class="foot"><span>${it.org}</span><span>обновлено ${it.updated}</span></div>
+    </a>`;
+    if(key==='tools') return `<a class="item-card" data-nav="#/card/tool/${it.id}" style="text-decoration:none;">
+      <div class="spine" style="background:${color}"></div>
+      <div class="row1"><h3>${it.title}</h3><span class="tag">${it.status}</span></div>
+      <div class="desc">${it.shortDesc}</div>
+      <div class="metarow"><span class="tag">${it.type}</span><span class="tag">${it.audience}</span><span class="tag">${it.dataType}</span></div>
+      <div class="foot"><span>Для кого: ${it.audience}</span><span>обновлено ${it.updated}</span></div>
+    </a>`;
+    if(key==='methodology') return `<a class="item-card" data-nav="#/card/methodology/${it.id}" style="text-decoration:none;">
+      <div class="spine" style="background:${color}"></div>
+      <div class="row1"><h3>${it.title}</h3></div>
+      <div class="desc">${it.shortDesc}</div>
+      <div class="metarow"><span class="tag">${it.sub}</span></div>
+      <div class="foot"><span></span><span>обновлено ${it.updated}</span></div>
+    </a>`;
+    if(key==='templates') return `<a class="item-card" data-nav="#/card/template/${it.id}" style="text-decoration:none;">
+      <div class="spine" style="background:${color}"></div>
+      <div class="row1"><h3>${it.title}</h3></div>
+      <div class="desc">${it.shortDesc}</div>
+      <div class="metarow">${it.formats.map(f=>`<span class="tag">${f}</span>`).join('')}</div>
+      <div class="foot"><span>${it.when}</span><span>обновлено ${it.updated}</span></div>
+    </a>`;
+    if(key==='learning') return `<a class="item-card" data-nav="#/card/learning/${it.id}" style="text-decoration:none;">
+      <div class="spine" style="background:${color}"></div>
+      <div class="row1"><h3>${it.title}</h3></div>
+      <div class="desc">${it.shortDesc}</div>
+      <div class="foot"><span>${it.when}</span><span>обновлено ${it.updated}</span></div>
+    </a>`;
+  }).join('');
+}
+
+/* ============================================================
+   РЕНДЕР: КАРТОЧКА КЕЙСА
+   ============================================================ */
+function relatedBlockHtml(title, list, type){
+  if(!list || !list.length) return '';
+  return `<div class="sidebar-box"><h4>${title}</h4>
+    ${list.map(id=>{
+      let obj = type==='case'?byId(CASES,id):type==='tool'?byId(TOOLS,id):type==='methodology'?byId(METHODOLOGY,id):byId(TEMPLATES,id);
+      if(!obj) return '';
+      return `<a class="related-item" data-nav="#/card/${type}/${id}"><span class="t rt" style="color:${SECTIONS[type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':'templates'].color}">${SECTIONS[type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':'templates'].short}</span><span class="rt">${obj.title}</span></a>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderCaseDetail(id){
+  buildNav('cases');
+  const c = byId(CASES,id);
+  const app = document.getElementById('app');
+  if(!c){ app.innerHTML = notFound(); return; }
+  const relatedTools = c.relatedTools.map(tid=>byId(TOOLS,tid)).filter(Boolean);
+  app.innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/cases">Кейсы проектов</a><span class="sep">/</span><span>${c.title}</span></div>
+    <div class="detail-head">
+      <span class="badge" style="background:${SECTIONS.cases.bg};color:${SECTIONS.cases.color}">Кейс проекта</span>
+      <div class="detail-titlebar">
+        <div><h1>${c.title}</h1><p class="detail-sub">${c.shortDesc}</p></div>
+        <div class="detail-actions"><a class="btn btn-ghost" href="#/section/cases">← К списку кейсов</a></div>
+      </div>
+      <div class="detail-meta">
+        <span class="chip">${c.projectType}</span><span class="chip">${c.stage}</span><span class="chip">${c.evalStage}</span><span class="chip">${c.geo}</span>
+        ${c.values.map(v=>{const val=byId(VALUES,v);return val?`<a class="chip" data-nav="#/value/${val.id}">♦ ${val.title}</a>`:'';}).join('')}
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="block"><h2><span class="n">Блок 1</span> · О проекте</h2>
+          <dl class="kv">
+            <dt>Организация</dt><dd>${c.org}</dd>
+            <dt>Период реализации</dt><dd>${c.period}</dd>
+            <dt>География</dt><dd>${c.geo}</dd>
+            <dt>Целевая аудитория</dt><dd>${c.audience}</dd>
+            <dt>Теги</dt><dd>${c.tags.map(t=>`<span class="tag">${t}</span>`).join(' ')}</dd>
+          </dl>
+        </div>
+        <div class="block"><h2><span class="n">Блок 2</span> · Оценка проекта</h2>
+          <dl class="kv">
+            <dt>Цель оценки</dt><dd>${c.evalGoal}</dd>
+            <dt>Критерии оценки</dt><dd>${fmtList(c.criteria)}</dd>
+            <dt>Соц.-культ. эффекты</dt><dd>${fmtList(c.effects)}</dd>
+          </dl>
+          <div class="subhead">Ключевые оценочные вопросы</div>
+          <ul class="plain">${c.questions.map(q=>`<li>${q}</li>`).join('')}</ul>
+        </div>
+        <div class="block"><h2><span class="n">Блок 3</span> · Документация</h2>
+          <div class="subhead">Планирование оценки</div>
+          <div class="filelist">${c.docs.planning.map(fileRow).join('') || '<span style="font-size:13px;color:var(--ink-faint);">Нет файлов</span>'}</div>
+          <div class="subhead">Инструментарий</div>
+          <div class="filelist">${c.docs.toolkit.map(fileRow).join('')}</div>
+          <div class="subhead">Сбор и анализ данных</div>
+          <div class="filelist">${c.docs.analysis.map(fileRow).join('')}</div>
+          <div class="subhead">Отчётность</div>
+          <div class="filelist">${c.docs.reporting.map(fileRow).join('')}</div>
+          ${c.docs.media.length? `<div class="subhead">Медиа</div><div class="filelist">${c.docs.media.map(fileRow).join('')}</div>` : ''}
+        </div>
+        <div class="block"><h2><span class="n">Блок 4</span> · Уроки и выводы</h2>
+          <div class="lesson-cols">
+            <div class="lesson-col good"><h4>Что сработало</h4><ul class="plain">${c.lessons.good.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+            <div class="lesson-col bad"><h4>Что не сработало</h4><ul class="plain">${c.lessons.bad.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+          </div>
+          <div class="subhead">Рекомендации для будущих проектов</div>
+          <ul class="plain">${c.lessons.reco.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>
+        <div class="block"><h2><span class="n">Блок 5</span> · Контакты</h2>
+          <dl class="kv"><dt>Контактное лицо</dt><dd>${c.contact}</dd></dl>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${c.updated}</div></div>
+        ${relatedBlockHtml('Использованные инструменты', c.relatedTools, 'tool')}
+        ${relatedBlockHtml('Методология', c.relatedMethodology, 'methodology')}
+        ${relatedBlockHtml('Шаблоны', c.relatedTemplates, 'template')}
+      </div>
+    </div>
+    <a class="back-link" href="#/section/cases">← Ко всем кейсам</a>
+  </div>`;
+}
+function fileRow(f){
+  return `<div class="filerow"><div class="name"><span class="ext">${f.ext}</span>${f.name}</div><button onclick="alert('Демо-прототип: файл ещё не прикреплён')">Скачать</button></div>`;
+}
+
+/* ============================================================
+   РЕНДЕР: КАРТОЧКА ИНСТРУМЕНТА
+   ============================================================ */
+function renderToolDetail(id){
+  buildNav('tools');
+  const t = byId(TOOLS,id);
+  const app = document.getElementById('app');
+  if(!t){ app.innerHTML = notFound(); return; }
+  app.innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/tools">Инструменты сбора данных</a><span class="sep">/</span><span>${t.title}</span></div>
+    <div class="detail-head">
+      <span class="badge" style="background:${SECTIONS.tools.bg};color:${SECTIONS.tools.color}">${t.type}</span>
+      <div class="detail-titlebar">
+        <div><h1>${t.title}</h1><p class="detail-sub">${t.shortDesc}</p></div>
+        <div class="detail-actions"><a class="btn btn-ghost" href="#/section/tools">← К списку инструментов</a></div>
+      </div>
+      <div class="detail-meta">
+        <span class="chip">Для: ${t.audience}</span><span class="chip">${t.dataType}</span><span class="chip">${t.stage}</span><span class="chip">${t.status}</span>
+        ${t.values.map(v=>{const val=byId(VALUES,v);return val?`<a class="chip" data-nav="#/value/${val.id}">♦ ${val.title}</a>`:'';}).join('')}
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="block"><h2>Развёрнутое описание</h2><p style="font-size:14px;line-height:1.6;">${t.fullDesc}</p></div>
+        <div class="block"><h2>Инструкция по применению</h2><ul class="plain">${t.instructions.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div class="block"><h2>Ограничения и риски</h2><ul class="plain">${t.limitations.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div class="block"><h2>Таблица связи «вопрос → индикатор → вопрос инструмента»</h2>
+          <table class="qtable"><thead><tr><th>Оценочный вопрос</th><th>Индикатор</th><th>Вопрос инструмента</th></tr></thead>
+          <tbody>${t.table.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table>
+        </div>
+        <div class="block"><h2>Файл инструмента</h2><div class="filelist">${fileRow(t.file)}</div></div>
+      </div>
+      <div>
+        <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${t.updated}</div></div>
+        ${relatedBlockHtml('Примеры применения (кейсы)', t.examples, 'case')}
+        ${relatedBlockHtml('Похожие инструменты', t.related, 'tool')}
+      </div>
+    </div>
+    <a class="back-link" href="#/section/tools">← Ко всем инструментам</a>
+  </div>`;
+}
+
+/* ============================================================
+   РЕНДЕР: МЕТОДОЛОГИЯ / ШАБЛОНЫ / ОБУЧЕНИЕ (detail)
+   ============================================================ */
+function renderMethodologyDetail(id){
+  buildNav('methodology');
+  const m = byId(METHODOLOGY,id);
+  const app = document.getElementById('app');
+  if(!m){ app.innerHTML = notFound(); return; }
+  app.innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/methodology">Методология и подходы</a><span class="sep">/</span><span>${m.title}</span></div>
+    <div class="detail-head">
+      <span class="badge" style="background:${SECTIONS.methodology.bg};color:${SECTIONS.methodology.color}">${m.sub}</span>
+      <div class="detail-titlebar"><div><h1>${m.title}</h1><p class="detail-sub">${m.shortDesc}</p></div>
+      <div class="detail-actions"><a class="btn btn-ghost" href="#/section/methodology">← К методологии</a></div></div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="block"><h2>Объяснение подхода простым языком</h2><p style="font-size:14px;line-height:1.6;">${m.explain}</p></div>
+        <div class="block"><h2>Как это делать — шаг за шагом</h2><ul class="plain">${m.steps.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div class="block"><h2>Типичные ошибки</h2><ul class="plain">${m.mistakes.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div class="block"><h2>На что обратить внимание</h2><ul class="plain">${m.tips.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      </div>
+      <div>
+        <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${m.updated}</div></div>
+        ${relatedBlockHtml('Инструменты', m.related.tools, 'tool')}
+        ${relatedBlockHtml('Кейсы', m.related.cases, 'case')}
+        ${relatedBlockHtml('Шаблоны', m.related.templates, 'template')}
+      </div>
+    </div>
+    <a class="back-link" href="#/section/methodology">← Ко всей методологии</a>
+  </div>`;
+}
+function renderTemplateDetail(id){
+  buildNav('templates');
+  const t = byId(TEMPLATES,id);
+  const app = document.getElementById('app');
+  if(!t){ app.innerHTML = notFound(); return; }
+  app.innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/templates">Шаблоны и образцы</a><span class="sep">/</span><span>${t.title}</span></div>
+    <div class="detail-head">
+      <span class="badge" style="background:${SECTIONS.templates.bg};color:${SECTIONS.templates.color}">Шаблон</span>
+      <div class="detail-titlebar"><div><h1>${t.title}</h1><p class="detail-sub">${t.shortDesc}</p></div>
+      <div class="detail-actions"><a class="btn btn-ghost" href="#/section/templates">← К шаблонам</a></div></div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="block"><h2>Когда использовать</h2><p style="font-size:14px;">${t.when}</p></div>
+        <div class="block"><h2>Скачать</h2><div class="filelist">${t.formats.map(f=>fileRow({name:t.title+'.'+f.toLowerCase(),ext:f})).join('')}</div></div>
+      </div>
+      <div>
+        <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${t.updated}</div></div>
+        ${relatedBlockHtml('Методология', t.related.methodology, 'methodology')}
+        ${relatedBlockHtml('Примеры кейсов', t.related.cases, 'case')}
+      </div>
+    </div>
+    <a class="back-link" href="#/section/templates">← Ко всем шаблонам</a>
+  </div>`;
+}
+function renderLearningDetail(id){
+  buildNav('learning');
+  const l = byId(LEARNING,id);
+  const app = document.getElementById('app');
+  if(!l){ app.innerHTML = notFound(); return; }
+  app.innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/learning">Обучающие материалы</a><span class="sep">/</span><span>${l.title}</span></div>
+    <div class="detail-head">
+      <span class="badge" style="background:${SECTIONS.learning.bg};color:${SECTIONS.learning.color}">Обучающий материал</span>
+      <div class="detail-titlebar"><div><h1>${l.title}</h1><p class="detail-sub">${l.shortDesc}</p></div></div>
+    </div>
+    <div class="detail-grid">
+      <div><div class="block"><h2>Когда пригодится</h2><p style="font-size:14px;">${l.when}</p></div></div>
+      <div>
+        <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${l.updated}</div></div>
+        ${relatedBlockHtml('Шаблоны', l.related.templates, 'template')}
+        ${relatedBlockHtml('Методология', l.related.methodology, 'methodology')}
+      </div>
+    </div>
+    <a class="back-link" href="#/section/learning">← Ко всем обучающим материалам</a>
+  </div>`;
+}
+function notFound(){ return `<div class="wrap" style="padding:60px 0;"><div class="empty-state"><h3>Материал не найден</h3><p>Возможно, ссылка устарела.</p><div style="margin-top:14px;"><a class="btn btn-primary" href="#/">На главную</a></div></div></div>`; }
+
+/* ============================================================
+   РЕНДЕР: FAQ
+   ============================================================ */
+function renderFAQ(){
+  buildNav('faq');
+  document.getElementById('app').innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>FAQ</span></div>
+    <div class="catalog-head"><span class="badge" style="background:${SECTIONS.faq.bg};color:${SECTIONS.faq.color}">FAQ</span>
+      <h1 style="margin-top:12px;">Часто задаваемые вопросы</h1>
+      <p>Быстрые ответы на типовые вопросы команд и оценщиков, сгруппированные по темам.</p>
+    </div>
+    <div style="max-width:760px;margin-top:26px;">
+      ${FAQ.map((g,gi)=>`<div class="faq-group"><h3>${g.group}</h3>
+        ${g.items.map((it,ii)=>`<div class="faq-item" id="faq-${gi}-${ii}">
+          <button class="faq-q" onclick="toggleFaq(${gi},${ii})"><span>${it.q}</span><span class="plus">+</span></button>
+          <div class="faq-a"><p>${it.a}</p></div>
+        </div>`).join('')}
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+function toggleFaq(gi,ii){ document.getElementById(`faq-${gi}-${ii}`).classList.toggle('open'); }
+
+/* ============================================================
+   РЕНДЕР: ГЛОССАРИЙ
+   ============================================================ */
+function renderGlossary(){
+  buildNav('glossary');
+  const sorted = [...GLOSSARY].sort((a,b)=>a.term.localeCompare(b.term,'ru'));
+  const letters = [...new Set(sorted.map(t=>t.term[0].toUpperCase()))];
+  let html = `<div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Глоссарий</span></div>
+    <div class="catalog-head"><span class="badge" style="background:${SECTIONS.glossary.bg};color:${SECTIONS.glossary.color}">Глоссарий</span>
+      <h1 style="margin-top:12px;">Словарь терминов</h1>
+      <p>Простые, неакадемические определения — с перекрёстными ссылками на методологию.</p>
+    </div>
+    <div class="alpha-nav">${'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ'.split('').map(l=>`<a href="#g-${l}" class="${letters.includes(l)?'has':''}">${l}</a>`).join('')}</div>
+    <div style="max-width:760px;">`;
+  let lastLetter='';
+  sorted.forEach(t=>{
+    const L = t.term[0].toUpperCase();
+    if(L!==lastLetter){ html+=`<div class="gloss-letter" id="g-${L}">${L}</div>`; lastLetter=L; }
+    html += `<a class="gloss-row" data-nav="#/glossary/${encodeURIComponent(t.term)}" style="text-decoration:none;color:inherit;">
+      <span class="term">${t.term}</span><span class="def">${t.def}</span>
+    </a>`;
+  });
+  html += `</div></div>`;
+  document.getElementById('app').innerHTML = html;
+}
+function renderGlossaryTerm(term){
+  buildNav('glossary');
+  const t = GLOSSARY.find(x=>x.term===term);
+  const app = document.getElementById('app');
+  if(!t){ app.innerHTML = notFound(); return; }
+  app.innerHTML = `<div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/glossary">Глоссарий</a><span class="sep">/</span><span>${t.term}</span></div>
+    <div class="detail-head"><span class="badge" style="background:${SECTIONS.glossary.bg};color:${SECTIONS.glossary.color}">Термин</span>
+      <div class="detail-titlebar"><div><h1>${t.term}</h1></div></div>
+    </div>
+    <div class="detail-grid">
+      <div><div class="block"><h2>Определение</h2><p style="font-size:15px;line-height:1.6;">${t.def}</p></div></div>
+      <div>${t.seeAlso.length?`<div class="sidebar-box"><h4>См. также</h4>${t.seeAlso.map(s=>`<a class="related-item" data-nav="#/glossary/${encodeURIComponent(s)}"><span class="rt">${s}</span></a>`).join('')}</div>`:''}</div>
+    </div>
+    <a class="back-link" href="#/glossary">← Ко всему глоссарию</a>
+  </div>`;
+}
+
+/* ============================================================
+   РЕНДЕР: ЦЕННОСТИ
+   ============================================================ */
+function renderValues(){
+  buildNav('values');
+  document.getElementById('app').innerHTML = `<div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Ценности</span></div>
+    <div class="catalog-head"><span class="badge" style="background:${SECTIONS.values.bg};color:${SECTIONS.values.color}">Ценности</span>
+      <h1 style="margin-top:12px;">Ценностная рамка</h1>
+      <p>Ценность работает как сквозной фильтр: откройте карточку — увидите кейсы и инструменты, где она фигурировала. Показаны 8 примеров из 17 ценностей Указа №809 — полный список наполняется на этапе внедрения.</p>
+    </div>
+    <div class="values-grid">
+      ${VALUES.map(v=>{
+        const n = CASES.filter(c=>c.values.includes(v.id)).length + TOOLS.filter(t=>t.values.includes(v.id)).length;
+        return `<a class="value-card" data-nav="#/value/${v.id}" style="text-decoration:none;color:inherit;display:block;">
+          <div class="n">♦ ЦЕННОСТЬ</div><h3 style="margin-top:6px;">${v.title}</h3><p>${v.desc}</p>
+          <div class="link-count">${n} связанных материал${n===1?'':n<5?'а':'ов'} →</div>
+        </a>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+function renderValueDetail(id){
+  buildNav('values');
+  const v = byId(VALUES,id);
+  const app = document.getElementById('app');
+  if(!v){ app.innerHTML = notFound(); return; }
+  const cases = CASES.filter(c=>c.values.includes(id));
+  const tools = TOOLS.filter(t=>t.values.includes(id));
+  app.innerHTML = `<div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/values">Ценности</a><span class="sep">/</span><span>${v.title}</span></div>
+    <div class="detail-head"><span class="badge" style="background:${SECTIONS.values.bg};color:${SECTIONS.values.color}">Ценность</span>
+      <div class="detail-titlebar"><div><h1>♦ ${v.title}</h1><p class="detail-sub">${v.desc}</p></div></div>
+    </div>
+    <div class="section-pad" style="padding-top:24px;">
+      <div class="subhead">Кейсы, где фигурировала эта ценность</div>
+      <div class="card-list">${cases.length?renderCardList('cases',cases):'<div class="empty-state"><p>Пока нет связанных кейсов в демо-наполнении.</p></div>'}</div>
+      <div class="subhead" style="margin-top:26px;">Инструменты, связанные с этой ценностью</div>
+      <div class="card-list">${tools.length?renderCardList('tools',tools):'<div class="empty-state"><p>Пока нет связанных инструментов в демо-наполнении.</p></div>'}</div>
+    </div>
+    <a class="back-link" href="#/values">← Ко всем ценностям</a>
+  </div>`;
+}
+
+/* ============================================================
+   РЕНДЕР: БАНК РЕЗУЛЬТАТОВ (дерево: область → область влияния → результат)
+   ============================================================ */
+function renderResults(){
+  buildNav('results');
+  if(state.resultsSel.area===null) state.resultsSel = {area:0, infl:0};
+  const areaObj = RESULTS_TREE[state.resultsSel.area];
+  const inflObj = areaObj.influence[state.resultsSel.infl];
+  document.getElementById('app').innerHTML = `<div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Банк результатов</span></div>
+    <div class="catalog-head"><span class="badge" style="background:${SECTIONS.results.bg};color:${SECTIONS.results.color}">Банк результатов</span>
+      <h1 style="margin-top:12px;">Область → область влияния → результат</h1>
+      <p>Готовые формулировки социокультурных результатов для теории изменений. Результаты и ценности — это фильтры для поиска других материалов, а не самостоятельные объекты оценки.</p>
+    </div>
+    <div class="tree-cols">
+      <div class="tree-col">
+        <div class="tree-col-h">Область (зал)</div>
+        ${RESULTS_TREE.map((a,i)=>`<button class="tree-opt ${i===state.resultsSel.area?'sel':''}" onclick="selResultsArea(${i})">${a.area}<span class="cnt">${a.influence.length}</span></button>`).join('')}
+      </div>
+      <div class="tree-col">
+        <div class="tree-col-h">Область влияния (шкаф)</div>
+        ${areaObj.influence.map((inf,i)=>`<button class="tree-opt ${i===state.resultsSel.infl?'sel':''}" onclick="selResultsInfl(${i})">${inf.name}<span class="cnt">${inf.results.length}</span></button>`).join('')}
+      </div>
+      <div class="tree-col">
+        <div class="tree-col-h">Результаты (полка)</div>
+        ${inflObj.results.map(r=>`<div class="result-line">${r.text}<span class="ind">${r.ind}</span></div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+function selResultsArea(i){ state.resultsSel={area:i, infl:0}; renderResults(); }
+function selResultsInfl(i){ state.resultsSel.infl=i; renderResults(); }
+
+/* ============================================================
+   РЕНДЕР: ПОИСК
+   ============================================================ */
+function renderSearch(q, type){
+  buildNav(null);
+  q = q||''; type = type||'all';
+  const qLower = q.toLowerCase();
+  function match(text){ return !q || text.toLowerCase().includes(qLower); }
+  let results = [];
+  CASES.forEach(c=>{ if(match(c.title+c.shortDesc+c.org)) results.push({type:'cases', obj:c, route:'case'}); });
+  TOOLS.forEach(t=>{ if(match(t.title+t.shortDesc)) results.push({type:'tools', obj:t, route:'tool'}); });
+  METHODOLOGY.forEach(m=>{ if(match(m.title+m.shortDesc)) results.push({type:'methodology', obj:m, route:'methodology'}); });
+  TEMPLATES.forEach(t=>{ if(match(t.title+t.shortDesc)) results.push({type:'templates', obj:t, route:'template'}); });
+  LEARNING.forEach(l=>{ if(match(l.title+l.shortDesc)) results.push({type:'learning', obj:l, route:'learning'}); });
+  GLOSSARY.forEach(g=>{ if(match(g.term+g.def)) results.push({type:'glossary', obj:{title:g.term, shortDesc:g.def, id:g.term}, route:'glossary'}); });
+  if(type!=='all') results = results.filter(r=>r.type===type);
+
+  const tabs = ['all',...CATALOG_SECTIONS,'glossary'];
+  document.getElementById('app').innerHTML = `<div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Поиск</span></div>
+    <div class="catalog-head">
+      <h1 style="font-size:26px;">Результаты поиска${q?': «'+esc(q)+'»':''}</h1>
+      <div class="unisearch" style="margin-top:18px;max-width:640px;">
+        <input id="searchPageInput" value="${esc(q)}" placeholder="Искать в базе знаний…" onkeydown="if(event.key==='Enter')searchPageGo()">
+        <button onclick="searchPageGo()">Искать</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 22px;">
+      ${tabs.map(t=>`<a class="chip ${type===t?'active':''}" data-nav="#/search?q=${encodeURIComponent(q)}&type=${t}">${t==='all'?'Всё':SECTIONS[t].short}</a>`).join('')}
+    </div>
+    <div class="count" style="margin-bottom:14px;color:var(--ink-soft);font-size:13px;">Найдено: ${results.length}</div>
+    <div class="card-list">
+      ${results.length ? results.map(r=>{
+        const s = SECTIONS[r.type];
+        return `<a class="item-card" data-nav="#/card/${r.route}/${encodeURIComponent(r.obj.id||r.obj.title)}" style="text-decoration:none;">
+          <div class="spine" style="background:${s.color}"></div>
+          <div class="row1"><h3>${r.obj.title}</h3><span class="badge" style="background:${s.bg};color:${s.color}">${s.short}</span></div>
+          <div class="desc">${r.obj.shortDesc}</div>
+        </a>`;
+      }).join('') : `<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте другой запрос или снимите фильтр по типу материала.</p></div>`}
+    </div>
+  </div>`;
+}
+function searchPageGo(){
+  const v = document.getElementById('searchPageInput').value.trim();
+  go('#/search?q='+encodeURIComponent(v)+'&type=all');
+}
+
+/* ============================================================
+   ГЛАВНЫЙ РОУТЕР
+   ============================================================ */
+function render(){
+  const {parts, query} = parseHash();
+  window.scrollTo(0,0);
+  if(parts.length===0){ renderHome(); return; }
+  const [a,b,c] = parts;
+  if(a==='start') return renderStart();
+  if(a==='section' && CATALOG_SECTIONS.includes(b)) return renderSection(b);
+  if(a==='card'){
+    if(b==='case') return renderCaseDetail(c);
+    if(b==='tool') return renderToolDetail(c);
+    if(b==='methodology') return renderMethodologyDetail(c);
+    if(b==='template') return renderTemplateDetail(c);
+    if(b==='learning') return renderLearningDetail(c);
+    if(b==='glossary') return renderGlossaryTerm(decodeURIComponent(c));
+  }
+  if(a==='glossary'){ return b? renderGlossaryTerm(decodeURIComponent(b)) : renderGlossary(); }
+  if(a==='values'){ return renderValues(); }
+  if(a==='value'){ return renderValueDetail(b); }
+  if(a==='results'){ return renderResults(); }
+  if(a==='faq'){ return renderFAQ(); }
+  if(a==='search'){ return renderSearch(query.q, query.type); }
+  renderHome();
+}
+</script>
+</body>
+</html>
