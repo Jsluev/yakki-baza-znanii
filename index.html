@@ -64,9 +64,12 @@ nav.mainnav a.active{color:var(--ink);background:var(--paper-sunk);}
 .dd-menu a{display:flex;align-items:center;gap:8px;padding:8px 10px;font-size:13.5px;border-radius:6px;}
 .dd-menu a:hover{background:var(--paper-sunk);}
 .swatch{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
-.searchbox{display:flex;align-items:center;background:var(--paper-sunk);border:1px solid var(--line);border-radius:24px;padding:4px 6px 4px 14px;gap:6px;min-width:230px;}
-.searchbox input{border:none;background:none;font-family:var(--font-body);font-size:13.5px;outline:none;width:150px;color:var(--ink);}
-.searchbox button{background:var(--navy);color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;}
+.searchbox{display:flex;align-items:center;background:var(--paper-sunk);border:1px solid var(--line);border-radius:10px;padding:3px 4px 3px 12px;gap:4px;min-width:200px;transition:border-color .12s;}
+.searchbox:focus-within{border-color:var(--navy);}
+.searchbox input{border:none;background:none;font-family:var(--font-body);font-size:13px;outline:none;width:140px;color:var(--ink);}
+.searchbox input::placeholder{color:var(--ink-faint);}
+.searchbox button{background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12.5px;font-weight:600;transition:background .12s;}
+.searchbox button:hover{background:var(--navy-deep);}
 @media (max-width:980px){nav.mainnav{display:none;}.searchbox{flex:1;}}
 
 /* ---------- buttons/chips ---------- */
@@ -107,19 +110,38 @@ main{min-height:60vh;}
 .hero p.lead{margin-top:18px;font-size:16.5px;max-width:600px;color:var(--ink-soft);line-height:1.6;}
 @media (max-width:640px){.hero h1{font-size:27px;line-height:1.32;}}
 
-.unisearch{margin-top:28px;display:flex;background:var(--paper-raised);border:1.5px solid var(--line-strong);border-radius:16px;box-shadow:var(--shadow);padding:6px;gap:6px;max-width:720px;}
-.unisearch select{border:none;background:var(--paper-sunk);border-radius:10px;padding:0 14px;font-family:var(--font-body);font-size:13.5px;font-weight:600;color:var(--ink);}
-.unisearch input{flex:1;border:none;outline:none;font-family:var(--font-body);font-size:15px;padding:0 12px;background:transparent;}
-.unisearch button{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:0 22px;font-weight:700;font-size:14px;}
-@media (max-width:640px){.unisearch{flex-wrap:wrap;}.unisearch select{order:1;width:calc(50% - 3px);}.unisearch button{order:2;width:calc(50% - 3px);}.unisearch input{order:0;width:100%;padding:10px 12px;}}
+.unisearch{margin-top:28px;max-width:720px;}
+.unisearch-main{display:flex;background:var(--paper-raised);border:1.5px solid var(--line-strong);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;transition:border-color .15s;}
+.unisearch-main:focus-within{border-color:var(--navy);}
+.unisearch-main .ico{display:flex;align-items:center;padding:0 0 0 16px;color:var(--ink-faint);flex-shrink:0;}
+.unisearch-main input{flex:1;border:none;outline:none;font-family:var(--font-body);font-size:15px;padding:14px 12px;background:transparent;color:var(--ink);}
+.unisearch-main input::placeholder{color:var(--ink-faint);}
+.unisearch-main button{background:var(--navy);color:#fff;border:none;padding:0 24px;font-weight:700;font-size:14px;font-family:var(--font-body);cursor:pointer;transition:background .12s;white-space:nowrap;}
+.unisearch-main button:hover{background:var(--navy-deep);}
+.unisearch-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.unisearch-tags .chip{cursor:pointer;transition:all .12s;font-size:12px;padding:5px 11px;}
+.unisearch-tags .chip:hover{border-color:var(--navy);color:var(--navy);}
+@media (max-width:640px){
+  .unisearch-main{flex-direction:column;border-radius:14px;}
+  .unisearch-main .ico{display:none;}
+  .unisearch-main input{padding:14px 16px;font-size:14px;}
+  .unisearch-main button{padding:12px;border-radius:0 0 12px 12px;}
+  .unisearch-tags{gap:5px;}
+  .unisearch-tags .chip{font-size:11.5px;padding:4px 9px;}
+}
 
-.stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:40px;padding-top:28px;border-top:1px solid var(--line);}
-.stat{padding:6px 20px 6px 0;border-right:1px solid var(--line);}
-.stat:last-child{border-right:none;}
-.stat b{font-family:var(--font-display);font-weight:700;font-size:24px;display:block;line-height:1.2;color:var(--ink);}
-.stat span{font-size:12px;color:var(--ink-soft);display:block;margin-top:6px;line-height:1.4;}
-@media (max-width:860px){.stat-row{grid-template-columns:repeat(3,1fr);row-gap:22px;}.stat:nth-child(3n){border-right:none;}}
-@media (max-width:560px){.stat-row{grid-template-columns:repeat(2,1fr);gap:20px 16px;margin-top:32px;padding-top:22px;}.stat{border-right:none;padding:0;}.stat b{font-size:21px;}}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:36px;padding-top:28px;border-top:1px solid var(--line);}
+.stat{background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;padding:16px 18px;transition:all .15s;cursor:pointer;text-decoration:none;color:inherit;display:block;}
+.stat:hover{border-color:var(--line-strong);box-shadow:var(--shadow);transform:translateY(-1px);}
+.stat .stat-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:10px;}
+.stat b{font-family:var(--font-display);font-weight:700;font-size:22px;display:block;line-height:1.2;color:var(--ink);}
+.stat span{font-size:12px;color:var(--ink-soft);display:block;margin-top:4px;line-height:1.4;}
+.stat .stat-sub{font-size:11px;font-family:var(--font-mono);color:var(--ink-faint);margin-top:8px;display:flex;align-items:center;gap:4px;}
+.stat .stat-sub::after{content:'→';font-size:12px;}
+@media (max-width:860px){.stat-row{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:480px){.stat-row{grid-template-columns:1fr 1fr;gap:10px;}.stat{padding:14px 14px;}}
+
+.view-all-row{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;}
 
 /* audience toggle block */
 .audience-block{padding:34px 0 8px;}
@@ -749,25 +771,51 @@ function renderHome(){
              : state.audience==='pro' ? ['tools','templates','methodology','results','cases','values','learning','faq','glossary']
              : Object.keys(SECTIONS);
   const featured = byId(CASES,'muzeinyi-eksperiment');
+  const totalMaterials = CASES.length + TOOLS.length + METHODOLOGY.length + TEMPLATES.length + LEARNING.length;
   document.getElementById('app').innerHTML = `
   <div class="hero"><div class="wrap hero-inner fade-in">
     <div class="eyebrow">creative-industries.su · база знаний</div>
     <h1>Опыт культурных проектов,<br>собранный <em>в одну систему</em></h1>
     <p class="lead">Кейсы, инструменты оценки, методология и шаблоны — чтобы команда сама планировала и оценивала результаты, не дожидаясь консультации методолога.</p>
     <div class="unisearch">
-      <select id="homeSearchType">
-        <option value="all">Везде</option>
-        ${Object.keys(SECTIONS).map(k=>`<option value="${k}">${SECTIONS[k].short}</option>`).join('')}
-      </select>
-      <input id="homeSearchInput" placeholder="Например: анкета обратной связи, теория изменений, критерии ОЭСР…" onkeydown="if(event.key==='Enter')homeDoSearch()">
-      <button onclick="homeDoSearch()">Искать</button>
+      <div class="unisearch-main">
+        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+        <input id="homeSearchInput" placeholder="Найти кейс, инструмент, шаблон или термин…" onkeydown="if(event.key==='Enter')homeDoSearch()">
+        <button onclick="homeDoSearch()">Найти</button>
+      </div>
+      <div class="unisearch-tags">
+        <span class="chip" onclick="go('#/search?q=&type=cases')">Кейсы</span>
+        <span class="chip" onclick="go('#/search?q=&type=tools')">Инструменты</span>
+        <span class="chip" onclick="go('#/search?q=&type=methodology')">Методология</span>
+        <span class="chip" onclick="go('#/search?q=&type=templates')">Шаблоны</span>
+        <span class="chip" onclick="go('#/search?q=&type=glossary')">Глоссарий</span>
+      </div>
     </div>
     <div class="stat-row">
-      <div class="stat"><b>${CASES.length}</b><span>кейсов проектов</span></div>
-      <div class="stat"><b>${TOOLS.length}</b><span>инструментов сбора данных</span></div>
-      <div class="stat"><b>${METHODOLOGY.length}</b><span>методологических материалов</span></div>
-      <div class="stat"><b>${TEMPLATES.length}</b><span>шаблонов документов</span></div>
-      <div class="stat"><b>${VALUES.length}</b><span>ценностей (из 17, Указ №809)</span></div>
+      <a class="stat" data-nav="#/section/cases">
+        <div class="stat-ico" style="background:var(--c-cases-bg);color:var(--c-cases)">▣</div>
+        <b>${CASES.length}</b><span>кейсов проектов</span>
+        <div class="stat-sub">Музейный эксперимент, Сцена будущего и др.</div>
+      </a>
+      <a class="stat" data-nav="#/section/tools">
+        <div class="stat-ico" style="background:var(--c-tools-bg);color:var(--c-tools)">✎</div>
+        <b>${TOOLS.length}</b><span>инструментов сбора данных</span>
+        <div class="stat-sub">Анкеты, гайды, чек-листы</div>
+      </a>
+      <a class="stat" data-nav="#/section/methodology">
+        <div class="stat-ico" style="background:var(--c-method-bg);color:var(--c-method)">◐</div>
+        <b>${METHODOLOGY.length}</b><span>методологических статей</span>
+        <div class="stat-sub">Теория изменений, ОЭСР-DAC</div>
+      </a>
+      <a class="stat" data-nav="#/section/templates">
+        <div class="stat-ico" style="background:var(--c-templates-bg);color:var(--c-templates)">▭</div>
+        <b>${TEMPLATES.length}</b><span>шаблонов документов</span>
+        <div class="stat-sub">План оценки, ЛМП, отчёт</div>
+      </a>
+    </div>
+    <div class="view-all-row">
+      <a class="btn btn-ghost" data-nav="#/search?q=&type=all">Все ${totalMaterials} материалов базы знаний →</a>
+      <a class="btn btn-ghost" data-nav="#/start">С чего начать новичку</a>
     </div>
   </div></div>
 
@@ -836,8 +884,7 @@ function renderHome(){
 function setAudience(a){ state.audience=a; renderHome(); }
 function homeDoSearch(){
   const v = document.getElementById('homeSearchInput').value.trim();
-  const t = document.getElementById('homeSearchType').value;
-  go('#/search?q='+encodeURIComponent(v)+'&type='+t);
+  go('#/search?q='+encodeURIComponent(v)+'&type=all');
 }
 
 /* ============================================================
