@@ -1425,13 +1425,36 @@ function renderGlossary(){
   buildNav('glossary');
   const sorted = [...GLOSSARY].sort((a,b)=>a.term.localeCompare(b.term,'ru'));
   const letters = [...new Set(sorted.map(t=>t.term[0].toUpperCase()))];
+  const allLetters = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ'.split('');
+  function scrollToLetter(l){
+    if(letters.includes(l)){
+      const el = document.getElementById('g-'+l);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    } else {
+      const idx = allLetters.indexOf(l);
+      for(let i=idx+1;i<allLetters.length;i++){
+        if(letters.includes(allLetters[i])){
+          const el = document.getElementById('g-'+allLetters[i]);
+          if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+          return;
+        }
+      }
+      for(let i=idx-1;i>=0;i--){
+        if(letters.includes(allLetters[i])){
+          const el = document.getElementById('g-'+allLetters[i]);
+          if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+          return;
+        }
+      }
+    }
+  }
   let html = `<div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Глоссарий</span></div>
     <div class="catalog-head"><span class="badge" style="background:${SECTIONS.glossary.bg};color:${SECTIONS.glossary.color}">Глоссарий</span>
       <h1 style="margin-top:12px;">Словарь терминов</h1>
       <p>Простые, неакадемические определения — с перекрёстными ссылками на методологию.</p>
     </div>
-    <div class="alpha-nav">${'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ'.split('').map(l=>`<a href="#g-${l}" class="${letters.includes(l)?'has':''}">${l}</a>`).join('')}</div>
+    <div class="alpha-nav">${allLetters.map(l=>`<a class="${letters.includes(l)?'has':''}" onclick="event.preventDefault();scrollToLetter('${l}')" href="#">${l}</a>`).join('')}</div>
     <div style="max-width:760px;">`;
   let lastLetter='';
   sorted.forEach(t=>{
@@ -1443,6 +1466,7 @@ function renderGlossary(){
   });
   html += `</div></div>`;
   document.getElementById('app').innerHTML = html;
+  window.scrollToLetter = scrollToLetter;
 }
 function renderGlossaryTerm(term){
   buildNav('glossary');
