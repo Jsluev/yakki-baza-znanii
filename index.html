@@ -144,7 +144,15 @@ main{min-height:60vh;}
 .stat .stat-sub{font-size:11px;font-family:var(--font-mono);color:var(--ink-faint);margin-top:8px;display:flex;align-items:center;gap:4px;}
 .stat .stat-sub::after{content:'→';font-size:12px;}
 @media (max-width:860px){.stat-row{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:480px){.stat-row{grid-template-columns:1fr 1fr;gap:10px;}.stat{padding:14px 14px;}}
+@media (max-width:640px){
+  .stat-row{grid-template-columns:1fr 1fr;gap:10px;margin-top:28px;padding-top:20px;}
+  .stat{padding:14px 14px;}
+  .stat .stat-ico{width:28px;height:28px;font-size:13px;margin-bottom:8px;}
+  .stat b{font-size:19px;}
+  .stat span{font-size:11px;margin-top:3px;}
+  .stat .stat-sub{display:none;}
+}
+@media (max-width:380px){.stat-row{grid-template-columns:1fr;}}
 
 .view-all-row{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;}
 
@@ -405,16 +413,6 @@ footer a:hover{color:#fff;}
 }
 
 /* --- Stats row --- */
-@media (max-width:640px){
-  .stat-row{grid-template-columns:1fr 1fr;gap:10px;margin-top:28px;padding-top:20px;}
-  .stat{padding:12px;}
-  .stat b{font-size:19px;}
-  .stat span{font-size:11px;}
-  .stat .stat-sub{font-size:10px;display:none;}
-}
-@media (max-width:380px){
-  .stat-row{grid-template-columns:1fr;}
-}
 
 /* --- View-all row --- */
 @media (max-width:640px){
@@ -456,6 +454,12 @@ footer a:hover{color:#fff;}
   .featured .eyebrow{font-size:11px;}
   .featured h3{font-size:18px;}
   .featured p{font-size:13px;}
+  .featured .meta-list{gap:5px;}
+  .featured .meta-list span{font-size:10.5px;padding:3px 7px;}
+  .featured-side{padding:14px;font-size:12px;}
+  .featured-side .row{padding:7px 0;gap:8px;flex-wrap:wrap;}
+  .featured-side .row span{font-size:11px;}
+  .featured-side .row b{font-size:12px;}
 }
 
 /* --- Catalog page --- */
@@ -492,9 +496,10 @@ footer a:hover{color:#fff;}
   .block{padding:16px;}
   .block h2{font-size:12px;margin-bottom:12px;}
   .kv{grid-template-columns:1fr;gap:4px 0;}
-  .kv dt{font-size:11px;color:var(--ink-faint);margin-top:8px;}
-  .kv dd{font-size:13px;}
-  .kv dd:first-of-type{margin-top:2px;}
+  .kv dt{font-size:11px;color:var(--ink-faint);margin-top:10px;}
+  .kv dt:first-child{margin-top:0;}
+  .kv dd{font-size:13px;margin-top:2px;}
+  .kv dd:first-of-type{margin-top:0;}
   .subhead{font-size:11px;margin:12px 0 6px;}
   .filelist{gap:6px;}
   .filerow{padding:8px 10px;font-size:12px;flex-direction:column;align-items:flex-start;gap:6px;}
@@ -595,6 +600,16 @@ footer a:hover{color:#fff;}
   .empty-state{padding:30px 16px;}
   .empty-state h3{font-size:15px;}
   .empty-state p{font-size:12.5px;}
+  .section-pad{padding:28px 0 40px;}
+  .audience-block{padding:24px 0 8px;}
+  .audience-block .head{gap:10px;margin-bottom:14px;}
+  .audience-note{padding:14px;font-size:13px;}
+  .audience-note b{display:block;margin-bottom:4px;}
+  .catalog-head{padding:20px 0 4px;}
+  .catalog-head h1{font-size:22px !important;}
+  .catalog-head p{font-size:13px;}
+  .detail-head{padding:20px 0 4px;}
+  .crumbs{font-size:11px;gap:4px;}
 }
 </style>
 </head>
@@ -1160,7 +1175,7 @@ function renderHome(){
     </div>
   </div>
 
-  <div class="wrap fade-in" style="padding:8px 0 0;">
+  <div class="wrap fade-in" style="padding-top:8px;">
     <div class="hr"></div>
     <div style="padding-top:40px;">
       <div class="eyebrow">Типичный путь пользователя</div>
@@ -1212,7 +1227,7 @@ function renderStart(){
       <h1>Четыре стадии оценки — простыми словами</h1>
       <p>Если вы впервые оцениваете культурный проект, не обязательно сразу разбираться во всей базе. Достаточно понимать четыре стадии — и знать, какие материалы нужны на каждой.</p>
     </div>
-    <div class="scenario-list" style="margin-top:28px;grid-template-columns:repeat(4,1fr);">
+    <div class="scenario-list" style="margin-top:28px;">
       <div class="scenario"><div class="num">01</div><h4>Планирование</h4><p>Определяете цель и вопросы оценки. Полезны: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline">шаблон плана оценки</a>, <a data-nav="#/card/methodology/oecd-dac" style="text-decoration:underline">критерии ОЭСР-DAC</a>.</p></div>
       <div class="scenario"><div class="num">02</div><h4>Сбор данных</h4><p>Выбираете и, если нужно, пилотируете инструмент. Смотрите раздел <a data-nav="#/section/tools" style="text-decoration:underline">«Инструменты сбора данных»</a>.</p></div>
       <div class="scenario"><div class="num">03</div><h4>Анализ</h4><p>Обрабатываете собранные ответы. Начните со статьи <a data-nav="#/card/learning/lrn-qual-analysis" style="text-decoration:underline">«Как анализировать качественные данные»</a>.</p></div>
