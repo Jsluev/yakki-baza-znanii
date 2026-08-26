@@ -720,7 +720,7 @@ const DATA_TYPES = ['Количественные','Качественные','�
 /* ============================================================
    СОСТОЯНИЕ И МАРШРУТИЗАЦИЯ
    ============================================================ */
-const state = { audience:'all', filters:{cases:{}, tools:{}}, resultsSel:{area:null, infl:null} };
+const state = { audience:'all', filters:{cases:{}, tools:{}, methodology:{}, templates:{}, learning:{}}, resultsSel:{area:null, infl:null} };
 
 function byId(arr,id){return arr.find(x=>x.id===id);}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -918,11 +918,23 @@ function renderSection(key){
   buildNav(key);
   const s = SECTIONS[key];
   const app = document.getElementById('app');
-  const f = state.filters[key] || {};
+  if(!state.filters[key]) state.filters[key] = {};
+  const f = state.filters[key];
   let items = [];
   if(key==='cases') items = filterCases();
   else if(key==='tools') items = filterTools();
-  else items = {methodology:METHODOLOGY, templates:TEMPLATES, learning:LEARNING}[key];
+  else if(key==='methodology') items = filterMethodology();
+  else if(key==='templates') items = filterTemplates();
+  else if(key==='learning') items = filterLearning();
+
+  const filterPanels = {
+    cases: filterPanelCases,
+    tools: filterPanelTools,
+    methodology: filterPanelMethodology,
+    templates: filterPanelTemplates,
+    learning: filterPanelLearning
+  };
+  const panelFn = filterPanels[key];
 
   app.innerHTML = `
   <div class="wrap fade-in">
@@ -935,7 +947,7 @@ function renderSection(key){
     <div class="catalog-body">
       <div class="filters">
         <h4>Фильтры</h4>
-        ${key==='cases'?filterPanelCases():key==='tools'?filterPanelTools():`<div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Для этого раздела в MVP фильтры не предусмотрены — материалов немного, используйте поиск по названию.</div>`}
+        ${panelFn ? panelFn() : `<div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Для этого раздела фильтры не предусмотрены — используйте поиск по названию.</div>`}
         <div class="crosslink-note">Связанные материалы (кейсы, методология, шаблоны) показаны внутри каждой карточки — переходите к ним оттуда.</div>
       </div>
       <div>
@@ -973,10 +985,38 @@ function filterTools(){
   );
 }
 function localSearchFilter(key){
+  if(!state.filters[key]) state.filters[key] = {};
   state.filters[key].q = document.getElementById('localSearch').value;
-  let items = key==='cases'?filterCases():key==='tools'?filterTools():[];
+  let items;
+  if(key==='cases') items = filterCases();
+  else if(key==='tools') items = filterTools();
+  else if(key==='methodology') items = filterMethodology();
+  else if(key==='templates') items = filterTemplates();
+  else if(key==='learning') items = filterLearning();
+  else items = [];
   document.getElementById('cardList').innerHTML = renderCardList(key, items);
   document.querySelector('.results-topline .count').textContent = 'Показано: '+items.length;
+}
+
+function filterMethodology(){
+  const f = state.filters.methodology || {};
+  return METHODOLOGY.filter(m=>
+    (!f.sub || m.sub===f.sub) &&
+    (!f.q || (m.title+m.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
+  );
+}
+function filterTemplates(){
+  const f = state.filters.templates || {};
+  return TEMPLATES.filter(t=>
+    (!f.format || t.formats.includes(f.format)) &&
+    (!f.q || (t.title+t.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
+  );
+}
+function filterLearning(){
+  const f = state.filters.learning || {};
+  return LEARNING.filter(l=>
+    (!f.q || (l.title+l.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
+  );
 }
 
 function filterPanelCases(){
@@ -1032,6 +1072,39 @@ function filterPanelTools(){
     </select></div>
   <div class="actions">
     <button class="btn btn-ghost btn-sm" onclick="state.filters.tools={};renderSection('tools')">Сбросить</button>
+  </div>`;
+}
+function filterPanelMethodology(){
+  const f = state.filters.methodology || {};
+  const subs = [...new Set(METHODOLOGY.map(m=>m.sub))];
+  return `
+  <div class="filter-group"><label>Подраздел</label>
+    <select onchange="state.filters.methodology.sub=this.value||null;renderSection('methodology')">
+      <option value="">Все подразделы</option>
+      ${subs.map(s=>`<option ${f.sub===s?'selected':''}>${s}</option>`).join('')}
+    </select></div>
+  <div class="actions">
+    <button class="btn btn-ghost btn-sm" onclick="state.filters.methodology={};renderSection('methodology')">Сбросить</button>
+  </div>`;
+}
+function filterPanelTemplates(){
+  const f = state.filters.templates || {};
+  const allFormats = [...new Set(TEMPLATES.flatMap(t=>t.formats))];
+  return `
+  <div class="filter-group"><label>Формат файла</label>
+    <select onchange="state.filters.templates.format=this.value||null;renderSection('templates')">
+      <option value="">Все форматы</option>
+      ${allFormats.map(fmt=>`<option ${f.format===fmt?'selected':''}>${fmt}</option>`).join('')}
+    </select></div>
+  <div class="actions">
+    <button class="btn btn-ghost btn-sm" onclick="state.filters.templates={};renderSection('templates')">Сбросить</button>
+  </div>`;
+}
+function filterPanelLearning(){
+  return `
+  <div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Обучающие материалы пока не имеют дополнительных фильтров — используйте поиск по названию.</div>
+  <div class="actions">
+    <button class="btn btn-ghost btn-sm" onclick="state.filters.learning={};renderSection('learning')">Сбросить</button>
   </div>`;
 }
 
@@ -1423,15 +1496,15 @@ function renderResults(){
     </div>
     <div class="tree-cols">
       <div class="tree-col">
-        <div class="tree-col-h">Область (зал)</div>
+        <div class="tree-col-h">Область</div>
         ${RESULTS_TREE.map((a,i)=>`<button class="tree-opt ${i===state.resultsSel.area?'sel':''}" onclick="selResultsArea(${i})">${a.area}<span class="cnt">${a.influence.length}</span></button>`).join('')}
       </div>
       <div class="tree-col">
-        <div class="tree-col-h">Область влияния (шкаф)</div>
+        <div class="tree-col-h">Область влияния</div>
         ${areaObj.influence.map((inf,i)=>`<button class="tree-opt ${i===state.resultsSel.infl?'sel':''}" onclick="selResultsInfl(${i})">${inf.name}<span class="cnt">${inf.results.length}</span></button>`).join('')}
       </div>
       <div class="tree-col">
-        <div class="tree-col-h">Результаты (полка)</div>
+        <div class="tree-col-h">Результаты</div>
         ${inflObj.results.map(r=>`<div class="result-line">${r.text}<span class="ind">${r.ind}</span></div>`).join('')}
       </div>
     </div>
@@ -1447,15 +1520,38 @@ function renderSearch(q, type){
   buildNav(null);
   q = q||''; type = type||'all';
   const qLower = q.toLowerCase();
+
+  const TYPE_ALIASES = {
+    'кейс': 'cases', 'кейсы': 'cases', 'кейсов': 'cases', 'проект': 'cases', 'проекты': 'cases',
+    'инструмент': 'tools', 'инструменты': 'tools', 'анкета': 'tools', 'анкеты': 'tools', 'гайд': 'tools', 'чек-лист': 'tools',
+    'методолог': 'methodology', 'методология': 'methodology', 'подход': 'methodology', 'критерии': 'methodology',
+    'шаблон': 'templates', 'шаблоны': 'templates', 'документ': 'templates',
+    'обучение': 'learning', 'обучающий': 'learning', 'статья': 'learning', 'статьи': 'learning',
+    'глоссарий': 'glossary', 'термин': 'glossary', 'определение': 'glossary',
+    'ценность': 'values', 'ценности': 'values',
+    'результат': 'results', 'результаты': 'results',
+    'faq': 'faq', 'вопрос': 'faq', 'ответ': 'faq'
+  };
+
+  let resolvedType = type;
+  if(type === 'all' && q) {
+    const words = qLower.split(/\s+/);
+    for(const w of words) {
+      if(TYPE_ALIASES[w]) { resolvedType = TYPE_ALIASES[w]; break; }
+    }
+  }
+
   function match(text){ return !q || text.toLowerCase().includes(qLower); }
+
   let results = [];
-  CASES.forEach(c=>{ if(match(c.title+c.shortDesc+c.org)) results.push({type:'cases', obj:c, route:'case'}); });
-  TOOLS.forEach(t=>{ if(match(t.title+t.shortDesc)) results.push({type:'tools', obj:t, route:'tool'}); });
-  METHODOLOGY.forEach(m=>{ if(match(m.title+m.shortDesc)) results.push({type:'methodology', obj:m, route:'methodology'}); });
-  TEMPLATES.forEach(t=>{ if(match(t.title+t.shortDesc)) results.push({type:'templates', obj:t, route:'template'}); });
-  LEARNING.forEach(l=>{ if(match(l.title+l.shortDesc)) results.push({type:'learning', obj:l, route:'learning'}); });
+  CASES.forEach(c=>{ if(match(c.title+c.shortDesc+c.org+c.projectType+c.tags.join(' '))) results.push({type:'cases', obj:c, route:'case'}); });
+  TOOLS.forEach(t=>{ if(match(t.title+t.shortDesc+t.type+t.audience)) results.push({type:'tools', obj:t, route:'tool'}); });
+  METHODOLOGY.forEach(m=>{ if(match(m.title+m.shortDesc+m.sub)) results.push({type:'methodology', obj:m, route:'methodology'}); });
+  TEMPLATES.forEach(t=>{ if(match(t.title+t.shortDesc+t.when)) results.push({type:'templates', obj:t, route:'template'}); });
+  LEARNING.forEach(l=>{ if(match(l.title+l.shortDesc+l.when)) results.push({type:'learning', obj:l, route:'learning'}); });
   GLOSSARY.forEach(g=>{ if(match(g.term+g.def)) results.push({type:'glossary', obj:{title:g.term, shortDesc:g.def, id:g.term}, route:'glossary'}); });
-  if(type!=='all') results = results.filter(r=>r.type===type);
+
+  if(resolvedType!=='all') results = results.filter(r=>r.type===resolvedType);
 
   const tabs = ['all',...CATALOG_SECTIONS,'glossary'];
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
@@ -1463,12 +1559,15 @@ function renderSearch(q, type){
     <div class="catalog-head">
       <h1 style="font-size:26px;">Результаты поиска${q?': «'+esc(q)+'»':''}</h1>
       <div class="unisearch" style="margin-top:18px;max-width:640px;">
-        <input id="searchPageInput" value="${esc(q)}" placeholder="Искать в базе знаний…" onkeydown="if(event.key==='Enter')searchPageGo()">
-        <button onclick="searchPageGo()">Искать</button>
+        <div class="unisearch-main">
+          <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <input id="searchPageInput" value="${esc(q)}" placeholder="Найти кейс, инструмент, шаблон или термин…" onkeydown="if(event.key==='Enter')searchPageGo()">
+          <button onclick="searchPageGo()">Найти</button>
+        </div>
       </div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 22px;">
-      ${tabs.map(t=>`<a class="chip ${type===t?'active':''}" data-nav="#/search?q=${encodeURIComponent(q)}&type=${t}">${t==='all'?'Всё':SECTIONS[t].short}</a>`).join('')}
+      ${tabs.map(t=>`<a class="chip ${resolvedType===t?'active':''}" data-nav="#/search?q=${encodeURIComponent(q)}&type=${t}">${t==='all'?'Всё':SECTIONS[t].short}</a>`).join('')}
     </div>
     <div class="count" style="margin-bottom:14px;color:var(--ink-soft);font-size:13px;">Найдено: ${results.length}</div>
     <div class="card-list">
