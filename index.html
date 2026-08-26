@@ -788,6 +788,7 @@ function renderHome(){
   buildNav(null);
   const order = state.audience==='new' ? ['cases','methodology','glossary','faq','values','learning','tools','templates','results']
              : state.audience==='pro' ? ['tools','templates','methodology','results','cases','values','learning','faq','glossary']
+             : state.audience==='donor' ? ['cases','results','methodology','values','templates','tools','learning','faq','glossary']
              : Object.keys(SECTIONS);
   const featured = byId(CASES,'muzeinyi-eksperiment');
   const totalMaterials = CASES.length + TOOLS.length + METHODOLOGY.length + TEMPLATES.length + LEARNING.length;
@@ -845,11 +846,13 @@ function renderHome(){
         <button class="${state.audience==='all'?'active':''}" onclick="setAudience('all')">Все разделы</button>
         <button class="${state.audience==='new'?'active':''}" onclick="setAudience('new')">Я новичок</button>
         <button class="${state.audience==='pro'?'active':''}" onclick="setAudience('pro')">Я оценщик</button>
+        <button class="${state.audience==='donor'?'active':''}" onclick="setAudience('donor')">Я донор</button>
       </div>
     </div>
     ${state.audience==='new' ? `<div class="audience-note"><b>Новичку.</b> Начните со страницы <a href="#/start" style="text-decoration:underline">«С чего начать новичку»</a> — четыре стадии оценки простыми словами. Затем посмотрите готовый кейс и загляните в глоссарий, если встретится незнакомый термин.</div>`
     : state.audience==='pro' ? `<div class="audience-note"><b>Специалисту.</b> Разделы ниже отсортированы под вашу задачу: инструменты и шаблоны — сверху, методология и банк результатов — рядом. Используйте фильтры по критериям ОЭСР-DAC и ценностям внутри разделов.</div>`
-    : `<div class="audience-note">Выберите, кто вы — и порядок разделов ниже подстроится под типичный путь: новичку ближе кейсы и объяснения, специалисту — инструменты, шаблоны и банк результатов.</div>`}
+    : state.audience==='donor' ? `<div class="audience-note"><b>Донору / фонду / заказчику.</b> База поможет понять, какие изменения создают поддержанные проекты, и обосновать вклад вашей поддержки. Начните с кейсов — там реальные примеры оценки воздействия. Банк результатов покажет, какие социокультурные изменения уже были зафиксированы.</div>`
+    : `<div class="audience-note">Выберите, кто вы — и порядок разделов ниже подстроится под типичный путь: новичку ближе кейсы и объяснения, специалисту — инструменты, шаблоны и банк результатов, донору — кейсы с оценкой воздействия и банк результатов.</div>`}
 
     <div class="grid-sections">
       ${order.map(k=>{
