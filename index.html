@@ -1307,13 +1307,61 @@ function renderSection(key){
   /* ALL view: unified catalog */
   const q = new URLSearchParams(window.location.hash.split('?')[1]||'').get('q')||'';
   const typeParam = new URLSearchParams(window.location.hash.split('?')[1]||'').get('type')||'';
+  const params = new URLSearchParams(window.location.hash.split('?')[1]||'');
+
+  /* Apply type-specific filter params from URL to state.filters */
+  if(typeParam && !state.filters[typeParam]) state.filters[typeParam] = {};
+  if(typeParam){
+    const f = state.filters[typeParam];
+    const filterKeys = Object.keys(f).filter(k=>k!=='q');
+    /* Read known filter keys from URL */
+    if(typeParam==='cases'){
+      f.projectType = params.get('projectType')||f.projectType||null;
+      f.stage = params.get('stage')||f.stage||null;
+      f.evalStage = params.get('evalStage')||f.evalStage||null;
+      f.value = params.get('value')||f.value||null;
+    } else if(typeParam==='tools'){
+      f.type = params.get('toolType')||f.type||null;
+      f.dataType = params.get('dataType')||f.dataType||null;
+      f.status = params.get('status')||f.status||null;
+      f.value = params.get('value')||f.value||null;
+    } else if(typeParam==='methodology'){
+      f.sub = params.get('sub')||f.sub||null;
+    } else if(typeParam==='templates'){
+      f.format = params.get('format')||f.format||null;
+    } else if(typeParam==='assessmentDocs'){
+      f.docType = params.get('docType')||f.docType||null;
+      f.projectType = params.get('projectType')||f.projectType||null;
+      f.caseId = params.get('caseId')||f.caseId||null;
+    }
+  }
+
   if(q){
     const ql = q.toLowerCase();
     items = allItems.filter(i=>(i.title+i.shortDesc+i.org+(i.description||'')).toLowerCase().includes(ql));
   }
   if(typeParam){
     items = items.filter(i=>i._section===typeParam);
+    /* Apply type-specific filters */
+    const f = state.filters[typeParam]||{};
+    if(typeParam==='cases'){
+      items = items.filter(i=>(!f.projectType||i.projectType===f.projectType)&&(!f.stage||i.stage===f.stage)&&(!f.evalStage||i.evalStage===f.evalStage)&&(!f.value||(i.values&&i.values.includes(f.value))));
+    } else if(typeParam==='tools'){
+      items = items.filter(i=>(!f.type||i.type===f.type)&&(!f.dataType||i.dataType===f.dataType)&&(!f.status||i.status===f.status)&&(!f.value||(i.values&&i.values.includes(f.value))));
+    } else if(typeParam==='methodology'){
+      items = items.filter(i=>!f.sub||i.sub===f.sub);
+    } else if(typeParam==='templates'){
+      items = items.filter(i=>!f.format||i.formats.includes(f.format));
+    } else if(typeParam==='assessmentDocs'){
+      items = items.filter(i=>(!f.docType||i.docType===f.docType)&&(!f.projectType||i.projectType===f.projectType)&&(!f.caseId||i.caseId===f.caseId));
+    }
   }
+
+  const allFilterPanels = {
+    cases: filterPanelCasesAll, tools: filterPanelToolsAll, methodology: filterPanelMethodologyAll,
+    templates: filterPanelTemplatesAll, learning: filterPanelLearningAll, assessmentDocs: filterPanelAssessmentDocsAll
+  };
+  const typePanelHtml = typeParam && allFilterPanels[typeParam] ? allFilterPanels[typeParam]() : '';
 
   const sLabel = 'Все материалы';
   const sDesc = 'Единый каталог всех разделов базы знаний';
@@ -1333,8 +1381,9 @@ function renderSection(key){
             ${CATALOG_SECTIONS.map(sk=>`<option value="${sk}" ${typeParam===sk?'selected':''}>${SECTIONS[sk].label} (${typeCounts[sk]})</option>`).join('')}
           </select>
         </div>
+        ${typePanelHtml}
         <div class="actions">
-          <button class="btn btn-ghost btn-sm" onclick="go('#/section/all')">Сбросить</button>
+          <button class="btn btn-ghost btn-sm" onclick="go('#/section/all${q?'?q='+encodeURIComponent(q):''}')">Сбросить фильтры</button>
         </div>
         <div class="crosslink-note">Связанные материалы показаны внутри каждой карточки.</div>
       </div>
@@ -1342,7 +1391,7 @@ function renderSection(key){
         <div class="results-topline">
           <span class="count">Показано: ${items.length}</span>
           <div class="local-search">
-            <input id="localSearch" placeholder="Поиск по всем материалам…" oninput="localSearchFilter('all')">
+            <input id="localSearch" placeholder="Поиск по всем материалам…" value="${esc(q)}" oninput="localSearchFilter('all')">
             <button onclick="localSearchFilter('all')">Найти</button>
           </div>
         </div>
@@ -1563,6 +1612,114 @@ function filterPanelAssessmentDocs(){
   <div class="actions">
     <button class="btn btn-ghost btn-sm" onclick="state.filters.assessmentDocs={};renderSection('assessmentDocs')">Сбросить</button>
   </div>`;
+}
+
+/* --- Filter panels for "All" view (context-aware) --- */
+function filterAllApply(){
+  const q = new URLSearchParams(window.location.hash.split('?')[1]||'').get('q')||'';
+  const type = document.getElementById('allTypeFilter')?.value||'';
+  let hash = '#/section/all?q='+encodeURIComponent(q)+(type?'&type='+type:'');
+  if(type && state.filters[type]){
+    const f = state.filters[type];
+    Object.entries(f).forEach(([k,v])=>{
+      if(v && k!=='q'){
+        const paramKey = (type==='tools'&&k==='type')?'toolType':k;
+        hash += '&'+paramKey+'='+encodeURIComponent(v);
+      }
+    });
+  }
+  go(hash);
+}
+
+function filterPanelCasesAll(){
+  const f = state.filters.cases||{};
+  return `
+  <div class="filter-group"><label>Тип проекта</label>
+    <select onchange="state.filters.cases.projectType=this.value||null;filterAllApply()">
+      <option value="">Все типы</option>
+      ${PROJECT_TYPES.map(t=>`<option ${f.projectType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Стадия проекта</label>
+    <select onchange="state.filters.cases.stage=this.value||null;filterAllApply()">
+      <option value="">Любая стадия</option>
+      ${STAGES.map(t=>`<option ${f.stage===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Этап оценки</label>
+    <select onchange="state.filters.cases.evalStage=this.value||null;filterAllApply()">
+      <option value="">Любой этап</option>
+      ${EVAL_STAGES.map(t=>`<option ${f.evalStage===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Ценность</label>
+    <select onchange="state.filters.cases.value=this.value||null;filterAllApply()">
+      <option value="">Любая ценность</option>
+      ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
+    </select></div>`;
+}
+function filterPanelToolsAll(){
+  const f = state.filters.tools||{};
+  return `
+  <div class="filter-group"><label>Тип инструмента</label>
+    <select onchange="state.filters.tools.type=this.value||null;filterAllApply()">
+      <option value="">Все типы</option>
+      ${TOOL_TYPES.map(t=>`<option ${f.type===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Тип данных</label>
+    <select onchange="state.filters.tools.dataType=this.value||null;filterAllApply()">
+      <option value="">Любой</option>
+      ${DATA_TYPES.map(t=>`<option ${f.dataType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Статус</label>
+    <select onchange="state.filters.tools.status=this.value||null;filterAllApply()">
+      <option value="">Любой</option>
+      <option ${f.status==='Протестирован'?'selected':''}>Протестирован</option>
+      <option ${f.status==='Черновик'?'selected':''}>Черновик</option>
+    </select></div>
+  <div class="filter-group"><label>Ценность</label>
+    <select onchange="state.filters.tools.value=this.value||null;filterAllApply()">
+      <option value="">Любая ценность</option>
+      ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
+    </select></div>`;
+}
+function filterPanelMethodologyAll(){
+  const f = state.filters.methodology||{};
+  const subs = [...new Set(METHODOLOGY.map(m=>m.sub))];
+  return `
+  <div class="filter-group"><label>Подраздел</label>
+    <select onchange="state.filters.methodology.sub=this.value||null;filterAllApply()">
+      <option value="">Все подразделы</option>
+      ${subs.map(s=>`<option ${f.sub===s?'selected':''}>${s}</option>`).join('')}
+    </select></div>`;
+}
+function filterPanelTemplatesAll(){
+  const f = state.filters.templates||{};
+  const allFormats = [...new Set(TEMPLATES.flatMap(t=>t.formats))];
+  return `
+  <div class="filter-group"><label>Формат файла</label>
+    <select onchange="state.filters.templates.format=this.value||null;filterAllApply()">
+      <option value="">Все форматы</option>
+      ${allFormats.map(fmt=>`<option ${f.format===fmt?'selected':''}>${fmt}</option>`).join('')}
+    </select></div>`;
+}
+function filterPanelLearningAll(){ return ''; }
+function filterPanelAssessmentDocsAll(){
+  const f = state.filters.assessmentDocs||{};
+  return `
+  <div class="filter-group"><label>Тип документа</label>
+    <select onchange="state.filters.assessmentDocs.docType=this.value||null;filterAllApply()">
+      <option value="">Все типы</option>
+      ${DOC_TYPES.map(t=>`<option ${f.docType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Тип проекта</label>
+    <select onchange="state.filters.assessmentDocs.projectType=this.value||null;filterAllApply()">
+      <option value="">Все типы</option>
+      ${PROJECT_TYPES.map(t=>`<option ${f.projectType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Связанный кейс</label>
+    <select onchange="state.filters.assessmentDocs.caseId=this.value||null;filterAllApply()">
+      <option value="">Все кейсы</option>
+      ${CASES.map(c=>`<option value="${c.id}" ${f.caseId===c.id?'selected':''}>${c.title}</option>`).join('')}
+    </select></div>`;
+}
 }
 
 function renderCardList(key, items){
