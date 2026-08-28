@@ -1720,7 +1720,6 @@ function filterPanelAssessmentDocsAll(){
       ${CASES.map(c=>`<option value="${c.id}" ${f.caseId===c.id?'selected':''}>${c.title}</option>`).join('')}
     </select></div>`;
 }
-}
 
 function renderCardList(key, items){
   if(!items.length) return `<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте сбросить фильтры или изменить запрос.</p></div>`;
