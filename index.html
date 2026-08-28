@@ -69,13 +69,21 @@ nav.mainnav a.active{color:var(--ink);background:var(--paper-sunk);}
 .searchbox input{border:none;background:none;font-family:var(--font-body);font-size:13px;outline:none;width:140px;color:var(--ink);}
 .searchbox input::placeholder{color:var(--ink-faint);}
 .searchbox button{background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12.5px;font-weight:600;transition:background .12s;}
-.searchbox button:hover{background:var(--navy-deep);}
-@media (max-width:980px){nav.mainnav{display:none;}.searchbox{flex:1;}}
+@media (max-width:980px){nav.mainnav{display:none;}.header-search{display:none;}}
 .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-shrink:0;}
 .hamburger span{display:block;width:20px;height:2px;background:var(--ink);margin:4px 0;border-radius:2px;transition:all .2s;}
 .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px);}
 .hamburger.open span:nth-child(2){opacity:0;}
 .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px);}
+
+.header-search{flex:1;max-width:400px;margin-left:16px;}
+.header-search-inner{display:flex;align-items:center;background:var(--paper-sunk);border:1.5px solid var(--line);border-radius:10px;overflow:hidden;transition:border-color .15s;}
+.header-search-inner:focus-within{border-color:var(--navy);}
+.header-search-inner svg{flex-shrink:0;margin-left:12px;color:var(--ink-faint);}
+.header-search-inner input{flex:1;border:none;outline:none;font-family:var(--font-body);font-size:13.5px;padding:9px 10px;background:transparent;color:var(--ink);}
+.header-search-inner input::placeholder{color:var(--ink-faint);}
+.header-search-inner button{background:var(--navy);color:#fff;border:none;padding:0 16px;font-weight:700;font-size:12.5px;font-family:var(--font-body);cursor:pointer;white-space:nowrap;height:100%;}
+.header-search-inner button:hover{background:var(--navy-deep);}
 
 /* ---------- buttons/chips ---------- */
 .btn{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:24px;border:1px solid transparent;}
@@ -114,6 +122,18 @@ main{min-height:60vh;}
 .hero h1 em{font-style:normal;color:var(--navy);}
 .hero p.lead{margin-top:18px;font-size:16.5px;max-width:600px;color:var(--ink-soft);line-height:1.6;}
 @media (max-width:640px){.hero h1{font-size:27px;line-height:1.32;}}
+
+.audience-btns{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;}
+.audience-btn{display:flex;align-items:center;gap:14px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;text-decoration:none;color:inherit;transition:all .15s;min-width:220px;flex:1;}
+.audience-btn:hover{border-color:var(--navy);box-shadow:var(--shadow);transform:translateY(-1px);}
+.audience-btn .ab-icon{width:36px;height:36px;border-radius:8px;background:var(--paper-sunk);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.audience-btn b{display:block;font-size:14px;margin-bottom:2px;}
+.audience-btn span{display:block;font-size:12px;color:var(--ink-soft);line-height:1.4;}
+@media (max-width:640px){
+  .audience-btns{flex-direction:column;gap:8px;}
+  .audience-btn{min-width:unset;padding:12px 14px;}
+  .audience-btn b{font-size:13px;}
+}
 
 .unisearch{margin-top:28px;max-width:720px;}
 .unisearch-main{display:flex;background:var(--paper-raised);border:1.5px solid var(--line-strong);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;transition:border-color .15s;}
@@ -627,10 +647,12 @@ footer a:hover{color:#fff;}
       <span></span><span></span><span></span>
     </button>
     <nav class="mainnav" id="mainnav"></nav>
-    <div class="searchbox">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input id="headerSearchInput" placeholder="Искать в базе знаний…" onkeydown="if(event.key==='Enter')doHeaderSearch()">
-      <button onclick="doHeaderSearch()">Найти</button>
+    <div class="header-search">
+      <div class="header-search-inner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="headerSearchInput" placeholder="Найти кейс, инструмент, шаблон…" onkeydown="if(event.key==='Enter')doHeaderSearch()">
+        <button onclick="doHeaderSearch()">Найти</button>
+      </div>
     </div>
   </div>
 </header>
@@ -1079,17 +1101,17 @@ document.addEventListener('click', function(e){
 });
 
 function buildNav(activeKey){
-  const primary = ['cases','tools','methodology','templates'];
-  let html = '';
-  primary.forEach(k=>{
-    html += `<a href="#/section/${k}" class="${activeKey===k?'active':''}">${SECTIONS[k].short}</a>`;
-  });
-  html += `<div class="dd">
-    <button class="dd-btn">Ещё ▾</button>
+  let html = `<div class="dd">
+    <button class="dd-btn ${CATALOG_SECTIONS.includes(activeKey)?'active':''}">База материалов ▾</button>
     <div class="dd-menu">
-      ${['learning','values','results','faq','glossary'].map(k=>`<a href="#${k==='values'?'/values':k==='results'?'/results':k==='faq'?'/faq':k==='glossary'?'/glossary':'/section/learning'}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
+      ${CATALOG_SECTIONS.map(k=>`<a href="#/section/${k}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
     </div>
   </div>`;
+  html += `<a href="#/values" class="${activeKey==='values'?'active':''}">Ценности</a>`;
+  html += `<a href="#/results" class="${activeKey==='results'?'active':''}">Результаты</a>`;
+  html += `<a href="#/start" class="${activeKey==='start'?'active':''}">С чего начать</a>`;
+  html += `<a href="#/faq" class="${activeKey==='faq'?'active':''}">FAQ</a>`;
+  html += `<a href="#/glossary" class="${activeKey==='glossary'?'active':''}">Глоссарий</a>`;
   document.getElementById('mainnav').innerHTML = html;
 }
 
@@ -1098,106 +1120,58 @@ function buildNav(activeKey){
    ============================================================ */
 function renderHome(){
   buildNav(null);
-  const order = state.audience==='new' ? ['cases','methodology','glossary','faq','values','learning','tools','templates','results']
-             : state.audience==='pro' ? ['tools','templates','methodology','results','cases','values','learning','faq','glossary']
-             : state.audience==='donor' ? ['cases','results','methodology','values','templates','tools','learning','faq','glossary']
-             : Object.keys(SECTIONS);
+  const order = Object.keys(SECTIONS);
   const featured = byId(CASES,'muzeinyi-eksperiment');
-  const totalMaterials = CASES.length + TOOLS.length + METHODOLOGY.length + TEMPLATES.length + LEARNING.length + ASSESSMENT_DOCS.length;
   document.getElementById('app').innerHTML = `
   <div class="hero"><div class="wrap hero-inner fade-in">
     <div class="eyebrow">creative-industries.su · база знаний</div>
-    <h1>Опыт культурных проектов,<br>собранный <em>в одну систему</em></h1>
-    <p class="lead">Кейсы, инструменты оценки, методология и шаблоны — чтобы команда сама планировала и оценивала результаты, не дожидаясь консультации методолога.</p>
-    <div class="unisearch">
-      <div class="unisearch-main">
-        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
-        <input id="homeSearchInput" placeholder="Найти кейс, инструмент, шаблон или термин…" onkeydown="if(event.key==='Enter')homeDoSearch()">
-        <button onclick="homeDoSearch()">Найти</button>
-      </div>
-      <div class="unisearch-tags">
-        <span class="chip" onclick="go('#/search?q=&type=cases')">Кейсы</span>
-        <span class="chip" onclick="go('#/search?q=&type=tools')">Инструменты</span>
-        <span class="chip" onclick="go('#/search?q=&type=methodology')">Методология</span>
-        <span class="chip" onclick="go('#/search?q=&type=templates')">Шаблоны</span>
-        <span class="chip" onclick="go('#/search?q=&type=glossary')">Глоссарий</span>
-      </div>
-    </div>
-    <div class="stat-row">
-      <a class="stat" data-nav="#/section/cases">
-        <div class="stat-ico" style="background:var(--c-cases-bg);color:var(--c-cases)">▣</div>
-        <b>${CASES.length}</b><span>кейсов проектов</span>
-        <div class="stat-sub">Музейный эксперимент, Сцена будущего и др.</div>
-      </a>
-      <a class="stat" data-nav="#/section/tools">
-        <div class="stat-ico" style="background:var(--c-tools-bg);color:var(--c-tools)">✎</div>
-        <b>${TOOLS.length}</b><span>инструментов сбора данных</span>
-        <div class="stat-sub">Анкеты, гайды, чек-листы</div>
-      </a>
-      <a class="stat" data-nav="#/section/methodology">
-        <div class="stat-ico" style="background:var(--c-method-bg);color:var(--c-method)">◐</div>
-        <b>${METHODOLOGY.length}</b><span>методологических статей</span>
-        <div class="stat-sub">Теория изменений, ОЭСР-DAC</div>
-      </a>
-      <a class="stat" data-nav="#/section/templates">
-        <div class="stat-ico" style="background:var(--c-templates-bg);color:var(--c-templates)">▭</div>
-        <b>${TEMPLATES.length}</b><span>шаблонов документов</span>
-        <div class="stat-sub">План оценки, ЛМП, отчёт</div>
-      </a>
-    </div>
-    <div class="view-all-row">
-      <a class="btn btn-ghost" data-nav="#/search?q=&type=all">Все ${totalMaterials} материалов базы знаний →</a>
-      <a class="btn btn-ghost" data-nav="#/start">С чего начать новичку</a>
+    <h1>База знаний по оценке<br>культурных проектов</h1>
+    <p class="lead">Кейсы, инструменты, методология и шаблоны — чтобы команда сама планировала и оценивала результаты, не дожидаясь консультации методолога.</p>
+    <div class="audience-btns">
+      <a class="audience-btn" data-nav="#/start"><span class="ab-icon">→</span><div><b>С чего начать</b><span>Четыре стадии оценки простыми словами</span></div></a>
+      <a class="audience-btn" data-nav="#/search?q=&type=all" data-audience="professional"><span class="ab-icon">⚙</span><div><b>Для профессионалов</b><span>Инструменты, шаблоны, методология</span></div></a>
+      <a class="audience-btn" data-nav="#/search?q=&type=cases" data-audience="foundation"><span class="ab-icon">◈</span><div><b>Для фондов</b><span>Кейсы с оценкой воздействия</span></div></a>
     </div>
   </div></div>
 
-  <div class="wrap audience-block fade-in">
-    <div class="head">
-      <h2 style="font-size:20px;">С чего начать</h2>
-      <div class="pill-toggle">
-        <button class="${state.audience==='all'?'active':''}" onclick="setAudience('all')">Все разделы</button>
-        <button class="${state.audience==='new'?'active':''}" onclick="setAudience('new')">Я новичок</button>
-        <button class="${state.audience==='pro'?'active':''}" onclick="setAudience('pro')">Я оценщик</button>
-        <button class="${state.audience==='donor'?'active':''}" onclick="setAudience('donor')">Я донор</button>
-      </div>
-    </div>
-    ${state.audience==='new' ? `<div class="audience-note"><b>Новичку.</b> Начните со страницы <a href="#/start" style="text-decoration:underline">«С чего начать новичку»</a> — четыре стадии оценки простыми словами. Затем посмотрите готовый кейс и загляните в глоссарий, если встретится незнакомый термин.</div>`
-    : state.audience==='pro' ? `<div class="audience-note"><b>Специалисту.</b> Разделы ниже отсортированы под вашу задачу: инструменты и шаблоны — сверху, методология и банк результатов — рядом. Используйте фильтры по критериям ОЭСР-DAC и ценностям внутри разделов.</div>`
-    : state.audience==='donor' ? `<div class="audience-note"><b>Донору / фонду / заказчику.</b> База поможет понять, какие изменения создают поддержанные проекты, и обосновать вклад вашей поддержки. Начните с кейсов — там реальные примеры оценки воздействия. Банк результатов покажет, какие социокультурные изменения уже были зафиксированы.</div>`
-    : `<div class="audience-note">Выберите, кто вы — и порядок разделов ниже подстроится под типичный путь: новичку ближе кейсы и объяснения, специалисту — инструменты, шаблоны и банк результатов, донору — кейсы с оценкой воздействия и банк результатов.</div>`}
-
-    <div class="grid-sections">
-      ${order.map(k=>{
-        const s=SECTIONS[k];
-        const route = k==='values'?'#/values':k==='results'?'#/results':k==='faq'?'#/faq':k==='glossary'?'#/glossary':`#/section/${k}`;
-        const count = {cases:CASES.length,tools:TOOLS.length,methodology:METHODOLOGY.length,templates:TEMPLATES.length,learning:LEARNING.length,assessmentDocs:ASSESSMENT_DOCS.length,values:VALUES.length,results:RESULTS_TREE.reduce((a,x)=>a+x.influence.reduce((b,y)=>b+y.results.length,0),0),faq:FAQ.reduce((a,g)=>a+g.items.length,0),glossary:GLOSSARY.length}[k];
-        return `<a class="sec-card" data-nav="${route}" style="text-decoration:none;">
-          <div class="spine" style="background:${s.color}"></div>
-          <div class="top"><div class="ico" style="background:${s.bg};color:${s.color}">${s.icon}</div></div>
-          <h3>${s.label}</h3>
-          <p>${s.desc}</p>
-          <div class="count">${count} материал${count===1?'':count<5?'а':'ов'}</div>
-        </a>`;
-      }).join('')}
-    </div>
-  </div>
-
   <div class="wrap fade-in" style="padding-top:8px;">
     <div class="hr"></div>
-    <div style="padding-top:40px;">
-      <div class="eyebrow">Типичный путь пользователя</div>
-      <h2 style="font-size:22px;margin-top:8px;">Как это использовать</h2>
-      <div class="scenario-list">
+    <div style="padding-top:36px;">
+      <h2 style="font-size:22px;">Как это использовать</h2>
+      <div class="scenario-list" style="margin-top:16px;">
         <div class="scenario"><div class="num">01</div><h4>Найти похожий проект</h4><p>Отфильтруйте кейсы по типу проекта или аудитории, откройте карточку и посмотрите, как проект оценивали.</p></div>
         <div class="scenario"><div class="num">02</div><h4>Взять готовый инструмент</h4><p>Найдите анкету или гайд под свою аудиторию, скачайте файл и инструкцию по применению.</p></div>
         <div class="scenario"><div class="num">03</div><h4>Разобраться в термине</h4><p>Откройте глоссарий, посмотрите определение и перейдите к методологии, где термин раскрыт подробнее.</p></div>
         <div class="scenario"><div class="num">04</div><h4>Скачать шаблон и применить у себя</h4><p>Возьмите шаблон плана оценки, ЛМП или отчёта — и адаптируйте под свой проект.</p></div>
       </div>
     </div>
+  </div>
 
-    <div class="featured">
+  <div class="wrap fade-in" style="padding:36px 0 8px;">
+    <div class="hr"></div>
+    <div style="padding-top:36px;">
+      <div class="grid-sections">
+        ${order.map(k=>{
+          const s=SECTIONS[k];
+          const route = k==='values'?'#/values':k==='results'?'#/results':k==='faq'?'#/faq':k==='glossary'?'#/glossary':`#/section/${k}`;
+          const count = {cases:CASES.length,tools:TOOLS.length,methodology:METHODOLOGY.length,templates:TEMPLATES.length,learning:LEARNING.length,assessmentDocs:ASSESSMENT_DOCS.length,values:VALUES.length,results:RESULTS_TREE.reduce((a,x)=>a+x.influence.reduce((b,y)=>b+y.results.length,0),0),faq:FAQ.reduce((a,g)=>a+g.items.length,0),glossary:GLOSSARY.length}[k];
+          return `<a class="sec-card" data-nav="${route}" style="text-decoration:none;">
+            <div class="spine" style="background:${s.color}"></div>
+            <div class="top"><div class="ico" style="background:${s.bg};color:${s.color}">${s.icon}</div></div>
+            <h3>${s.label}</h3>
+            <p>${s.desc}</p>
+            <div class="count">${count} материал${count===1?'':count<5?'а':'ов'}</div>
+          </a>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap fade-in" style="padding:8px 0 0;">
+    <div class="hr"></div>
+    <div class="featured" style="margin-top:36px;">
       <div>
-        <div class="eyebrow">Кейс дня</div>
+        <div class="eyebrow">Пример из практики</div>
         <h3>${featured.title}</h3>
         <p>${featured.shortDesc}</p>
         <div class="meta-list">
@@ -1208,17 +1182,12 @@ function renderHome(){
       <div class="featured-side">
         <div class="row"><span>Организация</span><b>${featured.org}</b></div>
         <div class="row"><span>Период</span><b>${featured.period}</b></div>
-        <div class="row"><span>Использованных инструментов</span><b>2</b></div>
+        <div class="row"><span>Инструментов</span><b>${featured.relatedTools.length}</b></div>
         <div class="row"><span>Обновлено</span><b>${featured.updated}</b></div>
       </div>
     </div>
   </div>
   `;
-}
-function setAudience(a){ state.audience=a; renderHome(); }
-function homeDoSearch(){
-  const v = document.getElementById('homeSearchInput').value.trim();
-  go('#/search?q='+encodeURIComponent(v)+'&type=all');
 }
 
 /* ============================================================
