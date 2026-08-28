@@ -240,15 +240,17 @@ main{min-height:60vh;}
 .local-search input{flex:1;border:none;padding:8px 12px;font-size:13px;outline:none;background:var(--paper-raised);}
 .local-search button{border:none;background:var(--paper-sunk);padding:0 12px;font-size:13px;}
 
-.card-list{display:flex;flex-direction:column;gap:12px;}
-.item-card{position:relative;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px 16px 22px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .15s, border-color .15s;}
-.item-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong);}
-.item-card .spine{position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:2px;}
-.item-card .row1{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;}
-.item-card h3{font-size:16.5px;}
-.item-card .desc{font-size:13.5px;color:var(--ink-soft);line-height:1.5;}
-.item-card .metarow{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
-.item-card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-size:11.5px;color:var(--ink-faint);font-family:var(--font-mono);}
+.card-list{display:flex;flex-direction:column;gap:10px;}
+.item-card{display:grid;grid-template-columns:4px 1fr;gap:0;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:all .15s;cursor:pointer;}
+.item-card:hover{border-color:var(--line-strong);box-shadow:var(--shadow);transform:translateY(-1px);}
+.item-card .spine{grid-row:1/3;}
+.item-card .card-body{padding:14px 16px;display:flex;flex-direction:column;gap:4px;}
+.item-card .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.item-card h3{font-size:15.5px;font-weight:600;line-height:1.3;flex:1;}
+.item-card .desc{font-size:13px;color:var(--ink-soft);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.item-card .metarow{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px;}
+.item-card .metarow .tag{font-size:11px;padding:3px 8px;border-radius:6px;background:var(--paper-sunk);color:var(--ink-soft);}
+.item-card .card-foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-faint);margin-top:4px;}
 .empty-state{padding:50px 20px;text-align:center;background:var(--paper-raised);border:1px dashed var(--line-strong);border-radius:var(--radius);}
 .empty-state h3{font-size:16px;margin-bottom:6px;}
 .empty-state p{font-size:13.5px;color:var(--ink-soft);}
@@ -493,9 +495,10 @@ footer a:hover{color:#fff;}
   .results-topline{flex-direction:column;align-items:stretch;gap:10px;}
   .local-search{max-width:100%;}
   .local-search input{font-size:13px;}
-  .card-list .item-card{padding:12px 14px 12px 18px;}
-  .card-list .item-card h3{font-size:14.5px;}
-  .card-list .item-card .desc{font-size:12.5px;}
+  .card-list .item-card{grid-template-columns:3px;}
+  .card-list .item-card .card-body{padding:12px 14px;}
+  .card-list .item-card h3{font-size:14px;}
+  .card-list .item-card .desc{font-size:12.5px;-webkit-line-clamp:2;}
   .card-list .item-card .metarow{gap:4px;}
   .card-list .item-card .metarow .tag{font-size:10.5px;padding:3px 7px;}
   .card-list .item-card .foot{font-size:10.5px;flex-direction:column;gap:2px;}
@@ -1090,7 +1093,8 @@ function toggleMobileMenu(){
 }
 function doHeaderSearch(){
   const v = document.getElementById('headerSearchInput').value.trim();
-  go('#/search?q='+encodeURIComponent(v)+'&type=all');
+  if(!v){go('#/section/all');return;}
+  go('#/section/all?q='+encodeURIComponent(v));
 }
 
 window.addEventListener('hashchange', render);
@@ -1129,8 +1133,8 @@ function renderHome(){
     <p class="lead">Кейсы, инструменты, методология и шаблоны — чтобы команда сама планировала и оценивала результаты, не дожидаясь консультации методолога.</p>
     <div class="audience-btns">
       <a class="audience-btn" data-nav="#/start"><span class="ab-icon">→</span><div><b>С чего начать</b><span>Четыре стадии оценки простыми словами</span></div></a>
-      <a class="audience-btn" data-nav="#/search?q=&type=all" data-audience="professional"><span class="ab-icon">⚙</span><div><b>Для профессионалов</b><span>Инструменты, шаблоны, методология</span></div></a>
-      <a class="audience-btn" data-nav="#/search?q=&type=cases" data-audience="foundation"><span class="ab-icon">◈</span><div><b>Для фондов</b><span>Кейсы с оценкой воздействия</span></div></a>
+      <a class="audience-btn" data-nav="#/section/all" data-audience="professional"><span class="ab-icon">⚙</span><div><b>Для профессионалов</b><span>Инструменты, шаблоны, методология</span></div></a>
+      <a class="audience-btn" data-nav="#/section/all?type=cases" data-audience="foundation"><span class="ab-icon">◈</span><div><b>Для фондов</b><span>Кейсы с оценкой воздействия</span></div></a>
     </div>
   </div></div>
 
@@ -1219,51 +1223,105 @@ function renderStart(){
    ============================================================ */
 function renderSection(key){
   buildNav(key);
-  const s = SECTIONS[key];
+  const isAll = key==='all';
   const app = document.getElementById('app');
-  if(!state.filters[key]) state.filters[key] = {};
-  const f = state.filters[key];
-  let items = [];
-  if(key==='cases') items = filterCases();
-  else if(key==='tools') items = filterTools();
-  else if(key==='methodology') items = filterMethodology();
-  else if(key==='templates') items = filterTemplates();
-  else if(key==='learning') items = filterLearning();
-  else if(key==='assessmentDocs') items = filterAssessmentDocs();
 
-  const filterPanels = {
-    cases: filterPanelCases,
-    tools: filterPanelTools,
-    methodology: filterPanelMethodology,
-    templates: filterPanelTemplates,
-    learning: filterPanelLearning,
-    assessmentDocs: filterPanelAssessmentDocs
-  };
-  const panelFn = filterPanels[key];
+  let allItems = [];
+  const typeCounts = {};
+  CATALOG_SECTIONS.forEach(sk=>{
+    let items;
+    if(sk==='cases') items = filterCases();
+    else if(sk==='tools') items = filterTools();
+    else if(sk==='methodology') items = filterMethodology();
+    else if(sk==='templates') items = filterTemplates();
+    else if(sk==='learning') items = filterLearning();
+    else if(sk==='assessmentDocs') items = filterAssessmentDocs();
+    typeCounts[sk] = items.length;
+    allItems = allItems.concat(items.map(i=>({...i,_section:sk})));
+  });
 
+  let items = allItems;
+  if(!isAll){
+    const s = SECTIONS[key];
+    items = allItems.filter(i=>i._section===key);
+    const filterPanels = {
+      cases: filterPanelCases, tools: filterPanelTools, methodology: filterPanelMethodology,
+      templates: filterPanelTemplates, learning: filterPanelLearning, assessmentDocs: filterPanelAssessmentDocs
+    };
+    const panelFn = filterPanels[key];
+
+    app.innerHTML = `
+    <div class="wrap fade-in">
+      <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>${s.label}</span></div>
+      <div class="catalog-head">
+        <span class="badge" style="background:${s.bg};color:${s.color}">${s.short}</span>
+        <h1 style="margin-top:12px;">${s.label}</h1>
+        <p>${s.desc}</p>
+      </div>
+      <div class="catalog-body">
+        <div class="filters">
+          <h4>Фильтры</h4>
+          ${panelFn ? panelFn() : `<div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Для этого раздела фильтры не предусмотрены — используйте поиск по названию.</div>`}
+          <div class="crosslink-note">Связанные материалы показаны внутри каждой карточки.</div>
+        </div>
+        <div>
+          <div class="results-topline">
+            <span class="count">Показано: ${items.length}</span>
+            <div class="local-search">
+              <input id="localSearch" placeholder="Искать в разделе «${s.short}»…" oninput="localSearchFilter('${key}')">
+              <button onclick="localSearchFilter('${key}')">Найти</button>
+            </div>
+          </div>
+          <div class="card-list" id="cardList">${renderCardList(key, items)}</div>
+        </div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  /* ALL view: unified catalog */
+  const q = new URLSearchParams(window.location.hash.split('?')[1]||'').get('q')||'';
+  const typeParam = new URLSearchParams(window.location.hash.split('?')[1]||'').get('type')||'';
+  if(q){
+    const ql = q.toLowerCase();
+    items = allItems.filter(i=>(i.title+i.shortDesc+i.org+(i.description||'')).toLowerCase().includes(ql));
+  }
+  if(typeParam){
+    items = items.filter(i=>i._section===typeParam);
+  }
+
+  const sLabel = 'Все материалы';
+  const sDesc = 'Единый каталог всех разделов базы знаний';
   app.innerHTML = `
   <div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>${s.label}</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>${sLabel}</span></div>
     <div class="catalog-head">
-      <span class="badge" style="background:${s.bg};color:${s.color}">${s.short}</span>
-      <h1 style="margin-top:12px;">${s.label}</h1>
-      <p>${s.desc}</p>
+      <h1 style="margin-top:0;">${sLabel}</h1>
+      <p>${sDesc}</p>
     </div>
     <div class="catalog-body">
       <div class="filters">
         <h4>Фильтры</h4>
-        ${panelFn ? panelFn() : `<div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Для этого раздела фильтры не предусмотрены — используйте поиск по названию.</div>`}
-        <div class="crosslink-note">Связанные материалы (кейсы, методология, шаблоны) показаны внутри каждой карточки — переходите к ним оттуда.</div>
+        <div class="filter-group"><label>Тип материала</label>
+          <select id="allTypeFilter" onchange="filterAllByType()">
+            <option value="">Все типы</option>
+            ${CATALOG_SECTIONS.map(sk=>`<option value="${sk}" ${typeParam===sk?'selected':''}>${SECTIONS[sk].label} (${typeCounts[sk]})</option>`).join('')}
+          </select>
+        </div>
+        <div class="actions">
+          <button class="btn btn-ghost btn-sm" onclick="go('#/section/all')">Сбросить</button>
+        </div>
+        <div class="crosslink-note">Связанные материалы показаны внутри каждой карточки.</div>
       </div>
       <div>
         <div class="results-topline">
           <span class="count">Показано: ${items.length}</span>
           <div class="local-search">
-            <input id="localSearch" placeholder="Искать в разделе «${s.short}»…" oninput="localSearchFilter('${key}')">
-            <button onclick="localSearchFilter('${key}')">Найти</button>
+            <input id="localSearch" placeholder="Поиск по всем материалам…" oninput="localSearchFilter('all')">
+            <button onclick="localSearchFilter('all')">Найти</button>
           </div>
         </div>
-        <div class="card-list" id="cardList">${renderCardList(key, items)}</div>
+        <div class="card-list" id="cardList">${renderCardListAll(items)}</div>
       </div>
     </div>
   </div>`;
@@ -1290,6 +1348,12 @@ function filterTools(){
   );
 }
 function localSearchFilter(key){
+  if(key==='all'){
+    const q = document.getElementById('localSearch').value;
+    const typeFilter = document.getElementById('allTypeFilter')?.value||'';
+    go('#/section/all?q='+encodeURIComponent(q)+(typeFilter?'&type='+typeFilter:''));
+    return;
+  }
   if(!state.filters[key]) state.filters[key] = {};
   state.filters[key].q = document.getElementById('localSearch').value;
   let items;
@@ -1302,6 +1366,37 @@ function localSearchFilter(key){
   else items = [];
   document.getElementById('cardList').innerHTML = renderCardList(key, items);
   document.querySelector('.results-topline .count').textContent = 'Показано: '+items.length;
+}
+
+function filterAllByType(){
+  const q = new URLSearchParams(window.location.hash.split('?')[1]||'').get('q')||'';
+  const type = document.getElementById('allTypeFilter').value;
+  go('#/section/all?q='+encodeURIComponent(q)+(type?'&type='+type:''));
+}
+
+function renderCardListAll(items){
+  if(!items.length) return `<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте сбросить фильтры или изменить запрос.</p></div>`;
+  return items.map(it=>{
+    const s = SECTIONS[it._section];
+    const routeKey = it._section==='cases'?'case':it._section==='assessmentDocs'?'assessment-doc':it._section==='tools'?'tool':it._section==='methodology'?'methodology':it._section==='templates'?'template':'learning';
+    const metaTags = [];
+    if(it._section==='cases'){ metaTags.push(it.projectType, it.evalStage, it.stage, it.shortAudience||it.audience); }
+    else if(it._section==='tools'){ metaTags.push(it.type, it.audience, it.dataType); }
+    else if(it._section==='methodology'){ if(it.sub) metaTags.push(it.sub); }
+    else if(it._section==='templates'){ it.formats.forEach(f=>metaTags.push(f)); }
+    else if(it._section==='learning'){ if(it.when) metaTags.push(it.when); }
+    else if(it._section==='assessmentDocs'){ metaTags.push(it.docType, it.projectType); }
+    const org = it.org || '';
+    return `<a class="item-card" data-nav="#/card/${routeKey}/${it.id}" style="text-decoration:none;">
+      <div class="spine" style="background:${s.color}"></div>
+      <div class="card-body">
+        <div class="card-head"><h3>${it.title}</h3><span class="tag" style="background:${s.bg};color:${s.color};font-size:11px;padding:3px 8px;border-radius:6px;white-space:nowrap;">${s.short}</span></div>
+        <div class="desc">${it.shortDesc}</div>
+        <div class="metarow">${metaTags.filter(Boolean).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div class="card-foot"><span>${org}</span><span>обновлено ${it.updated}</span></div>
+      </div>
+    </a>`;
+  }).join('');
 }
 
 function filterMethodology(){
@@ -1447,48 +1542,26 @@ function filterPanelAssessmentDocs(){
 
 function renderCardList(key, items){
   if(!items.length) return `<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте сбросить фильтры или изменить запрос.</p></div>`;
-  const color = SECTIONS[key].color;
+  const s = SECTIONS[key];
+  const routeKey = key==='cases'?'case':key==='assessmentDocs'?'assessment-doc':key==='tools'?'tool':key==='methodology'?'methodology':key==='templates'?'template':'learning';
   return items.map(it=>{
-    if(key==='cases') return `<a class="item-card" data-nav="#/card/case/${it.id}" style="text-decoration:none;">
-      <div class="spine" style="background:${color}"></div>
-      <div class="row1"><h3>${it.title}</h3><span class="tag">${it.evalStage}</span></div>
-      <div class="desc">${it.shortDesc}</div>
-      <div class="metarow"><span class="tag">${it.projectType}</span><span class="tag">${it.stage}</span><span class="tag">${it.shortAudience||it.audience}</span></div>
-      <div class="foot"><span>${it.org}</span><span>обновлено ${it.updated}</span></div>
-    </a>`;
-    if(key==='tools') return `<a class="item-card" data-nav="#/card/tool/${it.id}" style="text-decoration:none;">
-      <div class="spine" style="background:${color}"></div>
-      <div class="row1"><h3>${it.title}</h3><span class="tag">${it.status}</span></div>
-      <div class="desc">${it.shortDesc}</div>
-      <div class="metarow"><span class="tag">${it.type}</span><span class="tag">${it.audience}</span><span class="tag">${it.dataType}</span></div>
-      <div class="foot"><span>Для кого: ${it.audience}</span><span>обновлено ${it.updated}</span></div>
-    </a>`;
-    if(key==='methodology') return `<a class="item-card" data-nav="#/card/methodology/${it.id}" style="text-decoration:none;">
-      <div class="spine" style="background:${color}"></div>
-      <div class="row1"><h3>${it.title}</h3></div>
-      <div class="desc">${it.shortDesc}</div>
-      <div class="metarow"><span class="tag">${it.sub}</span></div>
-      <div class="foot"><span></span><span>обновлено ${it.updated}</span></div>
-    </a>`;
-    if(key==='templates') return `<a class="item-card" data-nav="#/card/template/${it.id}" style="text-decoration:none;">
-      <div class="spine" style="background:${color}"></div>
-      <div class="row1"><h3>${it.title}</h3></div>
-      <div class="desc">${it.shortDesc}</div>
-      <div class="metarow">${it.formats.map(f=>`<span class="tag">${f}</span>`).join('')}</div>
-      <div class="foot"><span>${it.when}</span><span>обновлено ${it.updated}</span></div>
-    </a>`;
-    if(key==='learning') return `<a class="item-card" data-nav="#/card/learning/${it.id}" style="text-decoration:none;">
-      <div class="spine" style="background:${color}"></div>
-      <div class="row1"><h3>${it.title}</h3></div>
-      <div class="desc">${it.shortDesc}</div>
-      <div class="foot"><span>${it.when}</span><span>обновлено ${it.updated}</span></div>
-    </a>`;
-    if(key==='assessmentDocs') return `<a class="item-card" data-nav="#/card/assessment-doc/${it.id}" style="text-decoration:none;">
-      <div class="spine" style="background:${color}"></div>
-      <div class="row1"><h3>${it.title}</h3><span class="tag">${it.docType}</span></div>
-      <div class="desc">${it.shortDesc}</div>
-      <div class="metarow"><span class="tag">${it.projectType}</span><span class="tag">${it.evalStage}</span></div>
-      <div class="foot"><span>${it.org}</span><span>обновлено ${it.updated}</span></div>
+    const metaTags = [];
+    if(key==='cases'){ metaTags.push(it.projectType, it.evalStage, it.stage, it.shortAudience||it.audience); }
+    else if(key==='tools'){ metaTags.push(it.type, it.audience, it.dataType); }
+    else if(key==='methodology'){ if(it.sub) metaTags.push(it.sub); }
+    else if(key==='templates'){ it.formats.forEach(f=>metaTags.push(f)); if(it.when) metaTags.push(it.when); }
+    else if(key==='learning'){ if(it.when) metaTags.push(it.when); }
+    else if(key==='assessmentDocs'){ metaTags.push(it.docType, it.projectType, it.evalStage); }
+    const org = it.org || '';
+    const status = it.status || '';
+    return `<a class="item-card" data-nav="#/card/${routeKey}/${it.id}" style="text-decoration:none;">
+      <div class="spine" style="background:${s.color}"></div>
+      <div class="card-body">
+        <div class="card-head"><h3>${it.title}</h3>${status?`<span class="tag" style="background:${s.bg};color:${s.color};font-size:11px;padding:3px 8px;border-radius:6px;white-space:nowrap;">${status}</span>`:''}</div>
+        <div class="desc">${it.shortDesc}</div>
+        <div class="metarow">${metaTags.filter(Boolean).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div class="card-foot"><span>${org}</span><span>обновлено ${it.updated}</span></div>
+      </div>
     </a>`;
   }).join('');
 }
@@ -2056,7 +2129,8 @@ function renderSearch(q, type){
 }
 function searchPageGo(){
   const v = document.getElementById('searchPageInput').value.trim();
-  go('#/search?q='+encodeURIComponent(v)+'&type=all');
+  if(!v){go('#/section/all');return;}
+  go('#/section/all?q='+encodeURIComponent(v));
 }
 
 /* ============================================================
@@ -2068,7 +2142,7 @@ function render(){
   if(parts.length===0){ renderHome(); return; }
   const [a,b,c] = parts;
   if(a==='start') return renderStart();
-  if(a==='section' && CATALOG_SECTIONS.includes(b)) return renderSection(b);
+  if(a==='section' && (b==='all' || CATALOG_SECTIONS.includes(b))) return renderSection(b);
   if(a==='card'){
     if(b==='case') return renderCaseDetail(c);
     if(b==='tool') return renderToolDetail(c);
