@@ -1130,6 +1130,8 @@ function buildNav(activeKey){
   html += `<div class="dd">
     <button class="dd-btn ${CATALOG_SECTIONS.includes(activeKey)?'active':''}">База материалов ▾</button>
     <div class="dd-menu">
+      <a href="#/section/all"><span class="swatch" style="background:var(--navy)"></span><b>Все материалы</b></a>
+      <div style="height:1px;background:var(--line);margin:4px 8px;"></div>
       ${CATALOG_SECTIONS.map(k=>`<a href="#/section/${k}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
     </div>
   </div>`;
@@ -1911,9 +1913,12 @@ function renderAssessmentDocDetail(id){
           <div class="filelist">
             ${fileRow(d.mainFile)}
             ${d.additionalFiles.map(f=>fileRow(f)).join('')}
-          </div>
-        </div>
       </div>
+      <div style="text-align:center;margin-top:24px;">
+        <a class="btn btn-primary" data-nav="#/section/all" style="font-size:14px;padding:12px 28px;">Все материалы →</a>
+      </div>
+    </div>
+  </div>
       <div>
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${d.updated}</div></div>
         ${relatedBlockHtml('Связанные инструменты', d.relatedTools, 'tool')}
