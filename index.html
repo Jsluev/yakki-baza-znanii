@@ -685,10 +685,11 @@ const SECTIONS = {
   learning:   {label:'Обучающие материалы', short:'Обучение', color:'var(--c-learning)', bg:'var(--c-learning-bg)', icon:'✺', desc:'Статьи и чек-листы по ключевым темам планирования и оценки — для тех, кто учится.'},
   values:     {label:'Ценности', short:'Ценности', color:'var(--c-values)', bg:'var(--c-values-bg)', icon:'♦', desc:'Ценностная рамка как постоянный фильтр: выберите ценность — увидьте связанные материалы.'},
   results:    {label:'Банк результатов', short:'Результаты', color:'var(--c-results)', bg:'var(--c-results-bg)', icon:'◫', desc:'Область → область влияния → результат. Готовые формулировки для теории изменений.'},
+  assessmentDocs:{label:'Документы оценки', short:'Документы', color:'var(--c-results)', bg:'var(--c-results-bg)', icon:'◉', desc:'Планы, отчёты и презентации оценки реальных проектов — со всеми приложениями и данными.'},
   faq:        {label:'Часто задаваемые вопросы', short:'FAQ', color:'var(--c-faq)', bg:'var(--c-faq-bg)', icon:'?', desc:'Быстрые ответы на типовые вопросы команд и оценщиков.'},
   glossary:   {label:'Глоссарий', short:'Глоссарий', color:'var(--c-glossary)', bg:'var(--c-glossary-bg)', icon:'A', desc:'Словарь ключевых терминов оценки — простым, неакадемическим языком.'}
 };
-const CATALOG_SECTIONS = ['cases','tools','methodology','templates','learning'];
+const CATALOG_SECTIONS = ['cases','tools','methodology','templates','learning','assessmentDocs'];
 
 const CASES = [
  {id:'muzeinyi-eksperiment', title:'Музейный эксперимент', org:'МБУК «Добрянский историко-краеведческий музей»', projectType:'Музейные проекты', stage:'Инновационные (новые)', evalStage:'Итоговая', period:'25.04.2025 — 25.02.2026 (оценка: октябрь 2025 — февраль 2026)', geo:'г. Добрянка, Пермский край', audience:'Подростки 12–17 лет и молодёжь 18–21 года — соавторы выставки; сотрудники музея; жители города; профессиональное сообщество музеев городов-заводов Пермского края', shortAudience:'Подростки и молодёжь, сотрудники музея, жители города', tags:['историческая память','преемственность поколений','музей','подростки','арт-резиденция','итоговая оценка'],
@@ -1028,17 +1029,23 @@ const RESULTS_TREE = [
  ]}
 ];
 
+const ASSESSMENT_DOCS = [
+ {id:'doc-muzeinyi-plan', title:'План оценки проекта «Музейный эксперимент»', docType:'План оценки', shortDesc:'План оценки арт-резиденций для подростков: цель, вопросы, методы, график и дерево результатов.', caseId:'muzeinyi-eksperiment', projectName:'Музейный эксперимент', org:'МБУК «Добрянский историко-краеведческий музей»', projectType:'Музейные проекты', geo:'г. Добрянка, Пермский край', audience:'Подростки и молодёжь, сотрудники музея, жители города', evalStage:'Итоговая', prepPeriod:'октябрь 2025', author:'АНО «Эволюция и Филантропия»', orgAuthor:'АНО «Эволюция и Филантропия»', annotation:'Документ описывает процедуру оценки проекта «Музейный эксперимент»: определены четыре уточняющих оценочных вопроса (КОВ), описаны целевые аудитории, методы сбора данных и календарный план.', contents:'1. Контекст проекта. 2. Цель и задачи оценки. 3. Оценочные вопросы. 4. Методы сбора данных. 5. Выборка и этапы. 6. График. 7. Этические условия.', evalQuestions:['Какие изменения в знаниях, навыках, отношении подростков?','В какой степени сотрудники музея ощутили профессиональный рост?','Удалось ли выставке стать резонансным событием?','Вызвал ли проект интерес к адаптации модели?'], dataCollectionMethods:['Интервью (селфи-интервью, три волны)','Анкеты (онлайн-опрос кураторов, сотрудников, жителей, профессионального сообщества)','Анализ документов (описания арт-объектов)'], dataAnalysisMethods:['Тематический анализ (кодирование и группировка)','Описательная статистика','Триангуляция данных'], effects:['Изменение отношения и ценностей','Формирование сообществ','Развитие компетенций'], values:['historical-memory','patriotism'], mainFile:{name:'План оценки — Музейный эксперимент.pdf', ext:'PDF'}, additionalFiles:[], format:'PDF', language:'Русский', relatedTools:['anketa-muzeinyi-eksperiment'], relatedMethodology:['theory-of-change'], relatedTemplates:['tpl-plan'], relatedDocs:[], tags:['план оценки','музей','подростки'], previewImage:null, publishDate:'2025-10-15', updated:'2025-10-15', status:'published', sortOrder:1},
+ {id:'doc-muzeinyi-report', title:'Полный отчёт об оценке проекта «Музейный эксперимент»', docType:'Полный отчёт', shortDesc:'Итоговый отчёт с выводами по каждому КОВ, методологией, данными и рекомендациями.', caseId:'muzeinyi-eksperiment', projectName:'Музейный эксперимент', org:'МБУК «Добрянский историко-краеведческий музей»', projectType:'Музейные проекты', geo:'г. Добрянка, Пермский край', audience:'Подростки и молодёжь, сотрудники музея, жители города', evalStage:'Итоговая', prepPeriod:'февраль 2026', author:'АНО «Эволюция и Филантропия»', orgAuthor:'АНО «Эволюция и Филантропия»', annotation:'Полный отчёт об оценке проекта «Музейный эксперимент»: оценка проведена в логике теоретически обоснованной оценки (theory-based evaluation). Результаты подтверждают результативность проекта в части влияния на отношение подростков к истории и музею.', contents:'1. Введение и контекст. 2. Цель и задачи оценки. 3. Методология. 4. Результаты по КОВ 1–4. 5. Ключевой вывод. 6. Уроки и рекомендации. Приложения.', evalQuestions:['Какие изменения в знаниях, навыках, отношении подростков?','В какой степени сотрудники музея ощутили профессиональный рост?','Удалось ли выставке стать резонансным событием?','Вызвал ли проект интерес к адаптации модели?'], dataCollectionMethods:['Интервью (40 интервью, 3 волны)','Анкеты (n=307 жителей, n=7 сотрудников, n=10 музеев, n=6 кураторов)','Анализ документов (13 арт-объектов)'], dataAnalysisMethods:['Тематический анализ (30 кодов, 14 тем)','Описательная статистика и частотный анализ','Триангуляция данных из разных источников'], effects:['Изменение отношения и ценностей','Формирование сообществ','Развитие компетенций'], values:['historical-memory','patriotism'], mainFile:{name:'Полный отчёт — Музейный эксперимент.pdf', ext:'PDF'}, additionalFiles:[{name:'Презентация отчёта.pdf', ext:'PDF'}], format:'PDF', language:'Русский', relatedTools:['anketa-muzeinyi-eksperiment','nabl-checklist'], relatedMethodology:['theory-of-change','content-analysis'], relatedTemplates:['tpl-report'], relatedDocs:['doc-muzeinyi-plan'], tags:['отчёт','музей','подростки','итоговая оценка'], previewImage:null, publishDate:'2026-02-14', updated:'2026-02-14', status:'published', sortOrder:2}
+];
+
 const PROJECT_TYPES = ['Музейные проекты','Театральные проекты','Фестивали и события','Арт-резиденции','Образовательные программы','Медиа и онлайн-проекты','Другое'];
 const STAGES = ['Инновационные (новые)','Зрелые (повторяющиеся)','Масштабирование','Завершённые'];
 const EVAL_STAGES = ['Предварительная (ex-ante)','Формирующая','Итоговая','Ретроспективная'];
 const CRITERIA = ['Актуальность','Согласованность','Эффективность','Результативность','Воздействие','Устойчивость'];
 const TOOL_TYPES = ['Анкета','Интервью (глубинное)','Наблюдение','Фокус-группа','Экспертная оценка','Анализ документов','Творческие/партисипативные методы'];
 const DATA_TYPES = ['Количественные','Качественные','Смешанные'];
+const DOC_TYPES = ['План оценки','Дерево результатов','ЛМП','ТЗ на инструментарий','ТЗ на анализ','Краткий отчёт','Полный отчёт','Презентация','Протокол'];
 
 /* ============================================================
    СОСТОЯНИЕ И МАРШРУТИЗАЦИЯ
    ============================================================ */
-const state = { audience:'all', filters:{cases:{}, tools:{}, methodology:{}, templates:{}, learning:{}}, resultsSel:{area:null, infl:null} };
+const state = { audience:'all', filters:{cases:{}, tools:{}, methodology:{}, templates:{}, learning:{}, assessmentDocs:{}}, resultsSel:{area:null, infl:null} };
 
 function byId(arr,id){return arr.find(x=>x.id===id);}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -1096,7 +1103,7 @@ function renderHome(){
              : state.audience==='donor' ? ['cases','results','methodology','values','templates','tools','learning','faq','glossary']
              : Object.keys(SECTIONS);
   const featured = byId(CASES,'muzeinyi-eksperiment');
-  const totalMaterials = CASES.length + TOOLS.length + METHODOLOGY.length + TEMPLATES.length + LEARNING.length;
+  const totalMaterials = CASES.length + TOOLS.length + METHODOLOGY.length + TEMPLATES.length + LEARNING.length + ASSESSMENT_DOCS.length;
   document.getElementById('app').innerHTML = `
   <div class="hero"><div class="wrap hero-inner fade-in">
     <div class="eyebrow">creative-industries.su · база знаний</div>
@@ -1163,7 +1170,7 @@ function renderHome(){
       ${order.map(k=>{
         const s=SECTIONS[k];
         const route = k==='values'?'#/values':k==='results'?'#/results':k==='faq'?'#/faq':k==='glossary'?'#/glossary':`#/section/${k}`;
-        const count = {cases:CASES.length,tools:TOOLS.length,methodology:METHODOLOGY.length,templates:TEMPLATES.length,learning:LEARNING.length,values:VALUES.length,results:RESULTS_TREE.reduce((a,x)=>a+x.influence.reduce((b,y)=>b+y.results.length,0),0),faq:FAQ.reduce((a,g)=>a+g.items.length,0),glossary:GLOSSARY.length}[k];
+        const count = {cases:CASES.length,tools:TOOLS.length,methodology:METHODOLOGY.length,templates:TEMPLATES.length,learning:LEARNING.length,assessmentDocs:ASSESSMENT_DOCS.length,values:VALUES.length,results:RESULTS_TREE.reduce((a,x)=>a+x.influence.reduce((b,y)=>b+y.results.length,0),0),faq:FAQ.reduce((a,g)=>a+g.items.length,0),glossary:GLOSSARY.length}[k];
         return `<a class="sec-card" data-nav="${route}" style="text-decoration:none;">
           <div class="spine" style="background:${s.color}"></div>
           <div class="top"><div class="ico" style="background:${s.bg};color:${s.color}">${s.icon}</div></div>
@@ -1253,13 +1260,15 @@ function renderSection(key){
   else if(key==='methodology') items = filterMethodology();
   else if(key==='templates') items = filterTemplates();
   else if(key==='learning') items = filterLearning();
+  else if(key==='assessmentDocs') items = filterAssessmentDocs();
 
   const filterPanels = {
     cases: filterPanelCases,
     tools: filterPanelTools,
     methodology: filterPanelMethodology,
     templates: filterPanelTemplates,
-    learning: filterPanelLearning
+    learning: filterPanelLearning,
+    assessmentDocs: filterPanelAssessmentDocs
   };
   const panelFn = filterPanels[key];
 
@@ -1320,6 +1329,7 @@ function localSearchFilter(key){
   else if(key==='methodology') items = filterMethodology();
   else if(key==='templates') items = filterTemplates();
   else if(key==='learning') items = filterLearning();
+  else if(key==='assessmentDocs') items = filterAssessmentDocs();
   else items = [];
   document.getElementById('cardList').innerHTML = renderCardList(key, items);
   document.querySelector('.results-topline .count').textContent = 'Показано: '+items.length;
@@ -1343,6 +1353,15 @@ function filterLearning(){
   const f = state.filters.learning || {};
   return LEARNING.filter(l=>
     (!f.q || (l.title+l.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
+  );
+}
+function filterAssessmentDocs(){
+  const f = state.filters.assessmentDocs || {};
+  return ASSESSMENT_DOCS.filter(d=>
+    (!f.docType || d.docType===f.docType) &&
+    (!f.projectType || d.projectType===f.projectType) &&
+    (!f.caseId || d.caseId===f.caseId) &&
+    (!f.q || (d.title+d.shortDesc+d.annotation).toLowerCase().includes(f.q.toLowerCase()))
   );
 }
 
@@ -1434,6 +1453,28 @@ function filterPanelLearning(){
     <button class="btn btn-ghost btn-sm" onclick="state.filters.learning={};renderSection('learning')">Сбросить</button>
   </div>`;
 }
+function filterPanelAssessmentDocs(){
+  const f = state.filters.assessmentDocs || {};
+  return `
+  <div class="filter-group"><label>Тип документа</label>
+    <select onchange="state.filters.assessmentDocs.docType=this.value||null;renderSection('assessmentDocs')">
+      <option value="">Все типы</option>
+      ${DOC_TYPES.map(t=>`<option ${f.docType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Тип проекта</label>
+    <select onchange="state.filters.assessmentDocs.projectType=this.value||null;renderSection('assessmentDocs')">
+      <option value="">Все типы</option>
+      ${PROJECT_TYPES.map(t=>`<option ${f.projectType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Связанный кейс</label>
+    <select onchange="state.filters.assessmentDocs.caseId=this.value||null;renderSection('assessmentDocs')">
+      <option value="">Все кейсы</option>
+      ${CASES.map(c=>`<option value="${c.id}" ${f.caseId===c.id?'selected':''}>${c.title}</option>`).join('')}
+    </select></div>
+  <div class="actions">
+    <button class="btn btn-ghost btn-sm" onclick="state.filters.assessmentDocs={};renderSection('assessmentDocs')">Сбросить</button>
+  </div>`;
+}
 
 function renderCardList(key, items){
   if(!items.length) return `<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте сбросить фильтры или изменить запрос.</p></div>`;
@@ -1473,6 +1514,13 @@ function renderCardList(key, items){
       <div class="desc">${it.shortDesc}</div>
       <div class="foot"><span>${it.when}</span><span>обновлено ${it.updated}</span></div>
     </a>`;
+    if(key==='assessmentDocs') return `<a class="item-card" data-nav="#/card/assessment-doc/${it.id}" style="text-decoration:none;">
+      <div class="spine" style="background:${color}"></div>
+      <div class="row1"><h3>${it.title}</h3><span class="tag">${it.docType}</span></div>
+      <div class="desc">${it.shortDesc}</div>
+      <div class="metarow"><span class="tag">${it.projectType}</span><span class="tag">${it.evalStage}</span></div>
+      <div class="foot"><span>${it.org}</span><span>обновлено ${it.updated}</span></div>
+    </a>`;
   }).join('');
 }
 
@@ -1481,11 +1529,13 @@ function renderCardList(key, items){
    ============================================================ */
 function relatedBlockHtml(title, list, type){
   if(!list || !list.length) return '';
+  const sectionKey = type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':type==='assessmentDoc'?'assessmentDocs':'templates';
+  const routeKey = type==='assessmentDoc'?'assessment-doc':type;
   return `<div class="sidebar-box"><h4>${title}</h4>
     ${list.map(id=>{
-      let obj = type==='case'?byId(CASES,id):type==='tool'?byId(TOOLS,id):type==='methodology'?byId(METHODOLOGY,id):byId(TEMPLATES,id);
+      let obj = type==='case'?byId(CASES,id):type==='tool'?byId(TOOLS,id):type==='methodology'?byId(METHODOLOGY,id):type==='assessmentDoc'?byId(ASSESSMENT_DOCS,id):byId(TEMPLATES,id);
       if(!obj) return '';
-      return `<a class="related-item" data-nav="#/card/${type}/${id}"><span class="t rt" style="color:${SECTIONS[type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':'templates'].color}">${SECTIONS[type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':'templates'].short}</span><span class="rt">${obj.title}</span></a>`;
+      return `<a class="related-item" data-nav="#/card/${routeKey}/${id}"><span class="t rt" style="color:${SECTIONS[sectionKey].color}">${SECTIONS[sectionKey].short}</span><span class="rt">${obj.title}</span></a>`;
     }).join('')}
   </div>`;
 }
@@ -1723,6 +1773,76 @@ function renderLearningDetail(id){
     <a class="back-link" href="#/section/learning">← Ко всем обучающим материалам</a>
   </div>`;
 }
+
+/* ============================================================
+   РЕНДЕР: КАРТОЧКА ДОКУМЕНТА ОЦЕНКИ
+   ============================================================ */
+function renderAssessmentDocDetail(id){
+  buildNav('assessmentDocs');
+  const d = byId(ASSESSMENT_DOCS,id);
+  const app = document.getElementById('app');
+  if(!d){ app.innerHTML = notFound(); return; }
+  const linkedCase = byId(CASES,d.caseId);
+  app.innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/assessmentDocs">Документы оценки</a><span class="sep">/</span><span>${d.title}</span></div>
+    <div class="detail-head">
+      <span class="badge" style="background:${SECTIONS.assessmentDocs.bg};color:${SECTIONS.assessmentDocs.color}">${d.docType}</span>
+      <div class="detail-titlebar">
+        <div><h1>${d.title}</h1><p class="detail-sub">${d.shortDesc}</p></div>
+        <div class="detail-actions"><a class="btn btn-ghost" href="#/section/assessmentDocs">← К списку документов</a></div>
+      </div>
+      <div class="detail-meta">
+        <span class="chip">${d.projectType}</span><span class="chip">${d.evalStage}</span><span class="chip">${d.geo}</span>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="block"><h2>О документе</h2>
+          <dl class="kv">
+            <dt>Тип документа</dt><dd>${d.docType}</dd>
+            <dt>Автор</dt><dd>${d.author}</dd>
+            <dt>Организация</dt><dd>${d.orgAuthor}</dd>
+            <dt>Период подготовки</dt><dd>${d.prepPeriod}</dd>
+            <dt>Язык</dt><dd>${d.language}</dd>
+            <dt>Формат</dt><dd>${d.format}</dd>
+            <dt>Теги</dt><dd>${d.tags.map(t=>`<span class="tag">${t}</span>`).join(' ')}</dd>
+          </dl>
+        </div>
+        <div class="block"><h2>Связанный проект</h2>
+          <dl class="kv">
+            <dt>Проект</dt><dd>${linkedCase ? `<a data-nav="#/card/case/${d.caseId}" style="text-decoration:underline;">${d.projectName}</a>` : d.projectName}</dd>
+            <dt>Организация-исполнитель</dt><dd>${d.org}</dd>
+            <dt>Целевая аудитория</dt><dd>${d.audience}</dd>
+          </dl>
+        </div>
+        <div class="block"><h2>Аннотация</h2>
+          <p style="font-size:13.5px;line-height:1.55;">${d.annotation}</p>
+        </div>
+        <div class="block"><h2>Содержание</h2>
+          <p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);">${d.contents}</p>
+        </div>
+        ${d.evalQuestions.length ? `<div class="block"><h2>Оценочные вопросы</h2><ul class="plain">${d.evalQuestions.map(q=>`<li>${q}</li>`).join('')}</ul></div>` : ''}
+        ${d.dataCollectionMethods.length ? `<div class="block"><h2>Методы сбора данных</h2><ul class="plain">${d.dataCollectionMethods.map(m=>`<li>${m}</li>`).join('')}</ul></div>` : ''}
+        ${d.dataAnalysisMethods.length ? `<div class="block"><h2>Методы анализа данных</h2><ul class="plain">${d.dataAnalysisMethods.map(m=>`<li>${m}</li>`).join('')}</ul></div>` : ''}
+        <div class="block"><h2>Файлы</h2>
+          <div class="filelist">
+            ${fileRow(d.mainFile)}
+            ${d.additionalFiles.map(f=>fileRow(f)).join('')}
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${d.updated}</div></div>
+        ${relatedBlockHtml('Связанные инструменты', d.relatedTools, 'tool')}
+        ${relatedBlockHtml('Методология', d.relatedMethodology, 'methodology')}
+        ${relatedBlockHtml('Шаблоны', d.relatedTemplates, 'template')}
+        ${relatedBlockHtml('Связанные документы', d.relatedDocs, 'assessmentDoc')}
+      </div>
+    </div>
+    <a class="back-link" href="#/section/assessmentDocs">← Ко всем документам оценки</a>
+  </div>`;
+}
 function notFound(){ return `<div class="wrap" style="padding:60px 0;"><div class="empty-state"><h3>Материал не найден</h3><p>Возможно, ссылка устарела.</p><div style="margin-top:14px;"><a class="btn btn-primary" href="#/">На главную</a></div></div></div>`; }
 
 /* ============================================================
@@ -1930,6 +2050,7 @@ function renderSearch(q, type){
   METHODOLOGY.forEach(m=>{ if(match(m.title+m.shortDesc+m.sub)) results.push({type:'methodology', obj:m, route:'methodology'}); });
   TEMPLATES.forEach(t=>{ if(match(t.title+t.shortDesc+t.when)) results.push({type:'templates', obj:t, route:'template'}); });
   LEARNING.forEach(l=>{ if(match(l.title+l.shortDesc+l.when)) results.push({type:'learning', obj:l, route:'learning'}); });
+  ASSESSMENT_DOCS.forEach(d=>{ if(match(d.title+d.shortDesc+d.annotation+d.docType+d.projectName)) results.push({type:'assessmentDocs', obj:d, route:'assessment-doc'}); });
   GLOSSARY.forEach(g=>{ if(match(g.term+g.def)) results.push({type:'glossary', obj:{title:g.term, shortDesc:g.def, id:g.term}, route:'glossary'}); });
 
   if(resolvedType!=='all') results = results.filter(r=>r.type===resolvedType);
@@ -1948,13 +2069,14 @@ function renderSearch(q, type){
       </div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 22px;">
-      ${tabs.map(t=>`<a class="chip ${resolvedType===t?'active':''}" data-nav="#/search?q=${encodeURIComponent(q)}&type=${t}">${t==='all'?'Всё':SECTIONS[t].short}</a>`).join('')}
+      ${tabs.map(t=>`<a class="chip ${resolvedType===t?'active':''}" data-nav="#/search?q=${encodeURIComponent(q)}&type=${t}">${t==='all'?'Все':SECTIONS[t].short}</a>`).join('')}
     </div>
     <div class="count" style="margin-bottom:14px;color:var(--ink-soft);font-size:13px;">Найдено: ${results.length}</div>
     <div class="card-list">
       ${results.length ? results.map(r=>{
         const s = SECTIONS[r.type];
-        return `<a class="item-card" data-nav="#/card/${r.route}/${encodeURIComponent(r.obj.id||r.obj.title)}" style="text-decoration:none;">
+        const routeKey = r.type==='assessmentDocs'?'assessment-doc':r.type==='cases'?'case':r.type;
+        return `<a class="item-card" data-nav="#/card/${routeKey}/${encodeURIComponent(r.obj.id||r.obj.title)}" style="text-decoration:none;">
           <div class="spine" style="background:${s.color}"></div>
           <div class="row1"><h3>${r.obj.title}</h3><span class="badge" style="background:${s.bg};color:${s.color}">${s.short}</span></div>
           <div class="desc">${r.obj.shortDesc}</div>
@@ -1984,6 +2106,7 @@ function render(){
     if(b==='methodology') return renderMethodologyDetail(c);
     if(b==='template') return renderTemplateDetail(c);
     if(b==='learning') return renderLearningDetail(c);
+    if(b==='assessment-doc') return renderAssessmentDocDetail(c);
     if(b==='glossary') return renderGlossaryTerm(decodeURIComponent(c));
   }
   if(a==='glossary'){ return b? renderGlossaryTerm(decodeURIComponent(b)) : renderGlossary(); }
