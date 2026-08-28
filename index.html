@@ -752,7 +752,7 @@ const CASES = [
   bad:['Не все качественные данные подкреплены количественными: фокус был больше на «спонтанном проявлении» эмпирических референтов, чем на оценке их распространённости.','Из-за высокой социальной желательности ответов не использовались прямые метрики отношения к истории/музею — опирались на косвенные данные.','Оценивались изменения преимущественно ретроспективно, без замеров «до/после» для всех целевых групп, кроме подростков.'],
   reco:['Расширять возможности для формирования личного опыта и демонстрации личных примеров приверженности ценности «историческая память и преемственность поколений».','Добавить каналы для лёгкого перехода от желания к действию на выставке и планировать эту работу с горизонтом не менее 6 месяцев после открытия.','Регулярно проводить опросы для мониторинга «узнаваемости» музея и его инициатив.']},
   contact:{name:'Куратор оценки: АНО «Эволюция и Филантропия»', email:'evaluation@evolution-philanthropy.ru'},
-  relatedTools:['anketa-muzeinyi-eksperiment'], relatedMethodology:['theory-of-change','content-analysis'], relatedTemplates:['tpl-plan','tpl-lmp'], relatedCases:['dialogi-v-temnote'],
+  relatedTools:['anketa-muzeinyi-eksperiment'], relatedMethodology:['theory-of-change','content-analysis'], relatedTemplates:['tpl-plan','tpl-lmp'], relatedCases:['dialogi-v-temnote'], relatedLearning:['lrn-plan','lrn-tree'],
   updated:'2026-02-14'},
  {id:'dialogi-v-temnote', title:'«Диалоги в темноте» — инклюзивный театральный проект', org:'Театральная лаборатория «Опыт»', projectType:'Театральные проекты', stage:'Зрелые (повторяющиеся)', evalStage:'Итоговая', period:'март 2025 — ноябрь 2025', geo:'Москва, Санкт-Петербург (гастроли)', audience:'Взрослая городская аудитория 18–45 лет', tags:['инклюзия','театр','изменение отношения','итоговая оценка'],
   shortDesc:'Спектакль-исследование, где зрячие зрители проходят часть спектакля в полной темноте с незрячими проводниками. Проект исследует, как формат влияет на инклюзивные установки аудитории.',
@@ -848,7 +848,7 @@ const TOOLS = [
   limitations:['Не подходит для одноразовых мероприятий без длительного вовлечения — эффект «до/после» будет незаметен.','Не рекомендуется для детей младше 14 лет без адаптации формулировок.','Не заменяет качественное интервью там, где нужны глубокие индивидуальные истории — лучше сочетать с интервью или фокус-группой.'],
   table:[['Изменилось ли отношение подростков к истории завода и музею?','Использование личных местоимений и личных нарративов в текстах о наследии','Контент-анализ текстов'],['Изменилось ли отношение подростков к истории завода и музею?','Самоидентификация с местом, наследием','Описательная статистика, сравнение «до» и «после»'],['Что повлияло на формирование личной связи с наследием?','Факторы влияния (занятия, общение, создание арт-объектов и др.)','Частотный анализ + качественная интерпретация']],
   file:{name:'Анкета для участников арт-резиденции «Музейный эксперимент».docx', ext:'DOCX'},
-  examples:['muzeinyi-eksperiment'], related:['fg-guide'], updated:'2026-02-10'},
+  examples:['muzeinyi-eksperiment'], related:['fg-guide'], relatedMethodology:['theory-of-change'], relatedTemplates:['tpl-plan'], relatedLearning:['lrn-choose-method'], updated:'2026-02-10'},
  {id:'anketa-do-posle', title:'Анкета «до / после»', type:'Анкета', audience:'Посетители/участники проекта', dataType:'Количественные', stage:'До и после мероприятия', status:'Протестирован', values:['identity'], criteria:['Эффективность','Результативность'],
   shortDesc:'Короткая парная анкета для замера изменения отношения или знаний участников до и после программы.',
   fullDesc:'Инструмент подходит для форматов с чётким «входом» и «выходом»: экскурсия, мастер-класс, серия занятий. Состоит из 6–8 пунктов по шкале Лайкерта и 1–2 открытых вопросов.',
@@ -924,7 +924,7 @@ const METHODOLOGY = [
   steps:['Сформулируйте конечное долгосрочное изменение, которого хотите добиться','Опишите промежуточные результаты, которые должны произойти по пути','Для каждого шага явно укажите допущение — почему вы верите, что он сработает','Проверьте цепочку с командой: нет ли «магических» скачков без объяснения'],
   mistakes:['Начинают с мероприятий, а не с изменения — получается список активностей, а не теория','Пропускают допущения — тогда неясно, что именно проверять при оценке'],
   tips:['Рисуйте теорию изменений как схему слева направо, а не текстом — так виднее пробелы'],
-  related:{tools:['interview-guide'], cases:['stsena-budushchego'], templates:['tpl-tree']}, updated:'20.07.2026'},
+  related:{tools:['interview-guide'], cases:['stsena-budushchego'], templates:['tpl-tree'], learning:['lrn-tree']}, updated:'20.07.2026'},
  {id:'logframe', sub:'Подходы к оценке', title:'Логико-структурный подход', shortDesc:'Классическая матрица «цель — результаты — мероприятия — индикаторы — допущения» для проектов с донорами.',
   explain:'Логическая матрица (logframe) — таблица, которая связывает цели проекта с измеримыми индикаторами и внешними условиями успеха.',
   steps:['Заполните столбец «Цель» и «Результаты» сверху вниз','Для каждого результата подберите 1–2 индикатора','Укажите источники проверки для каждого индикатора','Отдельно пропишите риски и допущения'],
@@ -958,7 +958,7 @@ const METHODOLOGY = [
 ];
 
 const TEMPLATES = [
- {id:'tpl-plan', title:'Шаблон плана оценки', shortDesc:'Пустографка документа, где фиксируются цель, вопросы, методы и график оценки.', when:'На старте проекта, до начала сбора данных.', formats:['DOCX','PDF'], instruction:'Заполните разделы «Цель оценки», «Ключевые вопросы», «Методы сбора данных» и «График» последовательно. Используйте подсказки в скобках в каждом разделе.', tags:['оценка','планирование'], related:{methodology:['oecd-dac'],cases:['muzeinyi-eksperiment']}, updated:'11.08.2026'},
+ {id:'tpl-plan', title:'Шаблон плана оценки', shortDesc:'Пустографка документа, где фиксируются цель, вопросы, методы и график оценки.', when:'На старте проекта, до начала сбора данных.', formats:['DOCX','PDF'], instruction:'Заполните разделы «Цель оценки», «Ключевые вопросы», «Методы сбора данных» и «График» последовательно. Используйте подсказки в скобках в каждом разделе.', tags:['оценка','планирование'], related:{methodology:['oecd-dac'],cases:['muzeinyi-eksperiment'],tools:['anketa-muzeinyi-eksperiment'],learning:['lrn-plan']}, updated:'11.08.2026'},
  {id:'tpl-tree', title:'Шаблон дерева результатов', shortDesc:'Визуальная структура для связи мероприятий с промежуточными и конечными результатами.', when:'При планировании проекта или пересборке теории изменений.', formats:['PDF','PPTX'], instruction:'Начните с конечного результата справа и продвигайтесь влево к мероприятиям. Для каждого результата укажите допущения.', tags:['дерево результатов','планирование'], related:{methodology:['theory-of-change'],cases:['stsena-budushchego']}, updated:'11.08.2026'},
  {id:'tpl-lmp', title:'Шаблон логической модели программы (ЛМП)', shortDesc:'Таблица «ресурсы — активности — результаты — эффекты» в едином формате.', when:'При подготовке заявки на грант или согласовании подхода с донором.', formats:['DOCX','XLSX'], instruction:'Заполните столбцы слева направо: ресурсы → активности → выходы → результаты → эффекты. Для каждого уровня подберите индикаторы.', tags:['логическая модель','грант'], related:{methodology:['logframe'],cases:[]}, updated:'05.08.2026'},
  {id:'tpl-toolkit-tz', title:'Шаблон ТЗ на разработку инструментария', shortDesc:'Структура задания для методолога или подрядчика на разработку анкет/гайдов.', when:'Когда инструменты разрабатывает не сама команда, а внешний специалист.', formats:['DOCX'], related:{methodology:[],cases:['stsena-budushchego']}, updated:'01.08.2026'},
@@ -1575,11 +1575,11 @@ function renderCardList(key, items){
    ============================================================ */
 function relatedBlockHtml(title, list, type){
   if(!list || !list.length) return '';
-  const sectionKey = type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':type==='assessmentDoc'?'assessmentDocs':'templates';
+  const sectionKey = type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':type==='assessmentDoc'?'assessmentDocs':type==='learning'?'learning':'templates';
   const routeKey = type==='assessmentDoc'?'assessment-doc':type;
   return `<div class="sidebar-box"><h4>${title}</h4>
     ${list.map(id=>{
-      let obj = type==='case'?byId(CASES,id):type==='tool'?byId(TOOLS,id):type==='methodology'?byId(METHODOLOGY,id):type==='assessmentDoc'?byId(ASSESSMENT_DOCS,id):byId(TEMPLATES,id);
+      let obj = type==='case'?byId(CASES,id):type==='tool'?byId(TOOLS,id):type==='methodology'?byId(METHODOLOGY,id):type==='assessmentDoc'?byId(ASSESSMENT_DOCS,id):type==='learning'?byId(LEARNING,id):byId(TEMPLATES,id);
       if(!obj) return '';
       return `<a class="related-item" data-nav="#/card/${routeKey}/${id}"><span class="t rt" style="color:${SECTIONS[sectionKey].color}">${SECTIONS[sectionKey].short}</span><span class="rt">${obj.title}</span></a>`;
     }).join('')}
@@ -1686,6 +1686,7 @@ function renderCaseDetail(id){
         ${relatedBlockHtml('Похожие кейсы', c.relatedCases, 'case')}
         ${relatedBlockHtml('Методология', c.relatedMethodology, 'methodology')}
         ${relatedBlockHtml('Шаблоны', c.relatedTemplates, 'template')}
+        ${relatedBlockHtml('Обучающие материалы', c.relatedLearning, 'learning')}
       </div>
     </div>
     <a class="back-link" href="#/section/cases">← Ко всем кейсам</a>
@@ -1735,6 +1736,9 @@ function renderToolDetail(id){
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${t.updated}</div></div>
         ${relatedBlockHtml('Примеры применения (кейсы)', t.examples, 'case')}
         ${relatedBlockHtml('Похожие инструменты', t.related, 'tool')}
+        ${relatedBlockHtml('Методология', t.relatedMethodology, 'methodology')}
+        ${relatedBlockHtml('Шаблоны', t.relatedTemplates, 'template')}
+        ${relatedBlockHtml('Обучающие материалы', t.relatedLearning, 'learning')}
       </div>
     </div>
     <a class="back-link" href="#/section/tools">← Ко всем инструментам</a>
@@ -1772,6 +1776,7 @@ function renderMethodologyDetail(id){
         ${relatedBlockHtml('Инструменты', m.related.tools, 'tool')}
         ${relatedBlockHtml('Кейсы', m.related.cases, 'case')}
         ${relatedBlockHtml('Шаблоны', m.related.templates, 'template')}
+        ${relatedBlockHtml('Обучающие материалы', m.related.learning, 'learning')}
       </div>
     </div>
     <a class="back-link" href="#/section/methodology">← Ко всей методологии</a>
@@ -1801,6 +1806,8 @@ function renderTemplateDetail(id){
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${t.updated}</div></div>
         ${relatedBlockHtml('Методология', t.related.methodology, 'methodology')}
         ${relatedBlockHtml('Примеры кейсов', t.related.cases, 'case')}
+        ${relatedBlockHtml('Инструменты', t.related.tools, 'tool')}
+        ${relatedBlockHtml('Обучающие материалы', t.related.learning, 'learning')}
       </div>
     </div>
     <a class="back-link" href="#/section/templates">← Ко всем шаблонам</a>
