@@ -1218,19 +1218,6 @@ function renderHome(){
   <div class="wrap fade-in" style="padding:36px 0 8px;">
     <div class="hr"></div>
     <div style="padding-top:36px;">
-      <div class="eyebrow">Для AI-агентов</div>
-      <h2 style="font-size:20px;margin-top:6px;">Промты для AI</h2>
-      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-top:8px;">Готовые инструкции для AI-ассистентов на основе методологии ЯККИ. Скопируйте промт и используйте в любом AI-инструменте.</p>
-      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-        <a class="btn btn-primary" data-nav="#/prompts">Все промты →</a>
-        <button class="btn btn-ghost" onclick="exportJSON()">Скачать JSON базы знаний</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="wrap fade-in" style="padding:36px 0 8px;">
-    <div class="hr"></div>
-    <div style="padding-top:36px;">
       <div class="grid-sections">
         ${order.map(k=>{
           const s=SECTIONS[k];
@@ -1244,6 +1231,19 @@ function renderHome(){
             <div class="count">${count} материал${count===1?'':count<5?'а':'ов'}</div>
           </a>`;
         }).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap fade-in" style="padding:36px 0 8px;">
+    <div class="hr"></div>
+    <div style="padding-top:36px;">
+      <div class="eyebrow">Для AI-агентов</div>
+      <h2 style="font-size:20px;margin-top:6px;">Промты для AI</h2>
+      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-top:8px;">Готовые инструкции для AI-ассистентов на основе методологии ЯККИ. Скопируйте промт и используйте в любом AI-инструменте.</p>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+        <a class="btn btn-primary" data-nav="#/prompts">Все промты →</a>
+        <button class="btn btn-ghost" onclick="exportJSON()">Скачать JSON базы знаний</button>
       </div>
     </div>
   </div>
