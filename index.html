@@ -1111,12 +1111,21 @@ function toggleMobileMenu(){
   }
 }
 function setStartPath(p){ state.startPath=p; renderStart(); }
-const PROMPTS = {
-  plan: `Ты — эксперт по оценке культурных проектов. Помоги составить план оценки для моего проекта.\n\nОпиши проект:\n- Название:\n- Тип проекта:\n- Целевая аудитория:\n- Период реализации:\n\nИспользуй структуру из базы знаний ЯККИ:\n1. Определи цель оценки\n2. Выбери критерии ОЭСР-DAC (актуальность, согласованность, эффективность, результативность, воздействие, устойчивость)\n3. Сформулируй 2-3 ключевых оценочных вопроса\n4. Подбери подходящие инструменты сбора данных\n5. Определи методы анализа\n6. Составь график`,
-  tool: `Ты — эксперт по оценке культурных проектов. Помоги выбрать подходящий инструмент сбора данных.\n\nОпиши задачу:\n- Что нужно узнать:\n- Кто целевая аудитория для сбора данных:\n- Когда собирать данные (до, во время, после проекта):\n- Какой тип данных предпочтителен (количественные, качественные, смешанные):\n\nИз базы знаний ЯККИ предложи 2-3 подходящих инструмента с описанием и ссылкой.`
-};
+const PROMPTS = [
+  {key:'plan', title:'Составить план оценки', cat:'Планирование', desc:'AI поможет составить план оценки по шагам из базы знаний ЯККИ.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги составить план оценки для моего проекта.\n\nОпиши проект:\n- Название:\n- Тип проекта:\n- Целевая аудитория:\n- Период реализации:\n\nИспользуй структуру из базы знаний ЯККИ:\n1. Определи цель оценки\n2. Выбери критерии ОЭСР-DAC (актуальность, согласованность, эффективность, результативность, воздействие, устойчивость)\n3. Сформулируй 2-3 ключевых оценочных вопроса\n4. Подбери подходящие инструменты сбора данных\n5. Определи методы анализа\n6. Составь график`},
+  {key:'tool', title:'Выбрать инструмент сбора данных', cat:'Планирование', desc:'AI подберёт подходящий инструмент под вашу задачу и аудиторию.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги выбрать подходящий инструмент сбора данных.\n\nОпиши задачу:\n- Что нужно узнать:\n- Кто целевая аудитория для сбора данных:\n- Когда собирать данные (до, во время, после проекта):\n- Какой тип данных предпочтителен (количественные, качественные, смешанные):\n\nИз базы знаний ЯККИ предложи 2-3 подходящих инструмента с описанием и ссылкой.`},
+  {key:'toc', title:'Составить теорию изменений', cat:'Планирование', desc:'AI поможет построить теорию изменений (Theory of Change) для проекта.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги составить теорию изменений (Theory of Change) для моего проекта.\n\nОпиши проект:\n- Название и краткое описание:\n- Целевая аудитория:\n- Какие изменения хотите получить:\n\nПостройте теорию изменений:\n1. Долгосрочная цель (impact)\n2. Промежуточные результаты (outcomes)\n3. Выходы проекта (outputs)\n4. Деятельность (activities)\n5. Ресурсы (inputs)\n6. Допущения и риски\n7. Индикаторы для каждого уровня\n\nИспользуй формат логической модели программы (ЛМП).`},
+  {key:'report', title:'Написать отчёт об оценке', cat:'Отчётность', desc:'AI поможет структурировать и написать отчёт по результатам оценки.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги написать отчёт об оценке проекта.\n\nДанные проекта:\n- Название проекта:\n- Организация:\n- Период реализации:\n- Цель оценки:\n- Методы сбора данных:\n- Ключевые находки:\n\nСтруктура отчёта:\n1. Введение и контекст\n2. Цель и задачи оценки\n3. Методология\n4. Результаты по каждому оценочному вопросу\n5. Ключевые выводы\n6. Ограничения оценки\n7. Рекомендации\n8. Приложения\n\nНапиши раздел «Результаты» на основе предоставленных данных.`},
+  {key:'presentation', title:'Подготовить презентацию результатов', cat:'Отчётность', desc:'AI поможет оформить результаты оценки в презентацию для донора или команды.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги подготовить презентацию результатов оценки.\n\nДанные:\n- Название проекта:\n- Ключевые выводы (3-5):\n- Целевая аудитория презентации (донор, команда, профессиональное сообщество):\n- Формат (slide deck, устная презентация):\n\nСоставь план презентации:\n1. Титульный слайд\n2. Контекст проекта (1 слайд)\n3. Цель и методы оценки (1 слайд)\n4. Ключевые результаты (3-5 слайдов)\n5. Ключевой вывод (1 слайд)\n6. Рекомендации (1 слайд)\n7. Слайды для Q&A\n\nДля каждого слайда опиши содержание и визуальный акцент.`},
+  {key:'criteria', title:'Определить критерии оценки', cat:'Анализ', desc:'AI поможет выбрать и адаптировать критерии ОЭСР-DAC под ваш проект.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги определить критерии оценки для моего проекта.\n\nОпиши проект:\n- Тип проекта:\n- Целевая аудитория:\n- Ожидаемые результаты:\n\nИспользуй критерии ОЭСР-DAC:\n1. Актуальность (Relevance) — насколько проект отвечает потребностям\n2. Согласованность (Coherence) — насколько проект дополняет другие\n3. Эффективность (Effectiveness) — достигаются ли цели\n4. Результативность (Efficiency) — ресурсы vs результаты\n5. Воздействие (Impact) — долгосрочные изменения\n6. Устойчивость (Sustainability) — сохраняются ли изменения\n\nДля каждого критерия:\n- Определи, почему он важен для данного проекта\n- Предложи 2-3 конкретных вопроса\n- Подбери индикаторы`},
+  {key:'findings', title:'Проанализировать данные оценки', cat:'Анализ', desc:'AI поможет структурировать и проанализировать собранные данные.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги проанализировать данные оценки.\n\nТип данных:\n- Количественные ( анкеты, опросы)\n- Качественные (интервью, наблюдения)\n- Смешанные\n\nДанные:\n[Вставьте данные или их описание]\n\nПроанализируй:\n1. Описательная статистика (для количественных данных)\n2. Тематический анализ (для качественных данных)\n3. Сопоставление с оценочными вопросами\n4. Выявление паттернов и аномалий\n5. Формулирование предварительных выводов\n6. Определите ограничения данных`},
+  {key:'foreign', title:'Сравнить с зарубежным опытом', cat:'Анализ', desc:'AI поможет найти и сравнить с похожими проектами за рубежом.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги найти и сравнить с зарубежным опытом.\n\nОпиши проект:\n- Тип проекта:\n- Целевая аудитория:\n- География:\n- Ключевые результаты:\n\nНайди 3-5 похожих зарубежных проектов:\n1. Название и организация\n2. Страна и город\n3. Сходные элементы\n4. Использованные подходы к оценке\n5. Ключевые выводы\n6. Уроки для адаптации\n\nПредложи, какие элементы зарубежного опыта можно адаптировать.`},
+  {key:'export', title:'Экспорт базы знаний', cat:'Данные', desc:'Скачать все данные базы знаний в структурированном JSON-формате.', prompt:null}
+];
 function copyPrompt(key){
-  navigator.clipboard.writeText(PROMPTS[key]).then(()=>{
+  const item = PROMPTS.find(p=>p.key===key);
+  if(!item||!item.prompt) return;
+  navigator.clipboard.writeText(item.prompt).then(()=>{
     const btn = event.target;
     const orig = btn.textContent;
     btn.textContent = 'Скопировано!';
@@ -1152,7 +1161,7 @@ document.addEventListener('click', function(e){
 
 function buildNav(activeKey){
   const refSections = ['results','faq','glossary'];
-  const isRef = refSections.includes(activeKey);
+  const isRef = refSections.includes(activeKey)||activeKey==='prompts';
   let html = `<a href="#/start" class="${activeKey==='start'?'active':''}">С чего начать</a>`;
   html += `<div class="dd">
     <button class="dd-btn ${CATALOG_SECTIONS.includes(activeKey)?'active':''}">База материалов ▾</button>
@@ -1167,6 +1176,8 @@ function buildNav(activeKey){
     <button class="dd-btn ${isRef?'active':''}">Справочник ▾</button>
     <div class="dd-menu">
       ${refSections.map(k=>`<a href="#/${k}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
+      <div style="height:1px;background:var(--line);margin:4px 8px;"></div>
+      <a href="#/prompts" class="${activeKey==='prompts'?'active':''}"><span class="swatch" style="background:var(--navy)"></span>Промты для ИИ</a>
     </div>
   </div>`;
   document.getElementById('mainnav').innerHTML = html;
@@ -1208,24 +1219,11 @@ function renderHome(){
     <div class="hr"></div>
     <div style="padding-top:36px;">
       <div class="eyebrow">Для AI-агентов</div>
-      <h2 style="font-size:20px;margin-top:6px;">Промты и материалы для скачивания</h2>
-      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-top:8px;">Скопируйте промт для вашего AI-ассистента или скачайте структурированные данные для загрузки в другие системы.</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:20px;">
-        <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;">
-          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Промт для планирования оценки</div>
-          <div style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px;">AI-ассистент поможет составить план оценки по шагам из базы знаний.</div>
-          <button class="btn btn-ghost btn-sm" onclick="copyPrompt('plan')">Скопировать промт</button>
-        </div>
-        <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;">
-          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Промт для выбора инструмента</div>
-          <div style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px;">AI подберёт подходящий инструмент сбора данных под вашу задачу.</div>
-          <button class="btn btn-ghost btn-sm" onclick="copyPrompt('tool')">Скопировать промт</button>
-        </div>
-        <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;">
-          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Экспорт данных базы знаний</div>
-          <div style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px;">Структурированный JSON со всеми кейсами, инструментами и шаблонами.</div>
-          <button class="btn btn-ghost btn-sm" onclick="exportJSON()">Скачать JSON</button>
-        </div>
+      <h2 style="font-size:20px;margin-top:6px;">Промты для AI</h2>
+      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-top:8px;">Готовые инструкции для AI-ассистентов на основе методологии ЯККИ. Скопируйте промт и используйте в любом AI-инструменте.</p>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+        <a class="btn btn-primary" data-nav="#/prompts">Все промты →</a>
+        <button class="btn btn-ghost" onclick="exportJSON()">Скачать JSON базы знаний</button>
       </div>
     </div>
   </div>
@@ -2604,6 +2602,56 @@ function searchPageGo(){
 function render(){
   const {parts, query} = parseHash();
   window.scrollTo(0,0);
+/* ============================================================
+   РЕНДЕР: ПРОМТЫ ДЛЯ ИИ
+   ============================================================ */
+function renderPrompts(){
+  buildNav('prompts');
+  const cats = [...new Set(PROMPTS.map(p=>p.cat))];
+  document.getElementById('app').innerHTML = `
+  <div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Промты для ИИ</span></div>
+    <div class="catalog-head"><span class="badge" style="background:var(--navy-soft);color:var(--navy)">ИИ-помощник</span>
+      <h1 style="margin-top:12px;">Промты для AI-агентов</h1>
+      <p>Готовые инструкции для AI-ассистентов, созданные на основе методологии оценки культурных проектов из базы знаний ЯККИ. Скопируйте промт и используйте в любом AI-инструменте.</p>
+    </div>
+    <div style="max-width:760px;margin-top:26px;">
+      ${cats.map(cat => `
+        <div style="margin-bottom:28px;">
+          <h3 style="font-size:16px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line);">${cat}</h3>
+          ${PROMPTS.filter(p=>p.cat===cat).map(p => `
+            <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:10px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:4px;">${p.title}</div>
+              <div style="font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px;">${p.desc}</div>
+              ${p.prompt ? `
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="btn btn-primary btn-sm" onclick="copyPrompt('${p.key}')">Скопировать промт</button>
+                  <button class="btn btn-ghost btn-sm" onclick="showPromptPreview('${p.key}')">Показать промт</button>
+                </div>
+                <div id="prompt-preview-${p.key}" style="display:none;margin-top:12px;background:var(--paper-sunk);border:1px solid var(--line);border-radius:8px;padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;font-family:var(--font-mono);color:var(--ink-soft);max-height:300px;overflow-y:auto;"></div>
+              ` : `
+                <button class="btn btn-primary btn-sm" onclick="exportJSON()">Скачать JSON базы знаний</button>
+              `}
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+    </div>
+    <div class="audience-note" style="margin-top:20px;max-width:640px;">Промты используют структуру и терминологию из <a data-nav="#/glossary" style="text-decoration:underline">глоссария</a> и <a data-nav="#/section/methodology" style="text-decoration:underline">методологии</a> ЯККИ. Для лучшего результата дополняйте промт конкретными данными вашего проекта.</div>
+  </div>`;
+}
+function showPromptPreview(key){
+  const item = PROMPTS.find(p=>p.key===key);
+  if(!item) return;
+  const el = document.getElementById('prompt-preview-'+key);
+  if(el.style.display==='none'){
+    el.textContent = item.prompt;
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
   if(parts.length===0){ renderHome(); return; }
   const [a,b,c] = parts;
   if(a==='start') return renderStart();
@@ -2622,6 +2670,7 @@ function render(){
   if(a==='value'){ return renderValueDetail(b); }
   if(a==='results'){ return renderResults(); }
   if(a==='faq'){ return renderFAQ(); }
+  if(a==='prompts'){ return renderPrompts(); }
   if(a==='search'){ return renderSearch(query.q, query.type); }
   renderHome();
 }
