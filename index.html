@@ -757,7 +757,7 @@ const CASES = [
   bad:['Не все качественные данные подкреплены количественными: фокус был больше на «спонтанном проявлении» эмпирических референтов, чем на оценке их распространённости.','Из-за высокой социальной желательности ответов не использовались прямые метрики отношения к истории/музею — опирались на косвенные данные.','Оценивались изменения преимущественно ретроспективно, без замеров «до/после» для всех целевых групп, кроме подростков.'],
   reco:['Расширять возможности для формирования личного опыта и демонстрации личных примеров приверженности ценности «историческая память и преемственность поколений».','Добавить каналы для лёгкого перехода от желания к действию на выставке и планировать эту работу с горизонтом не менее 6 месяцев после открытия.','Регулярно проводить опросы для мониторинга «узнаваемости» музея и его инициатив.']},
   contact:{name:'Куратор оценки: АНО «Эволюция и Филантропия»', email:'evaluation@evolution-philanthropy.ru'},
-  relatedTools:['anketa-muzeinyi-eksperiment'], relatedMethodology:['theory-of-change','content-analysis'], relatedTemplates:['tpl-plan','tpl-lmp'], relatedCases:['dialogi-v-temnote'], relatedLearning:['lrn-plan','lrn-tree'],
+  relatedTools:['anketa-muzeinyi-eksperiment'], relatedMethodology:['theory-of-change','content-analysis'], relatedTemplates:['tpl-plan','tpl-lmp'], relatedCases:['dialogi-v-temnote'], relatedLearning:['lrn-plan','lrn-tree'], relatedDocs:['doc-muzeinyi-plan','doc-muzeinyi-report'],
   updated:'2026-02-14'},
  {id:'dialogi-v-temnote', title:'«Диалоги в темноте» — инклюзивный театральный проект', org:'Театральная лаборатория «Опыт»', projectType:'Театральные проекты', stage:'Зрелые (повторяющиеся)', evalStage:'Итоговая', period:'март 2025 — ноябрь 2025', geo:'Москва, Санкт-Петербург (гастроли)', audience:'Взрослая городская аудитория 18–45 лет', tags:['инклюзия','театр','изменение отношения','итоговая оценка'],
   shortDesc:'Спектакль-исследование, где зрячие зрители проходят часть спектакля в полной темноте с незрячими проводниками. Проект исследует, как формат влияет на инклюзивные установки аудитории.',
@@ -1079,7 +1079,7 @@ const DOC_TYPES = ['План оценки','Дерево результатов'
 /* ============================================================
    СОСТОЯНИЕ И МАРШРУТИЗАЦИЯ
    ============================================================ */
-const state = { audience:'all', startPath:'newbie', filters:{cases:{}, tools:{}, methodology:{}, templates:{}, learning:{}, assessmentDocs:{}}, resultsSel:{area:null, infl:null} };
+const state = { audience:'all', startPath:'newbie', startScenario:'plan', filters:{cases:{}, tools:{}, methodology:{}, templates:{}, learning:{}, assessmentDocs:{}}, resultsSel:{area:null, infl:null} };
 
 function byId(arr,id){return arr.find(x=>x.id===id);}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -1279,6 +1279,7 @@ function renderHome(){
 function renderStart(){
   buildNav(null);
   const path = state.startPath || 'newbie';
+  const scenario = state.startScenario || 'plan';
   document.getElementById('app').innerHTML = `
   <div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>С чего начать</span></div>
@@ -1296,21 +1297,186 @@ function renderStart(){
     <div style="margin-top:28px;">
       <h2 style="font-size:20px;margin-bottom:6px;">Три стадии оценки — простым языком</h2>
       <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-bottom:20px;">Не обязательно разбираться во всей базе. Достаточно понимать три стадии — и знать, какие материалы нужны на каждой.</p>
-      <div class="scenario-list">
-        <div class="scenario"><div class="num">01</div><h4>Планирование</h4><p>Определяете цель и вопросы оценки, выбираете критерии. Полезны: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline">шаблон плана оценки</a>, <a data-nav="#/card/methodology/oecd-dac" style="text-decoration:underline">критерии ОЭСР-DAC</a>, <a data-nav="#/card/methodology/theory-of-change" style="text-decoration:underline">теория изменений</a>.</p></div>
-        <div class="scenario"><div class="num">02</div><h4>Сбор и анализ данных</h4><p>Выбираете инструменты, собираете и обрабатываете данные. Смотрите: <a data-nav="#/section/tools" style="text-decoration:underline">инструменты сбора данных</a>, <a data-nav="#/card/learning/lrn-qual-analysis" style="text-decoration:underline">«Как анализировать качественные данные»</a>, <a data-nav="#/card/learning/lrn-choose-method" style="text-decoration:underline">«Как выбрать метод сбора данных»</a>.</p></div>
-        <div class="scenario"><div class="num">03</div><h4>Использование результатов</h4><p>Оформляете выводы, презентуете донору и команде, применяете уроки в следующем проекте. Возьмите: <a data-nav="#/card/template/tpl-report" style="text-decoration:underline">шаблон отчёта</a>, <a data-nav="#/card/template/tpl-presentation" style="text-decoration:underline">шаблон презентации</a>.</p></div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <details style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:0;" open>
+          <summary style="cursor:pointer;padding:16px 18px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;">
+            <span style="background:var(--blue-bg);color:var(--blue);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">01</span>
+            Планирование оценки
+          </summary>
+          <div style="padding:0 18px 18px;">
+            <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:12px;">Определяете цель и вопросы оценки, выбираете критерии, формулируете показатели.</p>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">1.</span> Сформулируйте цель оценки — зачем она вам нужна и что хотите понять</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">2.</span> Определите критерии оценки — воспользуйтесь <a data-nav="#/card/methodology/oecd-dac" style="text-decoration:underline;color:var(--blue);">критериями ОЭСР-DAC</a></div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">3.</span> Составьте <a data-nav="#/card/methodology/theory-of-change" style="text-decoration:underline;color:var(--blue);">теорию изменений</a> — что должно измениться благодаря проекту</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">4.</span> Сформулируйте 2–3 оценочных вопроса</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">5.</span> Определите показатели — по каким признакам поймёте, что изменение произошло</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">6.</span> Решите, какие данные нужны и от кого их получать</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">7.</span> Составьте черновик плана оценки — воспользуйтесь <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline;color:var(--blue);">шаблоном плана оценки</a></div>
+            </div>
+            <div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" data-nav="#/card/template/tpl-plan">Шаблон плана оценки →</a></div>
+          </div>
+        </details>
+
+        <details style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:0;">
+          <summary style="cursor:pointer;padding:16px 18px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;">
+            <span style="background:var(--green-bg);color:var(--green);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">02</span>
+            Сбор и анализ данных
+          </summary>
+          <div style="padding:0 18px 18px;">
+            <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:12px;">Выбираете подходящие инструменты, собираете данные, анализируете результаты.</p>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">1.</span> Выберите инструменты сбора данных — смотрите <a data-nav="#/section/tools" style="text-decoration:underline;color:var(--green);">каталог инструментов</a></div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">2.</span> Проведите пилотирование — <a data-nav="#/card/learning/lrn-pilot" style="text-decoration:underline;color:var(--green);">«Как провести пилотирование»</a></div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">3.</span> Соберите данные в запланированные сроки</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">4.</span> Проанализируйте данные — <a data-nav="#/card/learning/lrn-qual-analysis" style="text-decoration:underline;color:var(--green);">«Как анализировать качественные данные»</a>, <a data-nav="#/card/learning/lrn-choose-method" style="text-decoration:underline;color:var(--green);">«Как выбрать метод анализа»</a></div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">5.</span> Сопоставьте данные с оценочными вопросами и показателями</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">6.</span> Сформулируйте предварительные выводы</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">7.</span> Проверьте ограничения и достоверность</div>
+            </div>
+            <div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" data-nav="#/section/tools">Все инструменты →</a></div>
+          </div>
+        </details>
+
+        <details style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:0;">
+          <summary style="cursor:pointer;padding:16px 18px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;">
+            <span style="background:var(--accent-light);color:var(--accent);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">03</span>
+            Использование результатов
+          </summary>
+          <div style="padding:0 18px 18px;">
+            <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:12px;">Оформляете выводы, применяете уроки в следующем проекте, делитесь опытом.</p>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--accent);font-weight:600;flex-shrink:0;">1.</span> Сопоставьте ожидаемые результаты и реальные данные</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--accent);font-weight:600;flex-shrink:0;">2.</span> Определите ограничения — что данные не позволяют утверждать</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--accent);font-weight:600;flex-shrink:0;">3.</span> Сформулируйте выводы: что поняли и что будете с этим делать</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--accent);font-weight:600;flex-shrink:0;">4.</span> Оформите результаты — <a data-nav="#/card/template/tpl-report" style="text-decoration:underline;color:var(--accent);">шаблон отчёта</a>, <a data-nav="#/card/template/tpl-presentation" style="text-decoration:underline;color:var(--accent);">презентация</a></div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--accent);font-weight:600;flex-shrink:0;">5.</span> Обсудите результаты с командой и партнёрами</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--accent);font-weight:600;flex-shrink:0;">6.</span> Примените уроки оценки в следующем проекте</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--accent);font-weight:600;flex-shrink:0;">7.</span> Поделитесь опытом — <a data-nav="#/section/cases" style="text-decoration:underline;color:var(--accent);">добавьте кейс в базу</a></div>
+            </div>
+            <div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" data-nav="#/card/template/tpl-report">Шаблон отчёта →</a></div>
+          </div>
+        </details>
       </div>
     </div>
     ` : `
     <div style="margin-top:28px;">
       <h2 style="font-size:20px;margin-bottom:6px;">Маршрут для творческой команды</h2>
-      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-bottom:20px;">У вас уже есть проект? Выберите стадию — и получите конкретные материалы и инструменты под вашу задачу.</p>
-      <div class="scenario-list">
-        <div class="scenario"><div class="num">01</div><h4>Готовлю проект / пишу заявку</h4><p>Вам нужно обосновать проект, сформулировать цели и показать, как вы будете измерять результаты. Полезны: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline">шаблон плана оценки</a>, <a data-nav="#/card/methodology/theory-of-change" style="text-decoration:underline">теория изменений</a>, <a data-nav="#/card/methodology/logframe" style="text-decoration:underline">логико-структурный подход</a>, <a data-nav="#/card/template/tpl-lmp" style="text-decoration:underline">логическая модель программы</a>.</p></div>
-        <div class="scenario"><div class="num">02</div><h4>Проект реализуется</h4><p>Проект идёт, и вы хотите собрать данные вовремя — или параллельно провести формирующую оценку. Смотрите: <a data-nav="#/section/tools" style="text-decoration:underline">инструменты сбора данных</a>, <a data-nav="#/card/learning/lrn-pilot" style="text-decoration:underline">«Как провести пилотирование»</a>, <a data-nav="#/card/tool/anketa-do-posle" style="text-decoration:underline">анкета «до/после»</a>.</p></div>
-        <div class="scenario"><div class="num">03</div><h4>Проект завершён — нужно подвести итоги</h4><p>Проект окончен, нужно оценить результаты и использовать выводы. Берите: <a data-nav="#/card/template/tpl-report" style="text-decoration:underline">шаблон отчёта</a>, <a data-nav="#/card/template/tpl-presentation" style="text-decoration:underline">презентацию</a>, <a data-nav="#/section/cases" style="text-decoration:underline">похожие кейсы</a> для сравнения.</p></div>
+      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-bottom:20px;">У вас уже есть проект? Выберите стадию — и получите пошаговый маршрут с конкретными материалами и инструментами.</p>
+
+      <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+        <button class="btn ${scenario==='plan'?'btn-primary':'btn-ghost'}" onclick="setStartScenario('plan')" style="font-size:13px;">Готовлю проект</button>
+        <button class="btn ${scenario==='implement'?'btn-primary':'btn-ghost'}" onclick="setStartScenario('implement')" style="font-size:13px;">Проект реализуется</button>
+        <button class="btn ${scenario==='done'?'btn-primary':'btn-ghost'}" onclick="setStartScenario('done')" style="font-size:13px;">Проект завершён</button>
       </div>
+
+      ${scenario==='plan' ? `
+      <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:20px;">
+        <h3 style="font-size:16px;margin-bottom:4px;">Сценарий 1: Готовлю проект / пишу заявку</h3>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Маршрут: ожидаемые результаты → приоритет оценки → оценочные вопросы → признаки изменений → данные → инструменты → план оценки</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--blue-bg);color:var(--blue);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">1</span>
+            <div><b>Что должно измениться благодаря проекту?</b><br>Выберите или сформулируйте 1–3 ожидаемых результата. База предлагает: библиотеку <a data-nav="#/results" style="text-decoration:underline;color:var(--blue);">социокультурных результатов</a>, примеры формулировок из <a data-nav="#/section/cases" style="text-decoration:underline;color:var(--blue);">похожих кейсов</a>.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--blue-bg);color:var(--blue);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">2</span>
+            <div><b>Что из этого действительно важно оценивать?</b><br>Выберите приоритетные результаты. Логика: не пытаться измерить всё.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--blue-bg);color:var(--blue);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">3</span>
+            <div><b>Что именно мы хотим про это узнать?</b><br>Сформулируйте 1–3 оценочных вопроса: произошло ли изменение, у кого, какие элементы проекта могли способствовать.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--blue-bg);color:var(--blue);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">4</span>
+            <div><b>По каким признакам мы поймём, что изменение произошло?</b><br>Выберите или сформулируйте показатели / наблюдаемые признаки. База предлагает варианты, связанные с выбранным результатом.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--blue-bg);color:var(--blue);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">5</span>
+            <div><b>Какие данные для этого нужны?</b><br>Для каждого вопроса определите: у кого получать данные, какие именно данные, в какие моменты собирать.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--blue-bg);color:var(--blue);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">6</span>
+            <div><b>Как эти данные собрать?</b><br>База предлагает подходящие <a data-nav="#/section/tools" style="text-decoration:underline;color:var(--blue);">инструменты сбора данных</a> и примеры их применения в других <a data-nav="#/section/cases" style="text-decoration:underline;color:var(--blue);">кейсах</a>.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--blue-bg);color:var(--blue);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">7</span>
+            <div><b>Собрать черновик плана оценки</b><br>На выходе — таблица: Результат → Оценочный вопрос → Признак → У кого данные → Как собираем → Когда. Смотрите: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline;color:var(--blue);">шаблон плана оценки</a>, <a data-nav="#/section/methodology" style="text-decoration:underline;color:var(--blue);">методология</a>, <a data-nav="#/section/assessmentDocs" style="text-decoration:underline;color:var(--blue);">документы оценки</a>.</div>
+          </div>
+        </div>
+      </div>
+      ` : scenario==='implement' ? `
+      <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:20px;">
+        <h3 style="font-size:16px;margin-bottom:4px;">Сценарий 2: Проект уже реализуется</h3>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Маршрут: ожидаемые результаты → что ещё можно оценить → какие данные есть → чего не хватает → что собрать → инструменты → план действий</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--green-bg);color:var(--green);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">1</span>
+            <div><b>Что вы уже планировали получить в результате проекта?</b><br>Зафиксируйте ключевые ожидаемые результаты — из заявки, логической модели или текущего понимания команды.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--green-bg);color:var(--green);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">2</span>
+            <div><b>Что из этого ещё реально оценить?</b><br>Выберите 1–3 результата, по которым ещё можно собрать данные. Важно не обещать оценить всё задним числом.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--green-bg);color:var(--green);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">3</span>
+            <div><b>Какие данные уже есть?</b><br>Отметьте: регистрационные данные, анкеты, обратную связь, наблюдения, посещаемость, материалы участников, интервью.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--green-bg);color:var(--green);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">4</span>
+            <div><b>Чего не хватает, чтобы ответить на основные вопросы?</b><br>Определите пробелы в данных и сформулируйте 1–3 вопроса, на которые ещё можно получить ответ.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--green-bg);color:var(--green);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">5</span>
+            <div><b>Что нужно собрать сейчас?</b><br>Для каждого вопроса: у кого, какие данные, когда ещё возможно собрать.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--green-bg);color:var(--green);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">6</span>
+            <div><b>Каким инструментом это сделать?</b><br>База предлагает подходящие <a data-nav="#/section/tools" style="text-decoration:underline;color:var(--green);">инструменты сбора данных</a>, в том числе те, которые можно быстро встроить в уже идущий проект.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--green-bg);color:var(--green);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">7</span>
+            <div><b>Составить краткий план сбора данных до завершения проекта</b><br>На выходе — таблица: Что хотим узнать → Что уже есть → Чего не хватает → У кого собрать → Как собрать → Когда. Смотрите: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline;color:var(--green);">шаблон плана</a>, <a data-nav="#/card/tool/anketa-do-posle" style="text-decoration:underline;color:var(--green);">анкета «до/после»</a>.</div>
+          </div>
+        </div>
+      </div>
+      ` : `
+      <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:20px;">
+        <h3 style="font-size:16px;margin-bottom:4px;">Сценарий 3: Проект завершён / нужно подвести итоги</h3>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Маршрут: ожидаемые результаты → имеющиеся данные → на что можем ответить → выводы → ограничения → использование результатов</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">1</span>
+            <div><b>Какие результаты проекта вы хотели получить?</b><br>Зафиксируйте ключевые ожидаемые результаты — из заявки, логической модели или других документов.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">2</span>
+            <div><b>Какие данные у вас уже есть?</b><br>Отметьте доступные источники: анкеты, интервью, наблюдения, статистику участия, материалы участников, административные данные.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">3</span>
+            <div><b>На какие вопросы данные позволяют ответить?</b><br>Определите, что действительно можно оценить по имеющимся данным, а что подтвердить нельзя.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">4</span>
+            <div><b>Какие выводы можно сделать?</b><br>Сопоставьте: ожидаемый результат → имеющиеся данные → наблюдаемые изменения → вывод. Смотрите <a data-nav="#/section/cases" style="text-decoration:underline;color:var(--accent);">примеры анализа из кейсов</a>.</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">5</span>
+            <div><b>Какие есть ограничения?</b><br>Данные только после проекта? Мало участников? Нет данных для сравнения? Нельзя связать изменения с проектом?</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">6</span>
+            <div><b>Что делать с результатами?</b><br>Улучшить следующий цикл? Принять решение о масштабировании? Обсудить с командой? Представить донору? Подготовить <a data-nav="#/card/template/tpl-report" style="text-decoration:underline;color:var(--accent);">отчёт</a> или <a data-nav="#/card/template/tpl-presentation" style="text-decoration:underline;color:var(--accent);">презентацию</a>?</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.6;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;">
+            <span style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">7</span>
+            <div><b>Собрать итог оценки</b><br>На выходе: Ожидаемый результат → Какие данные есть → Что показывают → Ограничения → Что делаем дальше. Финал — не отчёт, а «что мы поняли и что будем с этим делать».</div>
+          </div>
+        </div>
+      </div>
+      `}
     </div>
     `}
 
@@ -1318,6 +1484,7 @@ function renderStart(){
     <div style="margin:36px 0 60px;"><a class="btn btn-primary" data-nav="#/card/case/muzeinyi-eksperiment">Посмотреть готовый пример кейса →</a></div>
   </div>`;
 }
+function setStartScenario(s){ state.startScenario=s; renderStart(); }
 
 /* ============================================================
    РЕНДЕР: КАТАЛОГ РАЗДЕЛА (cases, tools, methodology, templates, learning)
@@ -1396,6 +1563,7 @@ function renderSection(key){
       f.stage = params.get('stage')||f.stage||null;
       f.evalStage = params.get('evalStage')||f.evalStage||null;
       f.value = params.get('value')||f.value||null;
+      f.foreign = params.get('foreign')==='1'||params.get('foreign')==='true'||f.foreign||null;
     } else if(typeParam==='tools'){
       f.type = params.get('toolType')||f.type||null;
       f.dataType = params.get('dataType')||f.dataType||null;
@@ -1484,6 +1652,7 @@ function filterCases(){
     (!f.stage || c.stage===f.stage) &&
     (!f.evalStage || c.evalStage===f.evalStage) &&
     (!f.value || c.values.includes(f.value)) &&
+    (!f.foreign || (c.tags&&c.tags.includes('зарубежный опыт'))) &&
     (!f.q || (c.title+c.shortDesc+c.org).toLowerCase().includes(f.q.toLowerCase()))
   );
 }
@@ -1602,6 +1771,11 @@ function filterPanelCases(){
       <option value="">Любая ценность</option>
       ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
     </select></div>
+  <div class="filter-group"><label>Опыт</label>
+    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+      <input type="checkbox" ${f.foreign?'checked':''} onchange="state.filters.cases.foreign=this.checked||null;renderSection('cases')">
+      Только зарубежный опыт
+    </label></div>
   <div class="actions">
     <button class="btn btn-ghost btn-sm" onclick="state.filters.cases={};renderSection('cases')">Сбросить</button>
   </div>`;
@@ -1729,7 +1903,12 @@ function filterPanelCasesAll(){
     <select onchange="state.filters.cases.value=this.value||null;filterAllApply()">
       <option value="">Любая ценность</option>
       ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
-    </select></div>`;
+    </select></div>
+  <div class="filter-group"><label>Опыт</label>
+    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+      <input type="checkbox" ${f.foreign?'checked':''} onchange="state.filters.cases.foreign=this.checked||null;filterAllApply()">
+      Только зарубежный опыт
+    </label></div>`;
 }
 function filterPanelToolsAll(){
   const f = state.filters.tools||{};
@@ -1940,6 +2119,7 @@ function renderCaseDetail(id){
         ${relatedBlockHtml('Методология', c.relatedMethodology, 'methodology')}
         ${relatedBlockHtml('Шаблоны', c.relatedTemplates, 'template')}
         ${relatedBlockHtml('Обучающие материалы', c.relatedLearning, 'learning')}
+        ${(() => { const caseDocs = ASSESSMENT_DOCS.filter(d => d.caseId === id); return caseDocs.length ? `<div class="sidebar-box"><h4>Документы оценки этого проекта</h4><div style="display:flex;flex-direction:column;gap:6px;">${caseDocs.map(d => `<a class="filerow" href="#/card/assessmentDoc/${d.id}" style="text-decoration:none;color:inherit;"><div class="name"><span class="ext">${d.format||'PDF'}</span>${d.title}</div></a>`).join('')}</div></div>` : ''; })()}
       </div>
     </div>
     <a class="back-link" href="#/section/cases">← Ко всем кейсам</a>
@@ -2141,10 +2321,18 @@ function renderAssessmentDocDetail(id){
         ${d.evalQuestions.length ? `<div class="block"><h2>Оценочные вопросы</h2><ul class="plain">${d.evalQuestions.map(q=>`<li>${q}</li>`).join('')}</ul></div>` : ''}
         ${d.dataCollectionMethods.length ? `<div class="block"><h2>Методы сбора данных</h2><ul class="plain">${d.dataCollectionMethods.map(m=>`<li>${m}</li>`).join('')}</ul></div>` : ''}
         ${d.dataAnalysisMethods.length ? `<div class="block"><h2>Методы анализа данных</h2><ul class="plain">${d.dataAnalysisMethods.map(m=>`<li>${m}</li>`).join('')}</ul></div>` : ''}
-        <div class="block"><h2>Файлы</h2>
-          <div class="filelist">
-            ${fileRow(d.mainFile)}
-            ${d.additionalFiles.map(f=>fileRow(f)).join('')}
+        <div class="block"><h2>Просмотр и скачивание</h2>
+          <div style="background:var(--paper-sunk);border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:14px;">
+            <div style="font-size:48px;margin-bottom:8px;">📄</div>
+            <div style="font-size:14px;font-weight:600;margin-bottom:4px;">${d.mainFile.name}</div>
+            <div style="font-size:12px;color:var(--ink-soft);margin-bottom:14px;">${d.format} · ${d.language}</div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" onclick="alert('Демо-прототип: просмотр файла будет доступен после загрузки документов')">Просмотреть</button>
+              <button class="btn btn-ghost btn-sm" onclick="alert('Демо-прототип: скачивание файла будет доступно после загрузки документов')">Скачать</button>
+            </div>
+          </div>
+          ${d.additionalFiles.length ? `<div class="subhead">Дополнительные файлы</div><div class="filelist">${d.additionalFiles.map(f=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);"><span class="ext">${f.ext}</span><span style="font-size:13px;">${f.name}</span><button class="btn btn-ghost btn-sm" style="margin-left:auto;font-size:11px;" onclick="alert('Демо-прототип: скачивание')">Скачать</button></div>`).join('')}</div>` : ''}
+        </div>
       </div>
       <div style="text-align:center;margin-top:24px;">
         <a class="btn btn-primary" data-nav="#/section/all" style="font-size:14px;padding:12px 28px;">Все материалы →</a>
