@@ -1079,7 +1079,7 @@ const DOC_TYPES = ['План оценки','Дерево результатов'
 /* ============================================================
    СОСТОЯНИЕ И МАРШРУТИЗАЦИЯ
    ============================================================ */
-const state = { audience:'all', filters:{cases:{}, tools:{}, methodology:{}, templates:{}, learning:{}, assessmentDocs:{}}, resultsSel:{area:null, infl:null} };
+const state = { audience:'all', startPath:'newbie', filters:{cases:{}, tools:{}, methodology:{}, templates:{}, learning:{}, assessmentDocs:{}}, resultsSel:{area:null, infl:null} };
 
 function byId(arr,id){return arr.find(x=>x.id===id);}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -1110,6 +1110,7 @@ function toggleMobileMenu(){
     }
   }
 }
+function setStartPath(p){ state.startPath=p; renderStart(); }
 function doHeaderSearch(){
   const v = document.getElementById('headerSearchInput').value.trim();
   if(!v){go('#/section/all');return;}
@@ -1124,7 +1125,7 @@ document.addEventListener('click', function(e){
 });
 
 function buildNav(activeKey){
-  const refSections = ['values','results','faq','glossary'];
+  const refSections = ['results','faq','glossary'];
   const isRef = refSections.includes(activeKey);
   let html = `<a href="#/start" class="${activeKey==='start'?'active':''}">С чего начать</a>`;
   html += `<div class="dd">
@@ -1135,6 +1136,7 @@ function buildNav(activeKey){
       ${CATALOG_SECTIONS.map(k=>`<a href="#/section/${k}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
     </div>
   </div>`;
+  html += `<a href="#/values" class="${activeKey==='values'?'active':''}">Ценности</a>`;
   html += `<div class="dd">
     <button class="dd-btn ${isRef?'active':''}">Справочник ▾</button>
     <div class="dd-menu">
@@ -1224,21 +1226,43 @@ function renderHome(){
    ============================================================ */
 function renderStart(){
   buildNav(null);
+  const path = state.startPath || 'newbie';
   document.getElementById('app').innerHTML = `
   <div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>С чего начать</span></div>
     <div class="catalog-head">
-      <div class="eyebrow">Для новичков</div>
-      <h1>Четыре стадии оценки — простыми словами</h1>
-      <p>Если вы впервые оцениваете культурный проект, не обязательно сразу разбираться во всей базе. Достаточно понимать четыре стадии — и знать, какие материалы нужны на каждой.</p>
+      <h1>С чего начать</h1>
+      <p>Выберите, кто вы и на какой стадии находитесь — мы подскажем, какие материалы базы знаний вам нужны прямо сейчас.</p>
     </div>
-    <div class="scenario-list" style="margin-top:28px;">
-      <div class="scenario"><div class="num">01</div><h4>Планирование</h4><p>Определяете цель и вопросы оценки. Полезны: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline">шаблон плана оценки</a>, <a data-nav="#/card/methodology/oecd-dac" style="text-decoration:underline">критерии ОЭСР-DAC</a>.</p></div>
-      <div class="scenario"><div class="num">02</div><h4>Сбор данных</h4><p>Выбираете и, если нужно, пилотируете инструмент. Смотрите раздел <a data-nav="#/section/tools" style="text-decoration:underline">«Инструменты сбора данных»</a>.</p></div>
-      <div class="scenario"><div class="num">03</div><h4>Анализ</h4><p>Обрабатываете собранные ответы. Начните со статьи <a data-nav="#/card/learning/lrn-qual-analysis" style="text-decoration:underline">«Как анализировать качественные данные»</a>.</p></div>
-      <div class="scenario"><div class="num">04</div><h4>Отчётность</h4><p>Оформляете выводы. Возьмите <a data-nav="#/card/template/tpl-report" style="text-decoration:underline">шаблон отчёта об оценке</a>.</p></div>
+
+    <div style="display:flex;gap:10px;margin:28px 0 0;flex-wrap:wrap;">
+      <button class="btn ${path==='newbie'?'btn-primary':'btn-ghost'}" onclick="setStartPath('newbie')" style="font-size:14px;">Обзор оценки</button>
+      <button class="btn ${path==='creative'?'btn-primary':'btn-ghost'}" onclick="setStartPath('creative')" style="font-size:14px;">Мой проект</button>
     </div>
-    <div class="audience-note" style="margin-top:30px;max-width:640px;">Не перегружайте себя сразу всеми деталями — на каждой стадии открывайте только те материалы, которые нужны прямо сейчас. Если встретится незнакомое слово — загляните в <a data-nav="#/glossary" style="text-decoration:underline">глоссарий</a>.</div>
+
+    ${path==='newbie' ? `
+    <div style="margin-top:28px;">
+      <h2 style="font-size:20px;margin-bottom:6px;">Три стадии оценки — простым языком</h2>
+      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-bottom:20px;">Не обязательно разбираться во всей базе. Достаточно понимать три стадии — и знать, какие материалы нужны на каждой.</p>
+      <div class="scenario-list">
+        <div class="scenario"><div class="num">01</div><h4>Планирование</h4><p>Определяете цель и вопросы оценки, выбираете критерии. Полезны: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline">шаблон плана оценки</a>, <a data-nav="#/card/methodology/oecd-dac" style="text-decoration:underline">критерии ОЭСР-DAC</a>, <a data-nav="#/card/methodology/theory-of-change" style="text-decoration:underline">теория изменений</a>.</p></div>
+        <div class="scenario"><div class="num">02</div><h4>Сбор и анализ данных</h4><p>Выбираете инструменты, собираете и обрабатываете данные. Смотрите: <a data-nav="#/section/tools" style="text-decoration:underline">инструменты сбора данных</a>, <a data-nav="#/card/learning/lrn-qual-analysis" style="text-decoration:underline">«Как анализировать качественные данные»</a>, <a data-nav="#/card/learning/lrn-choose-method" style="text-decoration:underline">«Как выбрать метод сбора данных»</a>.</p></div>
+        <div class="scenario"><div class="num">03</div><h4>Использование результатов</h4><p>Оформляете выводы, презентуете донору и команде, применяете уроки в следующем проекте. Возьмите: <a data-nav="#/card/template/tpl-report" style="text-decoration:underline">шаблон отчёта</a>, <a data-nav="#/card/template/tpl-presentation" style="text-decoration:underline">шаблон презентации</a>.</p></div>
+      </div>
+    </div>
+    ` : `
+    <div style="margin-top:28px;">
+      <h2 style="font-size:20px;margin-bottom:6px;">Маршрут для творческой команды</h2>
+      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-bottom:20px;">У вас уже есть проект? Выберите стадию — и получите конкретные материалы и инструменты под вашу задачу.</p>
+      <div class="scenario-list">
+        <div class="scenario"><div class="num">01</div><h4>Готовлю проект / пишу заявку</h4><p>Вам нужно обосновать проект, сформулировать цели и показать, как вы будете измерять результаты. Полезны: <a data-nav="#/card/template/tpl-plan" style="text-decoration:underline">шаблон плана оценки</a>, <a data-nav="#/card/methodology/theory-of-change" style="text-decoration:underline">теория изменений</a>, <a data-nav="#/card/methodology/logframe" style="text-decoration:underline">логико-структурный подход</a>, <a data-nav="#/card/template/tpl-lmp" style="text-decoration:underline">логическая модель программы</a>.</p></div>
+        <div class="scenario"><div class="num">02</div><h4>Проект реализуется</h4><p>Проект идёт, и вы хотите собрать данные вовремя — или параллельно провести формирующую оценку. Смотрите: <a data-nav="#/section/tools" style="text-decoration:underline">инструменты сбора данных</a>, <a data-nav="#/card/learning/lrn-pilot" style="text-decoration:underline">«Как провести пилотирование»</a>, <a data-nav="#/card/tool/anketa-do-posle" style="text-decoration:underline">анкета «до/после»</a>.</p></div>
+        <div class="scenario"><div class="num">03</div><h4>Проект завершён — нужно подвести итоги</h4><p>Проект окончен, нужно оценить результаты и использовать выводы. Берите: <a data-nav="#/card/template/tpl-report" style="text-decoration:underline">шаблон отчёта</a>, <a data-nav="#/card/template/tpl-presentation" style="text-decoration:underline">презентацию</a>, <a data-nav="#/section/cases" style="text-decoration:underline">похожие кейсы</a> для сравнения.</p></div>
+      </div>
+    </div>
+    `}
+
+    <div class="audience-note" style="margin-top:30px;max-width:640px;">Не перегружайте себя сразу всеми деталями — на каждой стадии открывайте только то, что нужно прямо сейчас. Если встретится незнакомое слово — загляните в <a data-nav="#/glossary" style="text-decoration:underline">глоссарий</a>.</div>
     <div style="margin:36px 0 60px;"><a class="btn btn-primary" data-nav="#/card/case/muzeinyi-eksperiment">Посмотреть готовый пример кейса →</a></div>
   </div>`;
 }
