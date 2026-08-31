@@ -1111,6 +1111,32 @@ function toggleMobileMenu(){
   }
 }
 function setStartPath(p){ state.startPath=p; renderStart(); }
+const PROMPTS = {
+  plan: `Ты — эксперт по оценке культурных проектов. Помоги составить план оценки для моего проекта.\n\nОпиши проект:\n- Название:\n- Тип проекта:\n- Целевая аудитория:\n- Период реализации:\n\nИспользуй структуру из базы знаний ЯККИ:\n1. Определи цель оценки\n2. Выбери критерии ОЭСР-DAC (актуальность, согласованность, эффективность, результативность, воздействие, устойчивость)\n3. Сформулируй 2-3 ключевых оценочных вопроса\n4. Подбери подходящие инструменты сбора данных\n5. Определи методы анализа\n6. Составь график`,
+  tool: `Ты — эксперт по оценке культурных проектов. Помоги выбрать подходящий инструмент сбора данных.\n\nОпиши задачу:\n- Что нужно узнать:\n- Кто целевая аудитория для сбора данных:\n- Когда собирать данные (до, во время, после проекта):\n- Какой тип данных предпочтителен (количественные, качественные, смешанные):\n\nИз базы знаний ЯККИ предложи 2-3 подходящих инструмента с описанием и ссылкой.`
+};
+function copyPrompt(key){
+  navigator.clipboard.writeText(PROMPTS[key]).then(()=>{
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'Скопировано!';
+    btn.style.background = 'var(--navy)'; btn.style.color = '#fff';
+    setTimeout(()=>{ btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
+  });
+}
+function exportJSON(){
+  const data = {
+    cases: CASES.map(c=>({id:c.id,title:c.title,org:c.org,projectType:c.projectType,shortDesc:c.shortDesc,tags:c.tags,updated:c.updated})),
+    tools: TOOLS.map(t=>({id:t.id,title:t.title,type:t.type,audience:t.audience,dataType:t.dataType,shortDesc:t.shortDesc,updated:t.updated})),
+    methodology: METHODOLOGY.map(m=>({id:m.id,title:m.title,sub:m.sub,shortDesc:m.shortDesc,updated:m.updated})),
+    templates: TEMPLATES.map(t=>({id:t.id,title:t.title,shortDesc:t.shortDesc,formats:t.formats,when:t.when,updated:t.updated})),
+    values: VALUES.map(v=>({id:v.id,title:v.title,desc:v.desc})),
+    glossary: GLOSSARY.map(g=>({term:g.term,def:g.def}))
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'yakki-knowledge-base.json'; a.click();
+}
 function doHeaderSearch(){
   const v = document.getElementById('headerSearchInput').value.trim();
   if(!v){go('#/section/all');return;}
@@ -1159,9 +1185,9 @@ function renderHome(){
     <h1>База знаний по оценке<br>культурных проектов</h1>
     <p class="lead">Кейсы, инструменты, методология и шаблоны — чтобы команда сама планировала и оценивала результаты, не дожидаясь консультации методолога.</p>
     <div class="audience-btns">
-      <a class="audience-btn" data-nav="#/start"><span class="ab-icon">→</span><div><b>С чего начать</b><span>Четыре стадии оценки простыми словами</span></div></a>
-      <a class="audience-btn" data-nav="#/section/tools" data-audience="professional"><span class="ab-icon">⚙</span><div><b>Для профессионалов</b><span>Инструменты, шаблоны, методология</span></div></a>
-      <a class="audience-btn" data-nav="#/section/all?type=cases" data-audience="foundation"><span class="ab-icon">◈</span><div><b>Для фондов</b><span>Кейсы с оценкой воздействия</span></div></a>
+      <a class="audience-btn" data-nav="#/start"><span class="ab-icon">→</span><div><b>С чего начать</b><span>Ориентирующий путь для первого знакомства с оценкой</span></div></a>
+      <a class="audience-btn" data-nav="#/section/tools" data-audience="professional"><span class="ab-icon">⚙</span><div><b>Для экспертов / оценщиков</b><span>Инструменты, шаблоны, методология</span></div></a>
+      <a class="audience-btn" data-nav="#/section/all?type=cases" data-audience="foundation"><span class="ab-icon">◈</span><div><b>Для доноров / заказчиков</b><span>Кейсы, ценности, результаты</span></div></a>
     </div>
   </div></div>
 
@@ -1174,6 +1200,32 @@ function renderHome(){
         <div class="scenario"><div class="num">02</div><h4>Взять готовый инструмент</h4><p>Найдите <a data-nav="#/section/tools" style="text-decoration:underline">анкету или гайд</a> под свою аудиторию, скачайте файл и инструкцию по применению.</p></div>
         <div class="scenario"><div class="num">03</div><h4>Разобраться в термине</h4><p>Откройте <a data-nav="#/glossary" style="text-decoration:underline">глоссарий</a>, посмотрите определение и перейдите к <a data-nav="#/section/methodology" style="text-decoration:underline">методологии</a>, где термин раскрыт подробнее.</p></div>
         <div class="scenario"><div class="num">04</div><h4>Скачать шаблон и применить у себя</h4><p>Возьмите <a data-nav="#/section/templates" style="text-decoration:underline">шаблон</a> плана оценки, ЛМП или отчёта — и адаптируйте под свой проект.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap fade-in" style="padding:36px 0 8px;">
+    <div class="hr"></div>
+    <div style="padding-top:36px;">
+      <div class="eyebrow">Для AI-агентов</div>
+      <h2 style="font-size:20px;margin-top:6px;">Промты и материалы для скачивания</h2>
+      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-top:8px;">Скопируйте промт для вашего AI-ассистента или скачайте структурированные данные для загрузки в другие системы.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:20px;">
+        <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Промт для планирования оценки</div>
+          <div style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px;">AI-ассистент поможет составить план оценки по шагам из базы знаний.</div>
+          <button class="btn btn-ghost btn-sm" onclick="copyPrompt('plan')">Скопировать промт</button>
+        </div>
+        <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Промт для выбора инструмента</div>
+          <div style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px;">AI подберёт подходящий инструмент сбора данных под вашу задачу.</div>
+          <button class="btn btn-ghost btn-sm" onclick="copyPrompt('tool')">Скопировать промт</button>
+        </div>
+        <div style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Экспорт данных базы знаний</div>
+          <div style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px;">Структурированный JSON со всеми кейсами, инструментами и шаблонами.</div>
+          <button class="btn btn-ghost btn-sm" onclick="exportJSON()">Скачать JSON</button>
+        </div>
       </div>
     </div>
   </div>
