@@ -2129,7 +2129,6 @@ function renderCaseDetail(id){
             <dt>Период реализации</dt><dd>${c.period}</dd>
             <dt>География</dt><dd>${c.geo}</dd>
             <dt>Целевая аудитория</dt><dd>${c.audience}</dd>
-            <dt>Теги</dt><dd>${c.tags.map(t=>`<span class="tag">${t}</span>`).join(' ')}</dd>
           </dl>
           ${c.fullDesc ? `<div style="margin-top:14px;"><div class="subhead">Полное описание проекта</div><div class="truncated" id="fullDescBlock"><p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);">${c.fullDesc}</p></div><button class="truncated-toggle" onclick="this.previousElementSibling.classList.toggle('expanded');this.textContent=this.textContent==='Показать полностью ▾'?'Свернуть ▴':'Показать полностью ▾'">Показать полностью ▾</button></div>` : ''}
         </div>
@@ -2293,7 +2292,6 @@ function renderTemplateDetail(id){
       <div>
         <div class="block"><h2>Когда использовать</h2><p style="font-size:14px;">${t.when}</p></div>
         ${t.instruction ? `<div class="block"><h2>Инструкция по использованию</h2><p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);">${t.instruction}</p></div>` : ''}
-        ${t.tags ? `<div class="block"><h2>Теги</h2><div style="display:flex;gap:6px;flex-wrap:wrap;">${t.tags.map(tg=>`<span class="tag">${tg}</span>`).join('')}</div></div>` : ''}
         <div class="block"><h2>Скачать</h2><div class="filelist">${t.formats.map(f=>fileRow({name:t.title+'.'+f.toLowerCase(),ext:f})).join('')}</div></div>
       </div>
       <div>
@@ -2340,7 +2338,6 @@ function renderAssessmentDocDetail(id){
             <dt>Период подготовки</dt><dd>${d.prepPeriod}</dd>
             <dt>Язык</dt><dd>${d.language}</dd>
             <dt>Формат</dt><dd>${d.format}</dd>
-            <dt>Теги</dt><dd>${d.tags.map(t=>`<span class="tag">${t}</span>`).join(' ')}</dd>
           </dl>
         </div>
         <div class="block"><h2>Связанный проект</h2>
