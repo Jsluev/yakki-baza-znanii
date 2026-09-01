@@ -70,6 +70,10 @@ nav.mainnav a.active{color:var(--ink);background:var(--paper-sunk);}
 .searchbox input{border:none;background:none;font-family:var(--font-body);font-size:13px;outline:none;width:140px;color:var(--ink);}
 .searchbox input::placeholder{color:var(--ink-faint);}
 .searchbox button{background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12.5px;font-weight:600;transition:background .12s;}
+@media (max-width:1100px){
+  nav.mainnav a, nav.mainnav .dd-btn{font-size:13px;padding:6px 8px;}
+  nav.mainnav{gap:0;}
+}
 @media (max-width:980px){nav.mainnav{display:none;}.header-search{display:none;}}
 .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-shrink:0;}
 .hamburger span{display:block;width:20px;height:2px;background:var(--ink);margin:4px 0;border-radius:2px;transition:all .2s;}
@@ -403,13 +407,14 @@ footer a:hover{color:#fff;}
     background:var(--paper-raised);border-bottom:1px solid var(--line);
     box-shadow:var(--shadow);z-index:100;
     flex-direction:column;padding:8px;gap:2px;
+    max-height:calc(100vh - 56px);overflow-y:auto;
   }
   nav.mainnav.mobile-open{display:flex;}
   nav.mainnav a, nav.mainnav .dd-btn{padding:10px 14px;width:100%;text-align:left;border-radius:8px;font-size:14px;}
   nav.mainnav a:hover, nav.mainnav .dd-btn:hover{background:var(--paper-sunk);}
   .dd{position:static;}
   .dd-menu{position:static;box-shadow:none;border:none;min-width:unset;padding:4px 0 4px 16px;display:none;}
-  .dd:hover .dd-menu, .dd:focus-within .dd-menu{display:block;}
+  .dd-menu.dd-open{display:block;}
   .mobile-search{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);}
   .mobile-search input{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px;font-family:var(--font-body);background:#fff;outline:none;transition:border-color .15s;}
   .mobile-search input:focus{border-color:var(--navy);}
@@ -638,6 +643,43 @@ footer a:hover{color:#fff;}
   .catalog-head p{font-size:13px;}
   .detail-head{padding:20px 0 4px;}
   .crumbs{font-size:11px;gap:4px;}
+}
+
+/* --- Prompts page --- */
+@media (max-width:640px){
+  .prompts-grid{grid-template-columns:1fr;}
+  .prompt-card{padding:14px;}
+  .prompt-cat{font-size:11px;}
+  .prompt-title{font-size:14px;}
+  .prompt-desc{font-size:12.5px;}
+  .prompt-actions{flex-direction:column;}
+  .prompt-actions .btn{width:100%;justify-content:center;}
+}
+
+/* --- Start page --- */
+@media (max-width:640px){
+  .start-hero{padding:24px 0 16px;}
+  .start-hero h1{font-size:22px !important;}
+  .start-hero p{font-size:13px;}
+  .stage-card{padding:14px;}
+  .stage-card h3{font-size:14px;}
+  .stage-card .step{font-size:12.5px;}
+  .scenario{padding:12px;}
+  .scenario h4{font-size:13.5px;}
+  .scenario p{font-size:12px;}
+}
+
+/* --- Filter toggle (mobile) --- */
+@media (max-width:860px){
+  .filter-toggle{display:flex;}
+  .filters{display:none;}
+  .filters.filter-open{display:block;position:static;margin-top:12px;}
+}
+
+/* --- Detail page actions --- */
+@media (max-width:640px){
+  .detail-actions{flex-direction:column;}
+  .detail-actions .btn{width:100%;}
 }
 </style>
 </head>
@@ -1099,6 +1141,14 @@ function toggleMobileMenu(){
     }
   }
 }
+function toggleMobileDd(el){
+  if(window.innerWidth>980) return;
+  const menu = el.nextElementSibling;
+  if(!menu) return;
+  const wasOpen = menu.classList.contains('dd-open');
+  document.querySelectorAll('.dd-menu.dd-open').forEach(m=>m.classList.remove('dd-open'));
+  if(!wasOpen) menu.classList.add('dd-open');
+}
 function setStartPath(p){ state.startPath=p; renderStart(); }
 const PROMPTS = [
   {key:'plan', title:'Составить план оценки', cat:'Планирование', desc:'AI поможет составить план оценки по шагам из базы знаний ЯККИ.', prompt:`Ты — эксперт по оценке культурных проектов. Помоги составить план оценки для моего проекта.\n\nОпиши проект:\n- Название:\n- Тип проекта:\n- Целевая аудитория:\n- Период реализации:\n\nИспользуй структуру из базы знаний ЯККИ:\n1. Определи цель оценки\n2. Выбери критерии ОЭСР-DAC (актуальность, согласованность, эффективность, результативность, воздействие, устойчивость)\n3. Сформулируй 2-3 ключевых оценочных вопроса\n4. Подбери подходящие инструменты сбора данных\n5. Определи методы анализа\n6. Составь график`},
@@ -1179,7 +1229,7 @@ function buildNav(activeKey){
   const isResults = activeKey==='results';
   let html = `<a href="#/start" class="${activeKey==='start'?'active':''}">С чего начать</a>`;
   html += `<div class="dd">
-    <button class="dd-btn ${CATALOG_SECTIONS.includes(activeKey)?'active':''}">База материалов ▾</button>
+    <button class="dd-btn ${CATALOG_SECTIONS.includes(activeKey)?'active':''}" onclick="toggleMobileDd(this)">База материалов ▾</button>
     <div class="dd-menu">
       <a href="#/section/all"><span class="swatch" style="background:var(--navy)"></span><b>Все материалы</b></a>
       <div style="height:1px;background:var(--line);margin:4px 8px;"></div>
@@ -1189,7 +1239,7 @@ function buildNav(activeKey){
   html += `<a href="#/values" class="${isValues?'active':''}">Ценности</a>`;
   html += `<a href="#/results" class="${isResults?'active':''}">Банк результатов</a>`;
   html += `<div class="dd">
-    <button class="dd-btn ${isRef?'active':''}">Справочник ▾</button>
+    <button class="dd-btn ${isRef?'active':''}" onclick="toggleMobileDd(this)">Справочник ▾</button>
     <div class="dd-menu">
       ${refSections.map(k=>`<a href="#/${k}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
       <div style="height:1px;background:var(--line);margin:4px 8px;"></div>
@@ -1539,6 +1589,7 @@ function renderSection(key){
         <p>${s.desc}</p>
       </div>
       <div class="catalog-body">
+        <button class="btn btn-ghost btn-sm filter-toggle" style="display:none;width:100%;margin-bottom:8px;" onclick="document.querySelector('.filters').classList.toggle('filter-open');this.textContent=this.textContent.includes('Показать')?'Скрыть фильтры ▲':'Показать фильтры ▼'">Показать фильтры ▼</button>
         <div class="filters">
           <h4>Фильтры</h4>
           ${panelFn ? panelFn() : `<div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Для этого раздела фильтры не предусмотрены — используйте поиск по названию.</div>`}
