@@ -2437,7 +2437,7 @@ function renderGlossaryTerm(term){
 function renderValues(){
   buildNav('values');
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Ценности</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/results">Библиотека ценностей и результатов</a><span class="sep">/</span><span>Ценности</span></div>
     <div class="catalog-head"><span class="badge" style="background:${SECTIONS.values.bg};color:${SECTIONS.values.color}">Ценности</span>
       <h1 style="margin-top:12px;">Ценностная рамка</h1>
       <p>Ценность работает как сквозной фильтр: откройте карточку — увидите кейсы и инструменты, где она фигурировала. Показаны 8 примеров из 17 ценностей Указа №809 — полный список наполняется на этапе внедрения.</p>
@@ -2459,19 +2459,28 @@ function renderValueDetail(id){
   const app = document.getElementById('app');
   if(!v){ app.innerHTML = notFound(); return; }
   const cases = CASES.filter(c=>c.values.includes(id));
-  const tools = TOOLS.filter(t=>t.values.includes(id));
+  const tools = TOOLS.filter(t=>t.values&&t.values.includes(id));
+  const bestCases = cases.slice(0,3);
+  const bestTools = tools.slice(0,3);
   app.innerHTML = `<div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/values">Ценности</a><span class="sep">/</span><span>${v.title}</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/results">Библиотека ценностей и результатов</a><span class="sep">/</span><span>${v.title}</span></div>
     <div class="detail-head"><span class="badge" style="background:${SECTIONS.values.bg};color:${SECTIONS.values.color}">Ценность</span>
       <div class="detail-titlebar"><div><h1>♦ ${v.title}</h1><p class="detail-sub">${v.desc}</p></div></div>
     </div>
     <div class="section-pad" style="padding-top:24px;">
-      <div class="subhead">Кейсы, где фигурировала эта ценность</div>
-      <div class="card-list">${cases.length?renderCardList('cases',cases):'<div class="empty-state"><p>Пока нет связанных кейсов в демо-наполнении.</p></div>'}</div>
-      <div class="subhead" style="margin-top:26px;">Инструменты, связанные с этой ценностью</div>
-      <div class="card-list">${tools.length?renderCardList('tools',tools):'<div class="empty-state"><p>Пока нет связанных инструментов в демо-наполнении.</p></div>'}</div>
+      ${bestCases.length ? `<div class="subhead">Лучшие кейсы с этой ценностью</div>
+      <div class="card-list">${renderCardList('cases',bestCases)}</div>
+      ${cases.length>3 ? `<div style="margin-top:10px;"><a class="btn btn-ghost btn-sm" href="#/section/cases?value=${id}">Все кейсы (${cases.length}) →</a></div>` : ''}` : '<div class="empty-state"><p>Пока нет связанных кейсов.</p></div>'}
+      ${bestTools.length ? `<div class="subhead" style="margin-top:26px;">Инструменты, связанные с этой ценностью</div>
+      <div class="card-list">${renderCardList('tools',bestTools)}</div>
+      ${tools.length>3 ? `<div style="margin-top:10px;"><a class="btn btn-ghost btn-sm" href="#/section/all?type=tools&value=${id}">Все инструменты (${tools.length}) →</a></div>` : ''}` : ''}
+      <div style="margin-top:24px;padding:16px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Все материалы по этой ценности</div>
+        <div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;">Используйте фильтр «Ценность» в каталоге для полного поиска.</div>
+        <a class="btn btn-primary btn-sm" href="#/section/all?value=${id}">Открыть полную выборку →</a>
+      </div>
     </div>
-    <a class="back-link" href="#/values">← Ко всем ценностям</a>
+    <a class="back-link" href="#/results">← К библиотеке ценностей и результатов</a>
   </div>`;
 }
 
@@ -2484,7 +2493,7 @@ function renderResults(){
   const areaObj = RESULTS_TREE[state.resultsSel.area];
   const inflObj = areaObj.influence[state.resultsSel.infl];
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Банк результатов</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Библиотека ценностей и результатов</span></div>
     <div class="catalog-head"><span class="badge" style="background:${SECTIONS.results.bg};color:${SECTIONS.results.color}">Банк результатов</span>
       <h1 style="margin-top:12px;">Область → область влияния → результат</h1>
       <p>Готовые формулировки социокультурных результатов для теории изменений. Результаты и ценности — это фильтры для поиска других материалов, а не самостоятельные объекты оценки.</p>
