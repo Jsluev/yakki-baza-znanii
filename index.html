@@ -677,7 +677,7 @@ footer a:hover{color:#fff;}
       <div>
         <h4>Разделы</h4>
         <a href="#/section/cases">Кейсы проектов</a>
-        <a href="#/section/tools">Инструменты сбора данных</a>
+        <a href="#/section/tools">Инструменты</a>
         <a href="#/section/methodology">Методология</a>
         <a href="#/section/templates">Шаблоны</a>
       </div>
@@ -709,7 +709,7 @@ footer a:hover{color:#fff;}
    ============================================================ */
 const SECTIONS = {
   cases:      {label:'Кейсы проектов', short:'Кейсы', color:'var(--c-cases)', bg:'var(--c-cases-bg)', icon:'▣', desc:'Реальные примеры оценки творческих проектов: контекст, методы, документация, выводы.'},
-  tools:      {label:'Инструменты сбора данных', short:'Инструменты', color:'var(--c-tools)', bg:'var(--c-tools-bg)', icon:'✎', desc:'Анкеты, гайды интервью, чек-листы наблюдений — готовые к применению без методолога.'},
+  tools:      {label:'Инструменты', short:'Инструменты', color:'var(--c-tools)', bg:'var(--c-tools-bg)', icon:'✎', desc:'Анкеты, гайды интервью, чек-листы, бланки — всё, что нужно для сбора и анализа данных.'},
   methodology:{label:'Методология и подходы', short:'Методология', color:'var(--c-method)', bg:'var(--c-method-bg)', icon:'◐', desc:'Подходы к оценке, критерии ОЭСР-DAC, типы эффектов и методы анализа — простым языком.'},
   templates:  {label:'Шаблоны и образцы', short:'Шаблоны', color:'var(--c-templates)', bg:'var(--c-templates-bg)', icon:'▭', desc:'Пустографки документов: план оценки, ЛМП, ТЗ на инструментарий, отчёт, презентация.'},
   values:     {label:'Ценности', short:'Ценности', color:'var(--c-values)', bg:'var(--c-values-bg)', icon:'♦', desc:'Ценностная рамка как постоянный фильтр: выберите ценность — увидьте связанные материалы.'},
@@ -1184,7 +1184,8 @@ document.addEventListener('click', function(e){
 function buildNav(activeKey){
   const refSections = ['faq','glossary'];
   const isRef = refSections.includes(activeKey)||activeKey==='prompts';
-  const isResults = activeKey==='results'||activeKey==='values'||activeKey==='value';
+  const isValues = activeKey==='values'||activeKey==='value';
+  const isResults = activeKey==='results';
   let html = `<a href="#/start" class="${activeKey==='start'?'active':''}">С чего начать</a>`;
   html += `<div class="dd">
     <button class="dd-btn ${CATALOG_SECTIONS.includes(activeKey)?'active':''}">База материалов ▾</button>
@@ -1194,7 +1195,8 @@ function buildNav(activeKey){
       ${CATALOG_SECTIONS.map(k=>`<a href="#/section/${k}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
     </div>
   </div>`;
-  html += `<a href="#/results" class="${isResults?'active':''}">Библиотека ценностей и результатов</a>`;
+  html += `<a href="#/values" class="${isValues?'active':''}">Ценности</a>`;
+  html += `<a href="#/results" class="${isResults?'active':''}">Банк результатов</a>`;
   html += `<div class="dd">
     <button class="dd-btn ${isRef?'active':''}">Справочник ▾</button>
     <div class="dd-menu">
@@ -2151,7 +2153,7 @@ function renderToolDetail(id){
   if(!t){ app.innerHTML = notFound(); return; }
   app.innerHTML = `
   <div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/tools">Инструменты сбора данных</a><span class="sep">/</span><span>${t.title}</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/tools">Инструменты</a><span class="sep">/</span><span>${t.title}</span></div>
     <div class="detail-head">
       <span class="badge" style="background:${SECTIONS.tools.bg};color:${SECTIONS.tools.color}">${t.type}</span>
       <div class="detail-titlebar">
@@ -2461,7 +2463,7 @@ function renderGlossaryTerm(term){
 function renderValues(){
   buildNav('values');
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/results">Библиотека ценностей и результатов</a><span class="sep">/</span><span>Ценности</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Ценности</span></div>
     <div class="catalog-head"><span class="badge" style="background:${SECTIONS.values.bg};color:${SECTIONS.values.color}">Ценности</span>
       <h1 style="margin-top:12px;">Ценностная рамка</h1>
       <p>Ценность работает как сквозной фильтр: откройте карточку — увидите кейсы и инструменты, где она фигурировала. Показаны 8 примеров из 17 ценностей Указа №809 — полный список наполняется на этапе внедрения.</p>
@@ -2487,7 +2489,7 @@ function renderValueDetail(id){
   const bestCases = cases.slice(0,3);
   const bestTools = tools.slice(0,3);
   app.innerHTML = `<div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/results">Библиотека ценностей и результатов</a><span class="sep">/</span><span>${v.title}</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/values">Ценности</a><span class="sep">/</span><span>${v.title}</span></div>
     <div class="detail-head"><span class="badge" style="background:${SECTIONS.values.bg};color:${SECTIONS.values.color}">Ценность</span>
       <div class="detail-titlebar"><div><h1>♦ ${v.title}</h1><p class="detail-sub">${v.desc}</p></div></div>
     </div>
@@ -2504,7 +2506,7 @@ function renderValueDetail(id){
         <a class="btn btn-primary btn-sm" href="#/section/all?value=${id}">Открыть полную выборку →</a>
       </div>
     </div>
-    <a class="back-link" href="#/results">← К библиотеке ценностей и результатов</a>
+    <a class="back-link" href="#/values">← Ко всем ценностям</a>
   </div>`;
 }
 
@@ -2517,7 +2519,7 @@ function renderResults(){
   const areaObj = RESULTS_TREE[state.resultsSel.area];
   const inflObj = areaObj.influence[state.resultsSel.infl];
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Библиотека ценностей и результатов</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Банк результатов</span></div>
     <div class="catalog-head"><span class="badge" style="background:${SECTIONS.results.bg};color:${SECTIONS.results.color}">Банк результатов</span>
       <h1 style="margin-top:12px;">Область → область влияния → результат</h1>
       <p>Готовые формулировки социокультурных результатов для теории изменений. Результаты и ценности — это фильтры для поиска других материалов, а не самостоятельные объекты оценки.</p>
@@ -2687,7 +2689,7 @@ function renderResultDetail(areaIdx,inflIdx,resultIdx){
   const relatedTools = TOOLS.filter(t=>t.values&&t.values.length>0);
 
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/results">Библиотека ценностей и результатов</a><span class="sep">/</span><span>${result.text.substring(0,50)}…</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/results">Банк результатов</a><span class="sep">/</span><span>${result.text.substring(0,50)}…</span></div>
     <div class="detail-head"><span class="badge" style="background:${SECTIONS.results.bg};color:${SECTIONS.results.color}">Результат</span>
       <div class="detail-titlebar"><div><h1>${result.text}</h1></div></div>
       <div class="detail-meta">
