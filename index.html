@@ -3397,7 +3397,7 @@ const DOC_TYPES = ['План оценки','Дерево результатов'
 /* ============================================================
    СОСТОЯНИЕ И МАРШРУТИЗАЦИЯ
    ============================================================ */
-const state = { audience:'all', startPath:'newbie', startScenario:'plan', filters:{cases:{}, tools:{}, methodology:{}, templates:{}}, resultsSel:{area:null, infl:null} };
+const state = { audience:'all', startPath:'newbie', startScenario:'plan', filters:{cases:{}, tools:{}, methodology:{}, templates:{}}, resultsSel:{approach:null, area:null} };
 
 function byId(arr,id){return arr.find(x=>x.id===id);}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
