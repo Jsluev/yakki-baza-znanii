@@ -971,15 +971,6 @@ const TEMPLATES = [
  {id:'tpl-presentation', title:'Шаблон презентации отчёта', shortDesc:'Слайды для презентации результатов оценки донору или команде проекта.', when:'Для устной презентации итогов оценки.', formats:['PPTX'], related:{methodology:[],cases:['aktyerskaya-birzha']}, updated:'15.07.2026'}
 ];
 
-const LEARNING = [
- {id:'lrn-plan', title:'Как составить план оценки', shortDesc:'Пошаговое объяснение, с чего начать проектирование оценки — на примере культурного проекта.', when:'Для тех, кто впервые пишет план оценки.', updated:'10.08.2026', related:{templates:['tpl-plan'],methodology:['oecd-dac']}},
- {id:'lrn-tree', title:'Как построить дерево результатов', shortDesc:'Разбор частых ошибок при построении дерева результатов на реальных примерах.', when:'После первого черновика теории изменений.', updated:'06.08.2026', related:{templates:['tpl-tree'],methodology:['theory-of-change']}},
- {id:'lrn-choose-method', title:'Как выбрать метод сбора данных', shortDesc:'Короткий гид: когда анкета, когда интервью, а когда наблюдение или фокус-группа.', when:'На этапе планирования инструментария.', updated:'30.07.2026', related:{templates:['tpl-toolkit-tz'],methodology:[]}},
- {id:'lrn-pilot', title:'Как провести пилотирование инструмента', shortDesc:'Зачем нужен пилот даже для «простой» анкеты и как его провести за 2–3 дня.', when:'Перед основным этапом сбора данных.', updated:'22.07.2026', related:{templates:[],methodology:[]}},
- {id:'lrn-qual-analysis', title:'Как анализировать качественные данные', shortDesc:'Введение в контент- и тематический анализ без специального софта.', when:'После сбора интервью или открытых ответов анкеты.', updated:'12.07.2026', related:{templates:['tpl-analysis-tz'],methodology:['content-analysis']}},
- {id:'lrn-readiness', title:'Чек-лист «Готовность к оценке»', shortDesc:'12 пунктов, чтобы проверить, готова ли команда начинать оценку прямо сейчас.', when:'В самом начале работы с базой знаний.', updated:'01.07.2026', related:{templates:['tpl-plan'],methodology:[]}}
-];
-
 const FAQ = [
  {group:'Планирование оценки', items:[
    {q:'С чего вообще начать оценку проекта?', a:'Начните с формулировки цели оценки и 2–3 ключевых вопросов, на которые вы хотите получить ответ. Шаблон плана оценки и статья «Как составить план оценки» проведут через этот процесс шаг за шагом.'},
@@ -1749,12 +1740,6 @@ function filterTemplates(){
     (!f.q || (t.title+t.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
   );
 }
-function filterLearning(){
-  const f = state.filters.learning || {};
-  return LEARNING.filter(l=>
-    (!f.q || (l.title+l.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
-  );
-}
 function filterAssessmentDocs(){
   const f = state.filters.assessmentDocs || {};
   return ASSESSMENT_DOCS.filter(d=>
@@ -1849,13 +1834,6 @@ function filterPanelTemplates(){
     </select></div>
   <div class="actions">
     <button class="btn btn-ghost btn-sm" onclick="state.filters.templates={};renderSection('templates')">Сбросить</button>
-  </div>`;
-}
-function filterPanelLearning(){
-  return `
-  <div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Обучающие материалы пока не имеют дополнительных фильтров — используйте поиск по названию.</div>
-  <div class="actions">
-    <button class="btn btn-ghost btn-sm" onclick="state.filters.learning={};renderSection('learning')">Сбросить</button>
   </div>`;
 }
 function filterPanelAssessmentDocs(){
@@ -1972,7 +1950,6 @@ function filterPanelTemplatesAll(){
       ${allFormats.map(fmt=>`<option ${f.format===fmt?'selected':''}>${fmt}</option>`).join('')}
     </select></div>`;
 }
-function filterPanelLearningAll(){ return ''; }
 function filterPanelAssessmentDocsAll(){
   const f = state.filters.assessmentDocs||{};
   return `
@@ -2022,8 +1999,8 @@ function renderCardList(key, items){
    ============================================================ */
 function relatedBlockHtml(title, list, type){
   if(!list || !list.length) return '';
-  const sectionKey = type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':type==='assessmentDoc'?'assessmentDocs':type==='learning'?'learning':'templates';
-  const routeKey = type==='assessmentDoc'?'assessment-doc':type;
+  const sectionKey = type==='case'?'cases':type==='tool'?'tools':type==='methodology'?'methodology':'templates';
+  const routeKey = type;
   return `<div class="sidebar-box"><h4>${title}</h4>
     ${list.map(id=>{
       let obj = type==='case'?byId(CASES,id):type==='tool'?byId(TOOLS,id):type==='methodology'?byId(METHODOLOGY,id):type==='assessmentDoc'?byId(ASSESSMENT_DOCS,id):type==='learning'?byId(LEARNING,id):byId(TEMPLATES,id);
@@ -2257,29 +2234,6 @@ function renderTemplateDetail(id){
       </div>
     </div>
     <a class="back-link" href="#/section/templates">← Ко всем шаблонам</a>
-  </div>`;
-}
-function renderLearningDetail(id){
-  buildNav('learning');
-  const l = byId(LEARNING,id);
-  const app = document.getElementById('app');
-  if(!l){ app.innerHTML = notFound(); return; }
-  app.innerHTML = `
-  <div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/learning">Обучающие материалы</a><span class="sep">/</span><span>${l.title}</span></div>
-    <div class="detail-head">
-      <span class="badge" style="background:${SECTIONS.learning.bg};color:${SECTIONS.learning.color}">Обучающий материал</span>
-      <div class="detail-titlebar"><div><h1>${l.title}</h1><p class="detail-sub">${l.shortDesc}</p></div></div>
-    </div>
-    <div class="detail-grid">
-      <div><div class="block"><h2>Когда пригодится</h2><p style="font-size:14px;">${l.when}</p></div></div>
-      <div>
-        <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${l.updated}</div></div>
-        ${relatedBlockHtml('Шаблоны', l.related.templates, 'template')}
-        ${relatedBlockHtml('Методология', l.related.methodology, 'methodology')}
-      </div>
-    </div>
-    <a class="back-link" href="#/section/learning">← Ко всем обучающим материалам</a>
   </div>`;
 }
 
@@ -2601,7 +2555,7 @@ function renderSearch(q, type){
     <div class="card-list">
       ${results.length ? results.map(r=>{
         const s = SECTIONS[r.type];
-        const routeKey = r.type==='assessmentDocs'?'assessment-doc':r.type==='cases'?'case':r.type;
+        const routeKey = r.type==='cases'?'case':r.type;
         return `<a class="item-card" data-nav="#/card/${routeKey}/${encodeURIComponent(r.obj.id||r.obj.title)}" style="text-decoration:none;">
           <div class="spine" style="background:${s.color}"></div>
           <div class="row1"><h3>${r.obj.title}</h3><span class="badge" style="background:${s.bg};color:${s.color}">${s.short}</span></div>
@@ -2741,7 +2695,6 @@ function renderResultDetail(areaIdx,inflIdx,resultIdx){
     if(b==='tool') return renderToolDetail(c);
     if(b==='methodology') return renderMethodologyDetail(c);
     if(b==='template') return renderTemplateDetail(c);
-    if(b==='assessment-doc') return renderAssessmentDocDetail(c);
     if(b==='glossary') return renderGlossaryTerm(decodeURIComponent(c));
   }
   if(a==='glossary'){ return b? renderGlossaryTerm(decodeURIComponent(b)) : renderGlossary(); }
