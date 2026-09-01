@@ -712,14 +712,12 @@ const SECTIONS = {
   tools:      {label:'Инструменты сбора данных', short:'Инструменты', color:'var(--c-tools)', bg:'var(--c-tools-bg)', icon:'✎', desc:'Анкеты, гайды интервью, чек-листы наблюдений — готовые к применению без методолога.'},
   methodology:{label:'Методология и подходы', short:'Методология', color:'var(--c-method)', bg:'var(--c-method-bg)', icon:'◐', desc:'Подходы к оценке, критерии ОЭСР-DAC, типы эффектов и методы анализа — простым языком.'},
   templates:  {label:'Шаблоны и образцы', short:'Шаблоны', color:'var(--c-templates)', bg:'var(--c-templates-bg)', icon:'▭', desc:'Пустографки документов: план оценки, ЛМП, ТЗ на инструментарий, отчёт, презентация.'},
-  learning:   {label:'Обучающие материалы', short:'Обучение', color:'var(--c-learning)', bg:'var(--c-learning-bg)', icon:'✺', desc:'Статьи и чек-листы по ключевым темам планирования и оценки — для тех, кто учится.'},
   values:     {label:'Ценности', short:'Ценности', color:'var(--c-values)', bg:'var(--c-values-bg)', icon:'♦', desc:'Ценностная рамка как постоянный фильтр: выберите ценность — увидьте связанные материалы.'},
   results:    {label:'Банк результатов', short:'Результаты', color:'var(--c-results)', bg:'var(--c-results-bg)', icon:'◫', desc:'Область → область влияния → результат. Готовые формулировки для теории изменений.'},
-  assessmentDocs:{label:'Документы оценки', short:'Документы', color:'var(--c-results)', bg:'var(--c-results-bg)', icon:'◉', desc:'Планы, отчёты и презентации оценки реальных проектов — со всеми приложениями и данными.'},
   faq:        {label:'Часто задаваемые вопросы', short:'FAQ', color:'var(--c-faq)', bg:'var(--c-faq-bg)', icon:'?', desc:'Быстрые ответы на типовые вопросы команд и оценщиков.'},
   glossary:   {label:'Глоссарий', short:'Глоссарий', color:'var(--c-glossary)', bg:'var(--c-glossary-bg)', icon:'A', desc:'Словарь ключевых терминов оценки — простым, неакадемическим языком.'}
 };
-const CATALOG_SECTIONS = ['cases','tools','methodology','templates','learning','assessmentDocs'];
+const CATALOG_SECTIONS = ['cases','tools','methodology','templates'];
 
 const CASES = [
   {id:'muzeinyi-eksperiment', title:'Музейный эксперимент', org:'МБУК «Добрянский историко-краеведческий музей»', projectType:'Музейные проекты', stage:'Инновационные (новые)', evalStage:'Итоговая', period:'25.04.2025 — 25.02.2026 (оценка: октябрь 2025 — февраль 2026)', geo:'г. Добрянка, Пермский край', audience:'Подростки 12–17 лет и молодёжь 18–21 года — соавторы выставки; сотрудники музея; жители города; профессиональное сообщество музеев городов-заводов Пермского края', shortAudience:'Подростки и молодёжь, сотрудники музея, жители города', tags:['историческая память','преемственность поколений','музей','подростки','арт-резиденция','итоговая оценка'],
@@ -1079,7 +1077,7 @@ const DOC_TYPES = ['План оценки','Дерево результатов'
 /* ============================================================
    СОСТОЯНИЕ И МАРШРУТИЗАЦИЯ
    ============================================================ */
-const state = { audience:'all', startPath:'newbie', startScenario:'plan', filters:{cases:{}, tools:{}, methodology:{}, templates:{}, learning:{}, assessmentDocs:{}}, resultsSel:{area:null, infl:null} };
+const state = { audience:'all', startPath:'newbie', startScenario:'plan', filters:{cases:{}, tools:{}, methodology:{}, templates:{}}, resultsSel:{area:null, infl:null} };
 
 function byId(arr,id){return arr.find(x=>x.id===id);}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -1222,7 +1220,7 @@ function renderHome(){
         ${order.map(k=>{
           const s=SECTIONS[k];
           const route = k==='values'?'#/values':k==='results'?'#/results':k==='faq'?'#/faq':k==='glossary'?'#/glossary':`#/section/${k}`;
-          const count = {cases:CASES.length,tools:TOOLS.length,methodology:METHODOLOGY.length,templates:TEMPLATES.length,learning:LEARNING.length,assessmentDocs:ASSESSMENT_DOCS.length,values:VALUES.length,results:RESULTS_TREE.reduce((a,x)=>a+x.influence.reduce((b,y)=>b+y.results.length,0),0),faq:FAQ.reduce((a,g)=>a+g.items.length,0),glossary:GLOSSARY.length}[k];
+          const count = {cases:CASES.length,tools:TOOLS.length,methodology:METHODOLOGY.length,templates:TEMPLATES.length,values:VALUES.length,results:RESULTS_TREE.reduce((a,x)=>a+x.influence.reduce((b,y)=>b+y.results.length,0),0),faq:FAQ.reduce((a,g)=>a+g.items.length,0),glossary:GLOSSARY.length}[k];
           return `<a class="sec-card" data-nav="${route}" style="text-decoration:none;">
             <div class="spine" style="background:${s.color}"></div>
             <div class="top"><div class="ico" style="background:${s.bg};color:${s.color}">${s.icon}</div></div>
@@ -1326,9 +1324,9 @@ function renderStart(){
             <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:12px;">Выбираете подходящие инструменты, собираете данные, анализируете результаты.</p>
             <div style="display:flex;flex-direction:column;gap:6px;">
               <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">1.</span> Выберите инструменты сбора данных — смотрите <a data-nav="#/section/tools" style="text-decoration:underline;color:var(--green);">каталог инструментов</a></div>
-              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">2.</span> Проведите пилотирование — <a data-nav="#/card/learning/lrn-pilot" style="text-decoration:underline;color:var(--green);">«Как провести пилотирование»</a></div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">2.</span> Проведите пилотирование — <a data-nav="#/section/tools" style="text-decoration:underline;color:var(--green);">инструменты для пилотирования</a></div>
               <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">3.</span> Соберите данные в запланированные сроки</div>
-              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">4.</span> Проанализируйте данные — <a data-nav="#/card/learning/lrn-qual-analysis" style="text-decoration:underline;color:var(--green);">«Как анализировать качественные данные»</a>, <a data-nav="#/card/learning/lrn-choose-method" style="text-decoration:underline;color:var(--green);">«Как выбрать метод анализа»</a></div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">4.</span> Проанализируйте данные — <a data-nav="#/section/methodology" style="text-decoration:underline;color:var(--green);">методы анализа</a></div>
               <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">5.</span> Сопоставьте данные с оценочными вопросами и показателями</div>
               <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">6.</span> Сформулируйте предварительные выводы</div>
               <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--green);font-weight:600;flex-shrink:0;">7.</span> Проверьте ограничения и достоверность</div>
@@ -1500,8 +1498,6 @@ function renderSection(key){
     else if(sk==='tools') items = filterTools();
     else if(sk==='methodology') items = filterMethodology();
     else if(sk==='templates') items = filterTemplates();
-    else if(sk==='learning') items = filterLearning();
-    else if(sk==='assessmentDocs') items = filterAssessmentDocs();
     typeCounts[sk] = items.length;
     allItems = allItems.concat(items.map(i=>({...i,_section:sk})));
   });
@@ -1512,7 +1508,7 @@ function renderSection(key){
     items = allItems.filter(i=>i._section===key);
     const filterPanels = {
       cases: filterPanelCases, tools: filterPanelTools, methodology: filterPanelMethodology,
-      templates: filterPanelTemplates, learning: filterPanelLearning, assessmentDocs: filterPanelAssessmentDocs
+      templates: filterPanelTemplates
     };
     const panelFn = filterPanels[key];
 
@@ -1601,7 +1597,7 @@ function renderSection(key){
 
   const allFilterPanels = {
     cases: filterPanelCasesAll, tools: filterPanelToolsAll, methodology: filterPanelMethodologyAll,
-    templates: filterPanelTemplatesAll, learning: filterPanelLearningAll, assessmentDocs: filterPanelAssessmentDocsAll
+    templates: filterPanelTemplatesAll
   };
   const typePanelHtml = typeParam && allFilterPanels[typeParam] ? allFilterPanels[typeParam]() : '';
 
@@ -1678,8 +1674,6 @@ function localSearchFilter(key){
   else if(key==='tools') items = filterTools();
   else if(key==='methodology') items = filterMethodology();
   else if(key==='templates') items = filterTemplates();
-  else if(key==='learning') items = filterLearning();
-  else if(key==='assessmentDocs') items = filterAssessmentDocs();
   else items = [];
   document.getElementById('cardList').innerHTML = renderCardList(key, items);
   document.querySelector('.results-topline .count').textContent = 'Показано: '+items.length;
@@ -1695,14 +1689,12 @@ function renderCardListAll(items){
   if(!items.length) return `<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте сбросить фильтры или изменить запрос.</p></div>`;
   return items.map(it=>{
     const s = SECTIONS[it._section];
-    const routeKey = it._section==='cases'?'case':it._section==='assessmentDocs'?'assessment-doc':it._section==='tools'?'tool':it._section==='methodology'?'methodology':it._section==='templates'?'template':'learning';
+    const routeKey = it._section==='cases'?'case':it._section==='tools'?'tool':it._section==='methodology'?'methodology':'template';
     const metaTags = [];
     if(it._section==='cases'){ metaTags.push(it.projectType, it.evalStage, it.stage, it.shortAudience||it.audience); }
     else if(it._section==='tools'){ metaTags.push(it.type, it.audience, it.dataType); }
     else if(it._section==='methodology'){ if(it.sub) metaTags.push(it.sub); }
     else if(it._section==='templates'){ it.formats.forEach(f=>metaTags.push(f)); }
-    else if(it._section==='learning'){ if(it.when) metaTags.push(it.when); }
-    else if(it._section==='assessmentDocs'){ metaTags.push(it.docType, it.projectType); }
     const org = it.org || '';
     return `<a class="item-card" data-nav="#/card/${routeKey}/${it.id}" style="text-decoration:none;">
       <div class="spine" style="background:${s.color}"></div>
@@ -1977,15 +1969,13 @@ function filterPanelAssessmentDocsAll(){
 function renderCardList(key, items){
   if(!items.length) return `<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте сбросить фильтры или изменить запрос.</p></div>`;
   const s = SECTIONS[key];
-  const routeKey = key==='cases'?'case':key==='assessmentDocs'?'assessment-doc':key==='tools'?'tool':key==='methodology'?'methodology':key==='templates'?'template':'learning';
+  const routeKey = key==='cases'?'case':key==='tools'?'tool':key==='methodology'?'methodology':'template';
   return items.map(it=>{
     const metaTags = [];
     if(key==='cases'){ metaTags.push(it.projectType, it.evalStage, it.stage, it.shortAudience||it.audience); }
     else if(key==='tools'){ metaTags.push(it.type, it.audience, it.dataType); }
     else if(key==='methodology'){ if(it.sub) metaTags.push(it.sub); }
     else if(key==='templates'){ it.formats.forEach(f=>metaTags.push(f)); if(it.when) metaTags.push(it.when); }
-    else if(key==='learning'){ if(it.when) metaTags.push(it.when); }
-    else if(key==='assessmentDocs'){ metaTags.push(it.docType, it.projectType, it.evalStage); }
     const org = it.org || '';
     const status = it.status || '';
     return `<a class="item-card" data-nav="#/card/${routeKey}/${it.id}" style="text-decoration:none;">
@@ -2116,7 +2106,6 @@ function renderCaseDetail(id){
         ${relatedBlockHtml('Похожие кейсы', c.relatedCases, 'case')}
         ${relatedBlockHtml('Методология', c.relatedMethodology, 'methodology')}
         ${relatedBlockHtml('Шаблоны', c.relatedTemplates, 'template')}
-        ${relatedBlockHtml('Обучающие материалы', c.relatedLearning, 'learning')}
         ${(() => { const caseDocs = ASSESSMENT_DOCS.filter(d => d.caseId === id); return caseDocs.length ? `<div class="sidebar-box"><h4>Документы оценки этого проекта</h4><div style="display:flex;flex-direction:column;gap:6px;">${caseDocs.map(d => `<a class="filerow" href="#/card/assessmentDoc/${d.id}" style="text-decoration:none;color:inherit;"><div class="name"><span class="ext">${d.format||'PDF'}</span>${d.title}</div></a>`).join('')}</div></div>` : ''; })()}
       </div>
     </div>
@@ -2169,7 +2158,6 @@ function renderToolDetail(id){
         ${relatedBlockHtml('Похожие инструменты', t.related, 'tool')}
         ${relatedBlockHtml('Методология', t.relatedMethodology, 'methodology')}
         ${relatedBlockHtml('Шаблоны', t.relatedTemplates, 'template')}
-        ${relatedBlockHtml('Обучающие материалы', t.relatedLearning, 'learning')}
       </div>
     </div>
     <a class="back-link" href="#/section/tools">← Ко всем инструментам</a>
@@ -2532,7 +2520,6 @@ function renderSearch(q, type){
     'инструмент': 'tools', 'инструменты': 'tools', 'анкета': 'tools', 'анкеты': 'tools', 'гайд': 'tools', 'чек-лист': 'tools',
     'методолог': 'methodology', 'методология': 'methodology', 'подход': 'methodology', 'критерии': 'methodology',
     'шаблон': 'templates', 'шаблоны': 'templates', 'документ': 'templates',
-    'обучение': 'learning', 'обучающий': 'learning', 'статья': 'learning', 'статьи': 'learning',
     'глоссарий': 'glossary', 'термин': 'glossary', 'определение': 'glossary',
     'ценность': 'values', 'ценности': 'values',
     'результат': 'results', 'результаты': 'results',
@@ -2554,8 +2541,6 @@ function renderSearch(q, type){
   TOOLS.forEach(t=>{ if(match(t.title+t.shortDesc+t.type+t.audience)) results.push({type:'tools', obj:t, route:'tool'}); });
   METHODOLOGY.forEach(m=>{ if(match(m.title+m.shortDesc+m.sub)) results.push({type:'methodology', obj:m, route:'methodology'}); });
   TEMPLATES.forEach(t=>{ if(match(t.title+t.shortDesc+t.when)) results.push({type:'templates', obj:t, route:'template'}); });
-  LEARNING.forEach(l=>{ if(match(l.title+l.shortDesc+l.when)) results.push({type:'learning', obj:l, route:'learning'}); });
-  ASSESSMENT_DOCS.forEach(d=>{ if(match(d.title+d.shortDesc+d.annotation+d.docType+d.projectName)) results.push({type:'assessmentDocs', obj:d, route:'assessment-doc'}); });
   GLOSSARY.forEach(g=>{ if(match(g.term+g.def)) results.push({type:'glossary', obj:{title:g.term, shortDesc:g.def, id:g.term}, route:'glossary'}); });
 
   if(resolvedType!=='all') results = results.filter(r=>r.type===resolvedType);
@@ -2661,7 +2646,6 @@ function showPromptPreview(key){
     if(b==='tool') return renderToolDetail(c);
     if(b==='methodology') return renderMethodologyDetail(c);
     if(b==='template') return renderTemplateDetail(c);
-    if(b==='learning') return renderLearningDetail(c);
     if(b==='assessment-doc') return renderAssessmentDocDetail(c);
     if(b==='glossary') return renderGlossaryTerm(decodeURIComponent(c));
   }
