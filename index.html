@@ -730,7 +730,7 @@ footer a:hover{color:#fff;}
         <h4>Разделы</h4>
         <a href="#/section/cases">Кейсы проектов</a>
         <a href="#/section/tools">Инструменты</a>
-        <a href="#/section/methodology">Методология</a>
+        <a href="#/section/methodology">Методики</a>
         <a href="#/section/templates">Шаблоны</a>
       </div>
       <div>
@@ -761,8 +761,8 @@ footer a:hover{color:#fff;}
    ============================================================ */
 const SECTIONS = {
   cases:      {label:'Кейсы проектов', short:'Кейсы', color:'var(--c-cases)', bg:'var(--c-cases-bg)', icon:'▣', desc:'Реальные примеры оценки творческих проектов: контекст, методы, документация, выводы.'},
-  tools:      {label:'Инструменты', short:'Инструменты', color:'var(--c-tools)', bg:'var(--c-tools-bg)', icon:'✎', desc:'Анкеты, гайды интервью, чек-листы, бланки — всё, что нужно для сбора и анализа данных.'},
-  methodology:{label:'Методология и подходы', short:'Методология', color:'var(--c-method)', bg:'var(--c-method-bg)', icon:'◐', desc:'Подходы к оценке, критерии ОЭСР-DAC, типы эффектов и методы анализа — простым языком.'},
+  tools:      {label:'Инструменты', short:'Инструменты', color:'var(--c-tools)', bg:'var(--c-tools-bg)', icon:'✎', desc:'Практические материалы для планирования, сбора данных, анализа и использования результатов оценки: планы, логические модели, деревья результатов, анкеты, гайды интервью и другие инструменты.'},
+  methodology:{label:'Методики', short:'Методики', color:'var(--c-method)', bg:'var(--c-method-bg)', icon:'◐', desc:'Подходы к оценке, критерии ОЭСР-DAC, типы эффектов и методы анализа — простым языком.'},
   templates:  {label:'Шаблоны и образцы', short:'Шаблоны', color:'var(--c-templates)', bg:'var(--c-templates-bg)', icon:'▭', desc:'Пустографки документов: план оценки, ЛМП, ТЗ на инструментарий, отчёт, презентация.'},
   values:     {label:'Ценности', short:'Ценности', color:'var(--c-values)', bg:'var(--c-values-bg)', icon:'♦', desc:'Ценностная рамка как постоянный фильтр: выберите ценность — увидьте связанные материалы.'},
   results:    {label:'Банк результатов', short:'Результаты', color:'var(--c-results)', bg:'var(--c-results-bg)', icon:'◫', desc:'Область → область влияния → результат. Готовые формулировки для теории изменений.'},
@@ -772,7 +772,7 @@ const SECTIONS = {
 const CATALOG_SECTIONS = ['cases','tools','methodology','templates'];
 
 const CASES = [
-  {id:'muzeinyi-eksperiment', title:'Музейный эксперимент', org:'МБУК «Добрянский историко-краеведческий музей»', projectType:'Музейные проекты', stage:'Инновационные (новые)', evalStage:'Итоговая', period:'25.04.2025 — 25.02.2026 (оценка: октябрь 2025 — февраль 2026)', geo:'г. Добрянка, Пермский край', audience:'Подростки 12–17 лет и молодёжь 18–21 года — соавторы выставки; сотрудники музея; жители города; профессиональное сообщество музеев городов-заводов Пермского края', shortAudience:'Подростки и молодёжь, сотрудники музея, жители города', tags:['историческая память','преемственность поколений','музей','подростки','арт-резиденция','итоговая оценка'],
+  {id:'muzeinyi-eksperiment', title:'Музейный эксперимент', audienceType:['Подростки','Молодёжь'], org:'МБУК «Добрянский историко-краеведческий музей»', projectType:'Музейные проекты', stage:'Инновационные (новые)', evalStage:'Итоговая', period:'25.04.2025 — 25.02.2026 (оценка: октябрь 2025 — февраль 2026)', geo:'г. Добрянка, Пермский край', audience:'Подростки 12–17 лет и молодёжь 18–21 года — соавторы выставки; сотрудники музея; жители города; профессиональное сообщество музеев городов-заводов Пермского края', shortAudience:'Подростки и молодёжь, сотрудники музея, жители города', tags:['историческая память','преемственность поколений','музей','подростки','арт-резиденция','итоговая оценка'],
   shortDesc:'Музей вовлекает подростков и молодёжь в диалог между историческим наследием и современным творчеством: участники двух арт-резиденций создали 13 арт-объектов для выставки «Д/З. Мой завод», посвящённой истории Добрянского металлургического завода. Проект — победитель конкурса ПФКИ.',
   fullDesc:'Проект «Музейный эксперимент» — это двухэтапная программа арт-резиденций для подростков и молодёжи, в рамках которой участники изучали историю Добрянского металлургического завода и создавали современные арт-объекты, интерпретируя наследие через призму личного опыта. Первая арт-резиденция (октябрь 2025) была пилотной, вторая (ноябрь–декабрь 2025) — масштабированной. Итогом стали 13 арт-объектов выставки «Д/З. Мой завод». Проект стал победителем конкурса ПФКИ и был реализован при поддержке АНО «Эволюция и Филантропия».',
   evalGoal:'Определить, насколько новая модель работы с подростковой и молодёжной аудиторией в целях передачи исторической памяти оказала влияние на целевые аудитории проекта: (1) изменение отношения подростков к историко-культурному наследию и музею, (2) развитие компетенций команды и внутренних процессов музея, (3) изменение образа учреждения у жителей города, (4) интерес к тиражированию успешной модели в профессиональном сообществе.',
@@ -809,7 +809,7 @@ const CASES = [
   contact:{name:'Куратор оценки: АНО «Эволюция и Филантропия»', email:'evaluation@evolution-philanthropy.ru'},
   relatedTools:['anketa-muzeinyi-eksperiment'], relatedMethodology:['theory-of-change','content-analysis'], relatedTemplates:['tpl-plan','tpl-lmp'], relatedCases:['dialogi-v-temnote'], relatedLearning:['lrn-plan','lrn-tree'], relatedDocs:['doc-muzeinyi-plan','doc-muzeinyi-report'],
   updated:'2026-02-14'},
- {id:'dialogi-v-temnote', title:'«Диалоги в темноте» — инклюзивный театральный проект', org:'Театральная лаборатория «Опыт»', projectType:'Театральные проекты', stage:'Зрелые (повторяющиеся)', evalStage:'Итоговая', period:'март 2025 — ноябрь 2025', geo:'Москва, Санкт-Петербург (гастроли)', audience:'Взрослая городская аудитория 18–45 лет', tags:['инклюзия','театр','изменение отношения','итоговая оценка'],
+ {id:'dialogi-v-temnote', title:'«Диалоги в темноте» — инклюзивный театральный проект', audienceType:['Местное сообщество'], org:'Театральная лаборатория «Опыт»', projectType:'Театральные проекты', stage:'Зрелые (повторяющиеся)', evalStage:'Итоговая', period:'март 2025 — ноябрь 2025', geo:'Москва, Санкт-Петербург (гастроли)', audience:'Взрослая городская аудитория 18–45 лет', tags:['инклюзия','театр','изменение отношения','итоговая оценка'],
   shortDesc:'Спектакль-исследование, где зрячие зрители проходят часть спектакля в полной темноте с незрячими проводниками. Проект исследует, как формат влияет на инклюзивные установки аудитории.',
   evalGoal:'Оценить, насколько спектакль меняет отношение зрителей к людям с инвалидностью по зрению и формирует инклюзивные установки.',
   criteria:['Актуальность','Эффективность','Воздействие'],
@@ -830,7 +830,7 @@ const CASES = [
   contact:{name:'Руководитель проекта', email:'info@dialogi-v-temnote.ru'},
   relatedTools:[], relatedMethodology:['oecd-dac'], relatedTemplates:['tpl-report'],
   updated:'2026-01-20'},
- {id:'otkrytyi-dvor', title:'Фестиваль уличного искусства «Открытый двор»', org:'Центр городских инициатив «Соседи»', projectType:'Фестивали и события', stage:'Масштабирование', evalStage:'Итоговая', period:'май 2025 — август 2025', geo:'Пермь, Мотовилихинский район', audience:'Жители района всех возрастов, локальные художники', tags:['фестиваль','локальная идентичность','сообщество','стрит-арт'],
+ {id:'otkrytyi-dvor', title:'Фестиваль уличного искусства «Открытый двор»', audienceType:['Местное сообщество'], org:'Центр городских инициатив «Соседи»', projectType:'Фестивали и события', stage:'Масштабирование', evalStage:'Итоговая', period:'май 2025 — август 2025', geo:'Пермь, Мотовилихинский район', audience:'Жители района всех возрастов, локальные художники', tags:['фестиваль','локальная идентичность','сообщество','стрит-арт'],
   shortDesc:'Ежегодный фестиваль стрит-арта и локальных сообществ во дворах спального района: муралы, перформансы, соседские маршруты. Оценивает влияние на локальную идентичность жителей.',
   evalGoal:'Оценить вклад фестиваля в укрепление локальной идентичности и соседских связей жителей района.',
   criteria:['Эффективность','Воздействие','Устойчивость'],
@@ -851,7 +851,7 @@ const CASES = [
   contact:{name:'Координатор фестиваля', email:'hello@openyard-fest.ru'},
   relatedTools:[], relatedMethodology:['realist-eval'], relatedTemplates:['tpl-analysis-tz'],
   updated:'2025-12-02'},
- {id:'otkrytye-masterskie', title:'Арт-резиденция «Открытые мастерские»', org:'Творческий кластер «Плоскость»', projectType:'Арт-резиденции', stage:'Инновационные (новые)', evalStage:'Предварительная (ex-ante)', period:'запуск запланирован на март 2026', geo:'Нижний Новгород', audience:'Молодые художники 20–35 лет, городская аудитория', tags:['арт-резиденция','предварительная оценка','творческая самореализация'],
+ {id:'otkrytye-masterskie', title:'Арт-резиденция «Открытые мастерские»', audienceType:['Молодёжь'], org:'Творческий кластер «Плоскость»', projectType:'Арт-резиденции', stage:'Инновационные (новые)', evalStage:'Предварительная (ex-ante)', period:'запуск запланирован на март 2026', geo:'Нижний Новгород', audience:'Молодые художники 20–35 лет, городская аудитория', tags:['арт-резиденция','предварительная оценка','творческая самореализация'],
   shortDesc:'Резидентская программа для молодых художников с открытыми мастерскими для города: месяц совместной работы, публичные показы и обсуждения с посетителями.',
   evalGoal:'Спроектировать систему оценки до запуска резиденции: определить ожидаемые эффекты для художников и аудитории.',
   criteria:['Актуальность','Согласованность'],
@@ -872,7 +872,7 @@ const CASES = [
   contact:{name:'Куратор резиденции', email:'residency@ploskost-art.ru'},
   relatedTools:[], relatedMethodology:['theory-of-change','logframe'], relatedTemplates:['tpl-lmp','tpl-plan'],
   updated:'2025-11-18'},
- {id:'kuratorskaya-shkola', title:'Образовательная программа «Кураторская школа»', org:'Институт городских культурных практик', projectType:'Образовательные программы', stage:'Зрелые (повторяющиеся)', evalStage:'Итоговая', period:'февраль 2025 — июль 2025', geo:'Екатеринбург (очный формат) + онлайн-модули', audience:'Начинающие кураторы и продюсеры культурных проектов 22–40 лет', tags:['образование','компетенции','кураторство','итоговая оценка'],
+ {id:'kuratorskaya-shkola', title:'Образовательная программа «Кураторская школа»', audienceType:['Профессиональное сообщество'], org:'Институт городских культурных практик', projectType:'Образовательные программы', stage:'Зрелые (повторяющиеся)', evalStage:'Итоговая', period:'февраль 2025 — июль 2025', geo:'Екатеринбург (очный формат) + онлайн-модули', audience:'Начинающие кураторы и продюсеры культурных проектов 22–40 лет', tags:['образование','компетенции','кураторство','итоговая оценка'],
   shortDesc:'Полугодовая образовательная программа для начинающих кураторов выставочных и общественных проектов, включает менторство и защиту итоговых проектов.',
   evalGoal:'Оценить развитие профессиональных компетенций участников и применимость полученных знаний в их реальных проектах.',
   criteria:['Эффективность','Воздействие'],
@@ -1013,14 +1013,14 @@ const METHODOLOGY = [
 ];
 
 const TEMPLATES = [
- {id:'tpl-plan', title:'Шаблон плана оценки', shortDesc:'Пустографка документа, где фиксируются цель, вопросы, методы и график оценки.', when:'На старте проекта, до начала сбора данных.', formats:['DOCX','PDF'], instruction:'Заполните разделы «Цель оценки», «Ключевые вопросы», «Методы сбора данных» и «График» последовательно. Используйте подсказки в скобках в каждом разделе.', tags:['оценка','планирование'], related:{methodology:['oecd-dac'],cases:['muzeinyi-eksperiment'],tools:['anketa-muzeinyi-eksperiment'],learning:['lrn-plan']}, updated:'11.08.2026'},
- {id:'tpl-tree', title:'Шаблон дерева результатов', shortDesc:'Визуальная структура для связи мероприятий с промежуточными и конечными результатами.', when:'При планировании проекта или пересборке теории изменений.', formats:['PDF','PPTX'], instruction:'Начните с конечного результата справа и продвигайтесь влево к мероприятиям. Для каждого результата укажите допущения.', tags:['дерево результатов','планирование'], related:{methodology:['theory-of-change'],cases:['stsena-budushchego']}, updated:'11.08.2026'},
- {id:'tpl-lmp', title:'Шаблон логической модели программы (ЛМП)', shortDesc:'Таблица «ресурсы — активности — результаты — эффекты» в едином формате.', when:'При подготовке заявки на грант или согласовании подхода с донором.', formats:['DOCX','XLSX'], instruction:'Заполните столбцы слева направо: ресурсы → активности → выходы → результаты → эффекты. Для каждого уровня подберите индикаторы.', tags:['логическая модель','грант'], related:{methodology:['logframe'],cases:[]}, updated:'05.08.2026'},
- {id:'tpl-toolkit-tz', title:'Шаблон ТЗ на разработку инструментария', shortDesc:'Структура задания для методолога или подрядчика на разработку анкет/гайдов.', when:'Когда инструменты разрабатывает не сама команда, а внешний специалист.', formats:['DOCX'], related:{methodology:[],cases:['stsena-budushchego']}, updated:'01.08.2026'},
- {id:'tpl-analysis-tz', title:'Шаблон ТЗ на анализ данных', shortDesc:'Структура задания на анализ собранных данных — вопросы, методы, формат результата.', when:'После сбора данных, перед передачей их аналитику.', formats:['DOCX'], related:{methodology:['content-analysis','impact-eval'],cases:[]}, updated:'28.07.2026'},
- {id:'tpl-tool-card', title:'Шаблон карточки инструмента', shortDesc:'Единый формат описания нового инструмента сбора данных для базы знаний.', when:'Когда команда хочет добавить собственный инструмент в базу.', formats:['DOCX'], related:{methodology:[],cases:[]}, updated:'20.07.2026'},
- {id:'tpl-report', title:'Шаблон отчёта об оценке', shortDesc:'Структура краткого и полного отчёта: выводы, данные, рекомендации.', when:'По завершении сбора и анализа данных.', formats:['DOCX','PDF'], related:{methodology:['realist-eval'],cases:['ekb-pablik-art']}, updated:'15.07.2026'},
- {id:'tpl-presentation', title:'Шаблон презентации отчёта', shortDesc:'Слайды для презентации результатов оценки донору или команде проекта.', when:'Для устной презентации итогов оценки.', formats:['PPTX'], related:{methodology:[],cases:['aktyerskaya-birzha']}, updated:'15.07.2026'}
+ {id:'tpl-plan', title:'Шаблон плана оценки', templateType:'План оценки', evalStage:'Планирование', shortDesc:'Пустографка документа, где фиксируются цель, вопросы, методы и график оценки.', when:'На старте проекта, до начала сбора данных.', formats:['DOCX','PDF'], instruction:'Заполните разделы «Цель оценки», «Ключевые вопросы», «Методы сбора данных» и «График» последовательно. Используйте подсказки в скобках в каждом разделе.', tags:['оценка','планирование'], related:{methodology:['oecd-dac'],cases:['muzeinyi-eksperiment'],tools:['anketa-muzeinyi-eksperiment'],learning:['lrn-plan']}, updated:'11.08.2026'},
+ {id:'tpl-tree', title:'Шаблон дерева результатов', templateType:'План оценки', evalStage:'Планирование', shortDesc:'Визуальная структура для связи мероприятий с промежуточными и конечными результатами.', when:'При планировании проекта или пересборке теории изменений.', formats:['PDF','PPTX'], instruction:'Начните с конечного результата справа и продвигайтесь влево к мероприятиям. Для каждого результата укажите допущения.', tags:['дерево результатов','планирование'], related:{methodology:['theory-of-change'],cases:['stsena-budushchego']}, updated:'11.08.2026'},
+ {id:'tpl-lmp', title:'Шаблон логической модели программы (ЛМП)', templateType:'План оценки', evalStage:'Планирование', shortDesc:'Таблица «ресурсы — активности — результаты — эффекты» в едином формате.', when:'При подготовке заявки на грант или согласовании подхода с донором.', formats:['DOCX','XLSX'], instruction:'Заполните столбцы слева направо: ресурсы → активности → выходы → результаты → эффекты. Для каждого уровня подберите индикаторы.', tags:['логическая модель','грант'], related:{methodology:['logframe'],cases:[]}, updated:'05.08.2026'},
+ {id:'tpl-toolkit-tz', title:'Шаблон ТЗ на разработку инструментария', templateType:'ТЗ', evalStage:'Планирование', shortDesc:'Структура задания для методолога или подрядчика на разработку анкет/гайдов.', when:'Когда инструменты разрабатывает не сама команда, а внешний специалист.', formats:['DOCX'], related:{methodology:[],cases:['stsena-budushchego']}, updated:'01.08.2026'},
+ {id:'tpl-analysis-tz', title:'Шаблон ТЗ на анализ данных', templateType:'ТЗ', evalStage:'Сбор данных', shortDesc:'Структура задания на анализ собранных данных — вопросы, методы, формат результата.', when:'После сбора данных, перед передачей их аналитику.', formats:['DOCX'], related:{methodology:['content-analysis','impact-eval'],cases:[]}, updated:'28.07.2026'},
+ {id:'tpl-tool-card', title:'Шаблон карточки инструмента', templateType:'Чек-лист', evalStage:'Планирование', shortDesc:'Единый формат описания нового инструмента сбора данных для базы знаний.', when:'Когда команда хочет добавить собственный инструмент в базу.', formats:['DOCX'], related:{methodology:[],cases:[]}, updated:'20.07.2026'},
+ {id:'tpl-report', title:'Шаблон отчёта об оценке', templateType:'Отчёт', evalStage:'Анализ', shortDesc:'Структура краткого и полного отчёта: выводы, данные, рекомендации.', when:'По завершении сбора и анализа данных.', formats:['DOCX','PDF'], related:{methodology:['realist-eval'],cases:['ekb-pablik-art']}, updated:'15.07.2026'},
+ {id:'tpl-presentation', title:'Шаблон презентации отчёта', templateType:'Презентация', evalStage:'Использование результатов', shortDesc:'Слайды для презентации результатов оценки донору или команде проекта.', when:'Для устной презентации итогов оценки.', formats:['PPTX'], related:{methodology:[],cases:['aktyerskaya-birzha']}, updated:'15.07.2026'}
 ];
 
 const FAQ = [
@@ -3391,6 +3391,8 @@ const CASE_EVAL_STAGES = ['Предварительная (ex-ante)','Форми
 const CRITERIA = ['Актуальность','Согласованность','Эффективность','Результативность','Воздействие','Устойчивость'];
 const TOOL_TYPES = ['Инструмент сбора данных','План оценки','Логические модели','Дерево результатов'];
 const EVAL_STAGES = ['Планирование','Сбор данных','Анализ','Использование результатов'];
+const AUDIENCE_TYPES = ['Дети','Подростки','Молодёжь','Семьи','Профессиональное сообщество','Местное сообщество'];
+const TEMPLATE_TYPES = ['План оценки','ТЗ','Таблица сбора данных','Форма анализа','Отчёт','Презентация','Чек-лист'];
 const DATA_TYPES = ['Количественные','Качественные','Смешанные'];
 const DOC_TYPES = ['План оценки','Дерево результатов','ЛМП','ТЗ на инструментарий','ТЗ на анализ','Краткий отчёт','Полный отчёт','Презентация','Протокол'];
 
@@ -3712,7 +3714,7 @@ function renderStart(){
               <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">5.</span> Сформулируйте предварительные выводы</div>
               <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;"><span style="color:var(--blue);font-weight:600;flex-shrink:0;">6.</span> Проверьте достоверность — сопоставьте данные из разных источников</div>
             </div>
-            <div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" data-nav="#/section/methodology">Методология анализа →</a></div>
+            <div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" data-nav="#/section/methodology">Методики анализа →</a></div>
           </div>
         </details>
 
@@ -3960,13 +3962,13 @@ function renderSection(key){
     /* Apply type-specific filters */
     const f = state.filters[typeParam]||{};
     if(typeParam==='cases'){
-      items = items.filter(i=>(!f.projectType||i.projectType===f.projectType)&&(!f.stage||i.stage===f.stage)&&(!f.evalStage||i.evalStage===f.evalStage)&&(!f.value||(i.values&&i.values.includes(f.value))));
+      items = items.filter(i=>(!f.projectType||i.projectType===f.projectType)&&(!f.audienceType||(i.audienceType&&i.audienceType.includes(f.audienceType)))&&(!f.value||(i.values&&i.values.includes(f.value))));
     } else if(typeParam==='tools'){
-      items = items.filter(i=>(!f.type||i.type===f.type)&&(!f.dataType||i.dataType===f.dataType)&&(!f.status||i.status===f.status)&&(!f.value||(i.values&&i.values.includes(f.value))));
+      items = items.filter(i=>(!f.type||i.type===f.type)&&(!f.evalStage||i.evalStage===f.evalStage)&&(!f.value||(i.values&&i.values.includes(f.value))));
     } else if(typeParam==='methodology'){
-      items = items.filter(i=>!f.sub||i.sub===f.sub);
+      items = items.filter(i=>(!f.sub||i.sub===f.sub)&&(!f.value||(i.values&&i.values.includes(f.value))));
     } else if(typeParam==='templates'){
-      items = items.filter(i=>!f.format||i.formats.includes(f.format));
+      items = items.filter(i=>(!f.templateType||i.templateType===f.templateType)&&(!f.evalStage||i.evalStage===f.evalStage)&&(!f.format||i.formats.includes(f.format)));
     } else if(typeParam==='assessmentDocs'){
       items = items.filter(i=>(!f.docType||i.docType===f.docType)&&(!f.projectType||i.projectType===f.projectType)&&(!f.caseId||i.caseId===f.caseId));
     }
@@ -4019,10 +4021,8 @@ function filterCases(){
   const f = state.filters.cases;
   return CASES.filter(c=>
     (!f.projectType || c.projectType===f.projectType) &&
-    (!f.stage || c.stage===f.stage) &&
-    (!f.evalStage || c.evalStage===f.evalStage) &&
+    (!f.audienceType || (c.audienceType && c.audienceType.includes(f.audienceType))) &&
     (!f.value || c.values.includes(f.value)) &&
-    (!f.foreign || (c.tags&&c.tags.includes('зарубежный опыт'))) &&
     (!f.q || (c.title+c.shortDesc+c.org).toLowerCase().includes(f.q.toLowerCase()))
   );
 }
@@ -4066,10 +4066,10 @@ function renderCardListAll(items){
     const s = SECTIONS[it._section];
     const routeKey = it._section==='cases'?'case':it._section==='tools'?'tool':it._section==='methodology'?'methodology':'template';
     const metaTags = [];
-    if(it._section==='cases'){ metaTags.push(it.projectType, it.evalStage, it.stage, it.shortAudience||it.audience); }
-    else if(it._section==='tools'){ metaTags.push(it.type, it.audience, it.dataType); }
+    if(it._section==='cases'){ metaTags.push(it.projectType, (it.audienceType||[]).join(', ')); }
+    else if(it._section==='tools'){ metaTags.push(it.type, it.evalStage); }
     else if(it._section==='methodology'){ if(it.sub) metaTags.push(it.sub); }
-    else if(it._section==='templates'){ it.formats.forEach(f=>metaTags.push(f)); }
+    else if(it._section==='templates'){ if(it.templateType) metaTags.push(it.templateType); if(it.evalStage) metaTags.push(it.evalStage); it.formats.forEach(f=>metaTags.push(f)); }
     const org = it.org || '';
     return `<a class="item-card" data-nav="#/card/${routeKey}/${it.id}" style="text-decoration:none;">
       <div class="spine" style="background:${s.color}"></div>
@@ -4087,12 +4087,15 @@ function filterMethodology(){
   const f = state.filters.methodology || {};
   return METHODOLOGY.filter(m=>
     (!f.sub || m.sub===f.sub) &&
+    (!f.value || (m.values && m.values.includes(f.value))) &&
     (!f.q || (m.title+m.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
   );
 }
 function filterTemplates(){
   const f = state.filters.templates || {};
   return TEMPLATES.filter(t=>
+    (!f.templateType || t.templateType===f.templateType) &&
+    (!f.evalStage || t.evalStage===f.evalStage) &&
     (!f.format || t.formats.includes(f.format)) &&
     (!f.q || (t.title+t.shortDesc).toLowerCase().includes(f.q.toLowerCase()))
   );
@@ -4115,26 +4118,16 @@ function filterPanelCases(){
       <option value="">Все типы</option>
       ${PROJECT_TYPES.map(t=>`<option ${f.projectType===t?'selected':''}>${t}</option>`).join('')}
     </select></div>
-  <div class="filter-group"><label>Стадия проекта</label>
-    <select onchange="state.filters.cases.stage=this.value||null;renderSection('cases')">
-      <option value="">Любая стадия</option>
-      ${STAGES.map(t=>`<option ${f.stage===t?'selected':''}>${t}</option>`).join('')}
+  <div class="filter-group"><label>Целевая аудитория</label>
+    <select onchange="state.filters.cases.audienceType=this.value||null;renderSection('cases')">
+      <option value="">Любая</option>
+      ${AUDIENCE_TYPES.map(t=>`<option ${f.audienceType===t?'selected':''}>${t}</option>`).join('')}
     </select></div>
-  <div class="filter-group"><label>Этап оценки</label>
-    <select onchange="state.filters.cases.evalStage=this.value||null;renderSection('cases')">
-      <option value="">Любой этап</option>
-      ${CASE_EVAL_STAGES.map(t=>`<option ${f.evalStage===t?'selected':''}>${t}</option>`).join('')}
-    </select></div>
-  <div class="filter-group"><label>Ценность (сквозной фильтр)</label>
+  <div class="filter-group"><label>Ценность</label>
     <select onchange="state.filters.cases.value=this.value||null;renderSection('cases')">
       <option value="">Любая ценность</option>
       ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
     </select></div>
-  <div class="filter-group"><label>Опыт</label>
-    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
-      <input type="checkbox" ${f.foreign?'checked':''} onchange="state.filters.cases.foreign=this.checked||null;renderSection('cases')">
-      Только зарубежный опыт
-    </label></div>
   <div class="actions">
     <button class="btn btn-ghost btn-sm" onclick="state.filters.cases={};renderSection('cases')">Сбросить</button>
   </div>`;
@@ -4165,10 +4158,15 @@ function filterPanelMethodology(){
   const f = state.filters.methodology || {};
   const subs = [...new Set(METHODOLOGY.map(m=>m.sub))];
   return `
-  <div class="filter-group"><label>Подраздел</label>
+  <div class="filter-group"><label>Тема / раздел</label>
     <select onchange="state.filters.methodology.sub=this.value||null;renderSection('methodology')">
-      <option value="">Все подразделы</option>
+      <option value="">Все разделы</option>
       ${subs.map(s=>`<option ${f.sub===s?'selected':''}>${s}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Ценность</label>
+    <select onchange="state.filters.methodology.value=this.value||null;renderSection('methodology')">
+      <option value="">Любая ценность</option>
+      ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
     </select></div>
   <div class="actions">
     <button class="btn btn-ghost btn-sm" onclick="state.filters.methodology={};renderSection('methodology')">Сбросить</button>
@@ -4178,6 +4176,16 @@ function filterPanelTemplates(){
   const f = state.filters.templates || {};
   const allFormats = [...new Set(TEMPLATES.flatMap(t=>t.formats))];
   return `
+  <div class="filter-group"><label>Тип шаблона</label>
+    <select onchange="state.filters.templates.templateType=this.value||null;renderSection('templates')">
+      <option value="">Все типы</option>
+      ${TEMPLATE_TYPES.map(t=>`<option ${f.templateType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Стадия оценки</label>
+    <select onchange="state.filters.templates.evalStage=this.value||null;renderSection('templates')">
+      <option value="">Все стадии</option>
+      ${EVAL_STAGES.map(s=>`<option ${f.evalStage===s?'selected':''}>${s}</option>`).join('')}
+    </select></div>
   <div class="filter-group"><label>Формат файла</label>
     <select onchange="state.filters.templates.format=this.value||null;renderSection('templates')">
       <option value="">Все форматы</option>
@@ -4235,26 +4243,16 @@ function filterPanelCasesAll(){
       <option value="">Все типы</option>
       ${PROJECT_TYPES.map(t=>`<option ${f.projectType===t?'selected':''}>${t}</option>`).join('')}
     </select></div>
-  <div class="filter-group"><label>Стадия проекта</label>
-    <select onchange="state.filters.cases.stage=this.value||null;filterAllApply()">
-      <option value="">Любая стадия</option>
-      ${STAGES.map(t=>`<option ${f.stage===t?'selected':''}>${t}</option>`).join('')}
-    </select></div>
-  <div class="filter-group"><label>Этап оценки</label>
-    <select onchange="state.filters.cases.evalStage=this.value||null;filterAllApply()">
-      <option value="">Любой этап</option>
-      ${CASE_EVAL_STAGES.map(t=>`<option ${f.evalStage===t?'selected':''}>${t}</option>`).join('')}
+  <div class="filter-group"><label>Целевая аудитория</label>
+    <select onchange="state.filters.cases.audienceType=this.value||null;filterAllApply()">
+      <option value="">Любая</option>
+      ${AUDIENCE_TYPES.map(t=>`<option ${f.audienceType===t?'selected':''}>${t}</option>`).join('')}
     </select></div>
   <div class="filter-group"><label>Ценность</label>
     <select onchange="state.filters.cases.value=this.value||null;filterAllApply()">
       <option value="">Любая ценность</option>
       ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
-    </select></div>
-  <div class="filter-group"><label>Опыт</label>
-    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
-      <input type="checkbox" ${f.foreign?'checked':''} onchange="state.filters.cases.foreign=this.checked||null;filterAllApply()">
-      Только зарубежный опыт
-    </label></div>`;
+    </select></div>`;
 }
 function filterPanelToolsAll(){
   const f = state.filters.tools||{};
@@ -4279,16 +4277,31 @@ function filterPanelMethodologyAll(){
   const f = state.filters.methodology||{};
   const subs = [...new Set(METHODOLOGY.map(m=>m.sub))];
   return `
-  <div class="filter-group"><label>Подраздел</label>
+  <div class="filter-group"><label>Тема / раздел</label>
     <select onchange="state.filters.methodology.sub=this.value||null;filterAllApply()">
-      <option value="">Все подразделы</option>
+      <option value="">Все разделы</option>
       ${subs.map(s=>`<option ${f.sub===s?'selected':''}>${s}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Ценность</label>
+    <select onchange="state.filters.methodology.value=this.value||null;filterAllApply()">
+      <option value="">Любая ценность</option>
+      ${VALUES.map(v=>`<option value="${v.id}" ${f.value===v.id?'selected':''}>${v.title}</option>`).join('')}
     </select></div>`;
 }
 function filterPanelTemplatesAll(){
   const f = state.filters.templates||{};
   const allFormats = [...new Set(TEMPLATES.flatMap(t=>t.formats))];
   return `
+  <div class="filter-group"><label>Тип шаблона</label>
+    <select onchange="state.filters.templates.templateType=this.value||null;filterAllApply()">
+      <option value="">Все типы</option>
+      ${TEMPLATE_TYPES.map(t=>`<option ${f.templateType===t?'selected':''}>${t}</option>`).join('')}
+    </select></div>
+  <div class="filter-group"><label>Стадия оценки</label>
+    <select onchange="state.filters.templates.evalStage=this.value||null;filterAllApply()">
+      <option value="">Все стадии</option>
+      ${EVAL_STAGES.map(s=>`<option ${f.evalStage===s?'selected':''}>${s}</option>`).join('')}
+    </select></div>
   <div class="filter-group"><label>Формат файла</label>
     <select onchange="state.filters.templates.format=this.value||null;filterAllApply()">
       <option value="">Все форматы</option>
@@ -4321,10 +4334,10 @@ function renderCardList(key, items){
   const routeKey = key==='cases'?'case':key==='tools'?'tool':key==='methodology'?'methodology':'template';
   return items.map(it=>{
     const metaTags = [];
-    if(key==='cases'){ metaTags.push(it.projectType, it.evalStage, it.stage, it.shortAudience||it.audience); }
-    else if(key==='tools'){ metaTags.push(it.type, it.audience, it.dataType); }
+    if(key==='cases'){ metaTags.push(it.projectType, (it.audienceType||[]).join(', ')); }
+    else if(key==='tools'){ metaTags.push(it.type, it.evalStage); }
     else if(key==='methodology'){ if(it.sub) metaTags.push(it.sub); }
-    else if(key==='templates'){ it.formats.forEach(f=>metaTags.push(f)); if(it.when) metaTags.push(it.when); }
+    else if(key==='templates'){ if(it.templateType) metaTags.push(it.templateType); if(it.evalStage) metaTags.push(it.evalStage); it.formats.forEach(f=>metaTags.push(f)); }
     const org = it.org || '';
     const status = it.status || '';
     return `<a class="item-card" data-nav="#/card/${routeKey}/${it.id}" style="text-decoration:none;">
@@ -4452,7 +4465,7 @@ function renderCaseDetail(id){
         ${quickDownloadHtml}
         ${relatedBlockHtml('Использованные инструменты', c.relatedTools, 'tool')}
         ${relatedBlockHtml('Похожие кейсы', c.relatedCases, 'case')}
-        ${relatedBlockHtml('Методология', c.relatedMethodology, 'methodology')}
+        ${relatedBlockHtml('Методики', c.relatedMethodology, 'methodology')}
         ${relatedBlockHtml('Шаблоны', c.relatedTemplates, 'template')}
         ${(() => { const caseDocs = ASSESSMENT_DOCS.filter(d => d.caseId === id); return caseDocs.length ? `<div class="sidebar-box"><h4>Документы оценки этого проекта</h4><div style="display:flex;flex-direction:column;gap:6px;">${caseDocs.map(d => `<a class="filerow" href="#/card/assessmentDoc/${d.id}" style="text-decoration:none;color:inherit;"><div class="name"><span class="ext">${d.format||'PDF'}</span>${d.title}</div></a>`).join('')}</div></div>` : ''; })()}
       </div>
@@ -4504,7 +4517,7 @@ function renderToolDetail(id){
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${t.updated}</div></div>
         ${relatedBlockHtml('Примеры применения (кейсы)', t.examples, 'case')}
         ${relatedBlockHtml('Похожие инструменты', t.related, 'tool')}
-        ${relatedBlockHtml('Методология', t.relatedMethodology, 'methodology')}
+        ${relatedBlockHtml('Методики', t.relatedMethodology, 'methodology')}
         ${relatedBlockHtml('Шаблоны', t.relatedTemplates, 'template')}
       </div>
     </div>
@@ -4522,7 +4535,7 @@ function renderMethodologyDetail(id){
   if(!m){ app.innerHTML = notFound(); return; }
   app.innerHTML = `
   <div class="wrap fade-in">
-    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/methodology">Методология и подходы</a><span class="sep">/</span><span>${m.title}</span></div>
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/section/methodology">Методики</a><span class="sep">/</span><span>${m.title}</span></div>
     <div class="detail-head">
       <span class="badge" style="background:${SECTIONS.methodology.bg};color:${SECTIONS.methodology.color}">${m.sub}</span>
       <div class="detail-titlebar"><div><h1>${m.title}</h1><p class="detail-sub">${m.shortDesc}</p></div>
@@ -4570,7 +4583,7 @@ function renderTemplateDetail(id){
       </div>
       <div>
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${t.updated}</div></div>
-        ${relatedBlockHtml('Методология', t.related.methodology, 'methodology')}
+        ${relatedBlockHtml('Методики', t.related.methodology, 'methodology')}
         ${relatedBlockHtml('Примеры кейсов', t.related.cases, 'case')}
         ${relatedBlockHtml('Инструменты', t.related.tools, 'tool')}
         ${relatedBlockHtml('Обучающие материалы', t.related.learning, 'learning')}
@@ -4651,7 +4664,7 @@ function renderAssessmentDocDetail(id){
       <div>
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${d.updated}</div></div>
         ${relatedBlockHtml('Связанные инструменты', d.relatedTools, 'tool')}
-        ${relatedBlockHtml('Методология', d.relatedMethodology, 'methodology')}
+        ${relatedBlockHtml('Методики', d.relatedMethodology, 'methodology')}
         ${relatedBlockHtml('Шаблоны', d.relatedTemplates, 'template')}
         ${relatedBlockHtml('Связанные документы', d.relatedDocs, 'assessmentDoc')}
       </div>
