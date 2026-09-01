@@ -1144,6 +1144,30 @@ function exportJSON(){
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'yakki-knowledge-base.json'; a.click();
 }
+function downloadAsMarkdown(type, id){
+  let md = '';
+  if(type==='case'){
+    const c = byId(CASES,id);
+    if(!c) return;
+    md = `# ${c.title}\n\n**Организация:** ${c.org}\n**Тип проекта:** ${c.projectType}\n**Стадия:** ${c.stage}\**Этап оценки:** ${c.evalStage}\n**География:** ${c.geo}\n**Период:** ${c.period}\n\n## О проекте\n\n${c.shortDesc}\n\n${c.fullDesc?'## Полное описание\n\n'+c.fullDesc+'\n\n':''}## Оценка проекта\n\n**Цель оценки:** ${c.evalGoal}\n\n**Критерии ОЭСР-DAC:** ${c.criteria.join(', ')}\n\n**Оценочные вопросы:**\n${c.questions.map(q=>'- '+q).join('\n')}\n\n${c.findings?'## Выводы по вопросам оценки\n\n'+c.findings.map(f=>'### '+f.q+'\n\n'+f.text).join('\n\n')+'\n\n':''}${c.keyConclusion?'## Ключевой вывод\n\n'+c.keyConclusion+'\n\n':''}## Уроки и выводы\n\n### Что сработало\n${c.lessons.good.map(x=>'- '+x).join('\n')}\n\n### Что не сработало\n${c.lessons.bad.map(x=>'- '+x).join('\n')}\n\n### Рекомендации\n${c.lessons.reco.map(x=>'- '+x).join('\n')}\n\n---\n*Источник: База знаний ЯККИ — ${location.origin+location.pathname}#/card/case/${c.id}*\n`;
+  } else if(type==='tool'){
+    const t = byId(TOOLS,id);
+    if(!t) return;
+    md = `# ${t.title}\n\n**Тип:** ${t.type}\n**Аудитория:** ${t.audience}\n**Тип данных:** ${t.dataType}\n\n## Описание\n\n${t.shortDesc}\n\n${t.fullDesc?'## Инструкция по применению\n\n'+t.fullDesc+'\n\n':''}---\n*Источник: База знаний ЯККИ — ${location.origin+location.pathname}#/card/tool/${t.id}*\n`;
+  } else if(type==='methodology'){
+    const m = byId(METHODOLOGY,id);
+    if(!m) return;
+    md = `# ${m.title}\n\n**Подраздел:** ${m.sub}\n\n## Описание\n\n${m.shortDesc}\n\n${m.fullDesc?'## Подробное описание\n\n'+m.fullDesc+'\n\n':''}---\n*Источник: База знаний ЯККИ — ${location.origin+location.pathname}#/card/methodology/${m.id}*\n`;
+  } else if(type==='template'){
+    const t = byId(TEMPLATES,id);
+    if(!t) return;
+    md = `# ${t.title}\n\n**Когда использовать:** ${t.when}\n**Форматы:** ${t.formats.join(', ')}\n\n## Описание\n\n${t.shortDesc}\n\n${t.instruction?'## Инструкция\n\n'+t.instruction+'\n\n':''}---\n*Источник: База знаний ЯККИ — ${location.origin+location.pathname}#/card/template/${t.id}*\n`;
+  }
+  if(!md) return;
+  const blob = new Blob([md],{type:'text/markdown'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `${type}-${id}.md`; a.click();
+}
 function doHeaderSearch(){
   const v = document.getElementById('headerSearchInput').value.trim();
   if(!v){go('#/section/all');return;}
@@ -2040,7 +2064,7 @@ function renderCaseDetail(id){
       <span class="badge" style="background:${SECTIONS.cases.bg};color:${SECTIONS.cases.color}">Кейс проекта</span>
       <div class="detail-titlebar">
         <div><h1>${c.title}</h1><p class="detail-sub">${c.shortDesc}</p></div>
-        <div class="detail-actions"><a class="btn btn-ghost" href="#/section/cases">← К списку кейсов</a></div>
+        <div class="detail-actions"><button class="btn btn-ghost" onclick="downloadAsMarkdown('case','${c.id}')">📥 Скачать .md</button><a class="btn btn-ghost" href="#/section/cases">← К списку</a></div>
       </div>
       <div class="detail-meta">
         <span class="chip">${c.projectType}</span><span class="chip">${c.stage}</span><span class="chip">${c.evalStage}</span><span class="chip">${c.geo}</span>
@@ -2132,7 +2156,7 @@ function renderToolDetail(id){
       <span class="badge" style="background:${SECTIONS.tools.bg};color:${SECTIONS.tools.color}">${t.type}</span>
       <div class="detail-titlebar">
         <div><h1>${t.title}</h1><p class="detail-sub">${t.shortDesc}</p></div>
-        <div class="detail-actions"><a class="btn btn-ghost" href="#/section/tools">← К списку инструментов</a></div>
+        <div class="detail-actions"><button class="btn btn-ghost" onclick="downloadAsMarkdown('tool','${t.id}')">📥 Скачать .md</button><a class="btn btn-ghost" href="#/section/tools">← К списку</a></div>
       </div>
       <div class="detail-meta">
         <span class="chip">Для: ${t.audience}</span><span class="chip">${t.dataType}</span><span class="chip">${t.stage}</span><span class="chip">${t.status}</span>
@@ -2179,7 +2203,7 @@ function renderMethodologyDetail(id){
     <div class="detail-head">
       <span class="badge" style="background:${SECTIONS.methodology.bg};color:${SECTIONS.methodology.color}">${m.sub}</span>
       <div class="detail-titlebar"><div><h1>${m.title}</h1><p class="detail-sub">${m.shortDesc}</p></div>
-      <div class="detail-actions"><a class="btn btn-ghost" href="#/section/methodology">← К методологии</a></div></div>
+      <div class="detail-actions"><button class="btn btn-ghost" onclick="downloadAsMarkdown('methodology','${m.id}')">📥 Скачать .md</button><a class="btn btn-ghost" href="#/section/methodology">← К списку</a></div></div>
       ${m.audience ? `<div class="detail-meta"><span class="chip">Для кого: ${m.audience}</span></div>` : ''}
     </div>
     <div class="detail-grid">
@@ -2213,7 +2237,7 @@ function renderTemplateDetail(id){
     <div class="detail-head">
       <span class="badge" style="background:${SECTIONS.templates.bg};color:${SECTIONS.templates.color}">Шаблон</span>
       <div class="detail-titlebar"><div><h1>${t.title}</h1><p class="detail-sub">${t.shortDesc}</p></div>
-      <div class="detail-actions"><a class="btn btn-ghost" href="#/section/templates">← К шаблонам</a></div></div>
+      <div class="detail-actions"><button class="btn btn-ghost" onclick="downloadAsMarkdown('template','${t.id}')">📥 Скачать .md</button><a class="btn btn-ghost" href="#/section/templates">← К списку</a></div></div>
     </div>
     <div class="detail-grid">
       <div>
