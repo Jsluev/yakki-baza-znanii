@@ -4724,8 +4724,8 @@ function renderFAQ(){
   document.getElementById('app').innerHTML = `
   <div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>FAQ</span></div>
-    <div class="catalog-head"><span class="badge" style="background:${SECTIONS.faq.bg};color:${SECTIONS.faq.color}">FAQ</span>
-      <h1 style="margin-top:12px;">Часто задаваемые вопросы</h1>
+    <div class="catalog-head">
+      <h1 style="margin-top:0;">Часто задаваемые вопросы</h1>
       <p>Быстрые ответы на типовые вопросы команд и оценщиков, сгруппированные по темам.</p>
     </div>
     <div style="max-width:760px;margin-top:26px;">
@@ -4772,8 +4772,8 @@ function renderGlossary(){
   }
   let html = `<div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Глоссарий</span></div>
-    <div class="catalog-head"><span class="badge" style="background:${SECTIONS.glossary.bg};color:${SECTIONS.glossary.color}">Глоссарий</span>
-      <h1 style="margin-top:12px;">Словарь терминов</h1>
+    <div class="catalog-head">
+      <h1 style="margin-top:0;">Словарь терминов</h1>
       <p>Простые, неакадемические определения — с перекрёстными ссылками на методологию.</p>
     </div>
     <div class="alpha-nav">${allLetters.map(l=>`<a class="${letters.includes(l)?'has':''}" onclick="event.preventDefault();scrollToLetter('${l}')" href="#">${l}</a>`).join('')}</div>
@@ -4815,8 +4815,8 @@ function renderValues(){
   buildNav('values');
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Ценности</span></div>
-    <div class="catalog-head"><span class="badge" style="background:${SECTIONS.values.bg};color:${SECTIONS.values.color}">Ценности</span>
-      <h1 style="margin-top:12px;">Ценностная рамка</h1>
+    <div class="catalog-head">
+      <h1 style="margin-top:0;">Ценностная рамка</h1>
       <p>17 ценностей Указа №809. Ценность работает как сквозной фильтр: откройте карточку — увидите результаты, кейсы и инструменты, где она фигурировала.</p>
     </div>
     <div class="values-grid">
@@ -4891,8 +4891,8 @@ function renderResults(){
   const area = appr.influenceAreas[state.resultsSel.area];
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Банк результатов</span></div>
-    <div class="catalog-head"><span class="badge" style="background:${SECTIONS.results.bg};color:${SECTIONS.results.color}">Банк результатов</span>
-      <h1 style="margin-top:12px;">Подход → область влияния → результат</h1>
+    <div class="catalog-head">
+      <h1 style="margin-top:0;">Подход → область влияния → результат</h1>
       <p>Готовые формулировки социокультурных результатов для теории изменений. Выберите подход и область влияния, чтобы увидеть связанные результаты с показателями и ценностями.</p>
     </div>
     <div class="tree-cols">
@@ -5006,8 +5006,8 @@ function renderPrompts(){
   document.getElementById('app').innerHTML = `
   <div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Промты для ИИ</span></div>
-    <div class="catalog-head"><span class="badge" style="background:var(--navy-soft);color:var(--navy)">ИИ-помощник</span>
-      <h1 style="margin-top:12px;">Промты для AI-агентов</h1>
+    <div class="catalog-head">
+      <h1 style="margin-top:0;">Промты для AI-агентов</h1>
       <p>Готовые инструкции для AI-ассистентов, созданные на основе методологии оценки культурных проектов из базы знаний ЯККИ. Скопируйте промт и используйте в любом AI-инструменте.</p>
     </div>
     <div style="max-width:760px;margin-top:26px;">
