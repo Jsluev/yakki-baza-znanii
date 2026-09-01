@@ -224,7 +224,7 @@ main{min-height:60vh;}
 .featured-side .row b{color:#fff;font-weight:600;}
 
 /* ---------- catalog / section page ---------- */
-.catalog-head{padding:28px 0 4px;}
+.catalog-head{padding:8px 0 4px;}
 .catalog-head h1{font-size:30px;}
 .catalog-head p{margin-top:10px;color:var(--ink-soft);font-size:14.5px;max-width:640px;}
 .catalog-body{display:grid;grid-template-columns:250px 1fr;gap:32px;margin-top:26px;align-items:start;}
@@ -3894,9 +3894,7 @@ function renderSection(key){
     <div class="wrap fade-in">
       <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>${s.label}</span></div>
       <div class="catalog-head">
-        <span class="badge" style="background:${s.bg};color:${s.color}">${s.short}</span>
-        <h1 style="margin-top:12px;">${s.label}</h1>
-        <p>${s.desc}</p>
+        <h1 style="margin-top:0;">${s.label}</h1>
       </div>
       <div class="catalog-body">
         <button class="btn btn-ghost btn-sm filter-toggle" style="display:none;width:100%;margin-bottom:8px;" onclick="document.querySelector('.filters').classList.toggle('filter-open');this.textContent=this.textContent.includes('Показать')?'Скрыть фильтры ▲':'Показать фильтры ▼'">Показать фильтры ▼</button>
@@ -3987,7 +3985,6 @@ function renderSection(key){
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>${sLabel}</span></div>
     <div class="catalog-head">
       <h1 style="margin-top:0;">${sLabel}</h1>
-      <p>${sDesc}</p>
     </div>
     <div class="catalog-body">
       <div class="filters">
