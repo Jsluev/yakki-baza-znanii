@@ -2509,7 +2509,7 @@ function renderResults(){
       </div>
       <div class="tree-col">
         <div class="tree-col-h">Результаты</div>
-        ${inflObj.results.map(r=>`<div class="result-line">${r.text}<span class="ind">${r.ind}</span></div>`).join('')}
+        ${inflObj.results.map((r,ri)=>`<a class="result-line" href="#/result/${state.resultsSel.area}/${state.resultsSel.infl}/${ri}" style="text-decoration:none;color:inherit;cursor:pointer;display:block;padding:8px 12px;border-bottom:1px solid var(--line);transition:background .15s;" onmouseover="this.style.background='var(--paper-raised)'" onmouseout="this.style.background=''">${r.text}<span class="ind">${r.ind}</span></a>`).join('')}
       </div>
     </div>
   </div>`;
@@ -2647,6 +2647,65 @@ function showPromptPreview(key){
   }
 }
 
+/* ============================================================
+   РЕНДЕР: СТРАНИЦА РЕЗУЛЬТАТА
+   ============================================================ */
+function renderResultDetail(areaIdx,inflIdx,resultIdx){
+  buildNav('results');
+  const areaObj = RESULTS_TREE[areaIdx];
+  if(!areaObj){ document.getElementById('app').innerHTML = notFound(); return; }
+  const inflObj = areaObj.influence[inflIdx];
+  if(!inflObj){ document.getElementById('app').innerHTML = notFound(); return; }
+  const result = inflObj.results[resultIdx];
+  if(!result){ document.getElementById('app').innerHTML = notFound(); return; }
+
+  const relatedCases = CASES.filter(c=>c.effects&&c.effects.includes(inflObj.name));
+  const relatedTools = TOOLS.filter(t=>t.values&&t.values.length>0);
+
+  document.getElementById('app').innerHTML = `<div class="wrap fade-in">
+    <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/results">Библиотека ценностей и результатов</a><span class="sep">/</span><span>${result.text.substring(0,50)}…</span></div>
+    <div class="detail-head"><span class="badge" style="background:${SECTIONS.results.bg};color:${SECTIONS.results.color}">Результат</span>
+      <div class="detail-titlebar"><div><h1>${result.text}</h1></div></div>
+      <div class="detail-meta">
+        <span class="chip">${areaObj.area}</span><span class="chip">${inflObj.name}</span>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="block"><h2>Характеристика результата</h2>
+          <dl class="kv">
+            <dt>Область</dt><dd>${areaObj.area}</dd>
+            <dt>Область влияния</dt><dd>${inflObj.name}</dd>
+            <dt>Формулировка</dt><dd>${result.text}</dd>
+            <dt>Пример показателя</dt><dd>${result.ind}</dd>
+          </dl>
+        </div>
+        <div class="block"><h2>Как измерять</h2>
+          <p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);">Для измерения этого результата используйте показатель: <b>${result.ind.replace('индикатор: ','')}</b>. Подходящие инструменты сбора данных смотрите в каталоге инструментов.</p>
+          <div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" href="#/section/tools">Найти инструмент →</a></div>
+        </div>
+        ${relatedCases.length ? `<div class="block"><h2>Кейсы, где проявился этот результат</h2>
+          <div class="card-list">${renderCardList('cases',relatedCases.slice(0,3))}</div>
+        </div>` : ''}
+      </div>
+      <div>
+        <div class="sidebar-box"><h4>Навигация</h4>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
+            <a href="#/results" style="text-decoration:none;">← Библиотека ценностей и результатов</a>
+            <a href="#/section/all?type=tools" style="text-decoration:none;">Каталог инструментов →</a>
+            <a href="#/section/all?type=cases" style="text-decoration:none;">Все кейсы →</a>
+          </div>
+        </div>
+        <div class="sidebar-box"><h4>Связанные ценности</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            ${VALUES.slice(0,5).map(v=>`<a class="chip" href="#/value/${v.id}" style="text-decoration:none;">♦ ${v.title}</a>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
   if(parts.length===0){ renderHome(); return; }
   const [a,b,c] = parts;
   if(a==='start') return renderStart();
@@ -2663,6 +2722,7 @@ function showPromptPreview(key){
   if(a==='values'){ return renderValues(); }
   if(a==='value'){ return renderValueDetail(b); }
   if(a==='results'){ return renderResults(); }
+  if(a==='result'){ return renderResultDetail(parseInt(b),parseInt(c),parseInt(parts[3]||'0')); }
   if(a==='faq'){ return renderFAQ(); }
   if(a==='prompts'){ return renderPrompts(); }
   if(a==='search'){ return renderSearch(query.q, query.type); }
