@@ -681,6 +681,16 @@ footer a:hover{color:#fff;}
   .detail-actions{flex-direction:column;}
   .detail-actions .btn{width:100%;}
 }
+
+/* --- Prompt preview --- */
+@media (max-width:640px){
+  [id^="prompt-preview-"]{max-height:200px;font-size:11.5px;padding:10px;}
+}
+
+/* --- Mobile touch: close menus on outside click --- */
+@media (max-width:980px){
+  body{overflow-x:hidden;}
+}
 </style>
 </head>
 <body>
@@ -1220,6 +1230,16 @@ document.addEventListener('DOMContentLoaded', render);
 document.addEventListener('click', function(e){
   const navEl = e.target.closest('[data-nav]');
   if(navEl){ go(navEl.getAttribute('data-nav')); }
+  if(window.innerWidth<=980){
+    if(!e.target.closest('.dd') && !e.target.closest('#hamburgerBtn')){
+      document.querySelectorAll('.dd-menu.dd-open').forEach(m=>m.classList.remove('dd-open'));
+    }
+    if(!e.target.closest('nav.mainnav') && !e.target.closest('#hamburgerBtn')){
+      const nav = document.getElementById('mainnav');
+      const btn = document.getElementById('hamburgerBtn');
+      if(nav&&btn){ nav.classList.remove('mobile-open'); btn.classList.remove('open'); }
+    }
+  }
 });
 
 function buildNav(activeKey){
