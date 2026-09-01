@@ -1158,8 +1158,9 @@ document.addEventListener('click', function(e){
 });
 
 function buildNav(activeKey){
-  const refSections = ['results','faq','glossary'];
+  const refSections = ['faq','glossary'];
   const isRef = refSections.includes(activeKey)||activeKey==='prompts';
+  const isResults = activeKey==='results'||activeKey==='values'||activeKey==='value';
   let html = `<a href="#/start" class="${activeKey==='start'?'active':''}">С чего начать</a>`;
   html += `<div class="dd">
     <button class="dd-btn ${CATALOG_SECTIONS.includes(activeKey)?'active':''}">База материалов ▾</button>
@@ -1169,7 +1170,7 @@ function buildNav(activeKey){
       ${CATALOG_SECTIONS.map(k=>`<a href="#/section/${k}"><span class="swatch" style="background:${SECTIONS[k].color}"></span>${SECTIONS[k].label}</a>`).join('')}
     </div>
   </div>`;
-  html += `<a href="#/values" class="${activeKey==='values'?'active':''}">Ценности</a>`;
+  html += `<a href="#/results" class="${isResults?'active':''}">Библиотека ценностей и результатов</a>`;
   html += `<div class="dd">
     <button class="dd-btn ${isRef?'active':''}">Справочник ▾</button>
     <div class="dd-menu">
