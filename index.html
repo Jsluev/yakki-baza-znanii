@@ -4404,7 +4404,6 @@ function renderCaseDetail(id){
         <div class="detail-actions"><button class="btn btn-ghost" onclick="downloadAsMarkdown('case','${c.id}')">📥 Скачать .md</button><a class="btn btn-ghost" href="#/section/cases">← К списку</a></div>
       </div>
       <div class="detail-meta">
-        <span class="chip">${c.projectType}</span><span class="chip">${c.stage}</span><span class="chip">${c.evalStage}</span><span class="chip">${c.geo}</span>
         ${c.values.map(v=>{const val=byId(VALUES,v);return val?`<a class="chip" data-nav="#/value/${val.id}">♦ ${val.title}</a>`:'';}).join('')}
       </div>
     </div>
@@ -4495,7 +4494,6 @@ function renderToolDetail(id){
         <div class="detail-actions"><button class="btn btn-ghost" onclick="downloadAsMarkdown('tool','${t.id}')">📥 Скачать .md</button><a class="btn btn-ghost" href="#/section/tools">← К списку</a></div>
       </div>
       <div class="detail-meta">
-        <span class="chip">Для: ${t.audience}</span><span class="chip">${t.dataType}</span><span class="chip">${t.stage}</span><span class="chip">${t.status}</span>
         ${t.values.map(v=>{const val=byId(VALUES,v);return val?`<a class="chip" data-nav="#/value/${val.id}">♦ ${val.title}</a>`:'';}).join('')}
       </div>
     </div>
@@ -4540,7 +4538,7 @@ function renderMethodologyDetail(id){
       <span class="badge" style="background:${SECTIONS.methodology.bg};color:${SECTIONS.methodology.color}">${m.sub}</span>
       <div class="detail-titlebar"><div><h1>${m.title}</h1><p class="detail-sub">${m.shortDesc}</p></div>
       <div class="detail-actions"><button class="btn btn-ghost" onclick="downloadAsMarkdown('methodology','${m.id}')">📥 Скачать .md</button><a class="btn btn-ghost" href="#/section/methodology">← К списку</a></div></div>
-      ${m.audience ? `<div class="detail-meta"><span class="chip">Для кого: ${m.audience}</span></div>` : ''}
+      ${''}
     </div>
     <div class="detail-grid">
       <div>
@@ -4612,7 +4610,6 @@ function renderAssessmentDocDetail(id){
         <div class="detail-actions"><a class="btn btn-ghost" href="#/section/assessmentDocs">← К списку документов</a></div>
       </div>
       <div class="detail-meta">
-        <span class="chip">${d.projectType}</span><span class="chip">${d.evalStage}</span><span class="chip">${d.geo}</span>
       </div>
     </div>
     <div class="detail-grid">
@@ -5025,7 +5022,6 @@ function renderResultDetail(apprIdx,areaIdx,resultIdx){
     <div class="detail-head"><span class="badge" style="background:${SECTIONS.results.bg};color:${SECTIONS.results.color}">Результат</span>
       <div class="detail-titlebar"><div><h1>${result.text}</h1></div></div>
       <div class="detail-meta">
-        <span class="chip">${appr.approach}</span><span class="chip">${area.name}</span>
       </div>
     </div>
     <div class="detail-grid">
