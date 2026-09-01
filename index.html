@@ -3387,7 +3387,7 @@ const ASSESSMENT_DOCS = [
 
 const PROJECT_TYPES = ['Музейные проекты','Театральные проекты','Фестивали и события','Арт-резиденции','Образовательные программы','Медиа и онлайн-проекты','Другое'];
 const STAGES = ['Инновационные (новые)','Зрелые (повторяющиеся)','Масштабирование','Завершённые'];
-const EVAL_STAGES = ['Предварительная (ex-ante)','Формирующая','Итоговая','Ретроспективная'];
+const CASE_EVAL_STAGES = ['Предварительная (ex-ante)','Формирующая','Итоговая','Ретроспективная'];
 const CRITERIA = ['Актуальность','Согласованность','Эффективность','Результативность','Воздействие','Устойчивость'];
 const TOOL_TYPES = ['Инструмент сбора данных','План оценки','Логические модели','Дерево результатов'];
 const EVAL_STAGES = ['Планирование','Сбор данных','Анализ','Использование результатов'];
@@ -4126,7 +4126,7 @@ function filterPanelCases(){
   <div class="filter-group"><label>Этап оценки</label>
     <select onchange="state.filters.cases.evalStage=this.value||null;renderSection('cases')">
       <option value="">Любой этап</option>
-      ${EVAL_STAGES.map(t=>`<option ${f.evalStage===t?'selected':''}>${t}</option>`).join('')}
+      ${CASE_EVAL_STAGES.map(t=>`<option ${f.evalStage===t?'selected':''}>${t}</option>`).join('')}
     </select></div>
   <div class="filter-group"><label>Ценность (сквозной фильтр)</label>
     <select onchange="state.filters.cases.value=this.value||null;renderSection('cases')">
@@ -4246,7 +4246,7 @@ function filterPanelCasesAll(){
   <div class="filter-group"><label>Этап оценки</label>
     <select onchange="state.filters.cases.evalStage=this.value||null;filterAllApply()">
       <option value="">Любой этап</option>
-      ${EVAL_STAGES.map(t=>`<option ${f.evalStage===t?'selected':''}>${t}</option>`).join('')}
+      ${CASE_EVAL_STAGES.map(t=>`<option ${f.evalStage===t?'selected':''}>${t}</option>`).join('')}
     </select></div>
   <div class="filter-group"><label>Ценность</label>
     <select onchange="state.filters.cases.value=this.value||null;filterAllApply()">
@@ -5049,20 +5049,6 @@ function renderResultDetail(apprIdx,areaIdx,resultIdx){
         ${valNames.length ? `<div class="sidebar-box"><h4>Связанные ценности</h4>
           <div style="display:flex;flex-wrap:wrap;gap:6px;">${valNames.join('')}</div>
         </div>` : ''}
-      </div>
-    </div>
-  </div>`;
-          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
-            <a href="#/results" style="text-decoration:none;">← Библиотека ценностей и результатов</a>
-            <a href="#/section/all?type=tools" style="text-decoration:none;">Каталог инструментов →</a>
-            <a href="#/section/all?type=cases" style="text-decoration:none;">Все кейсы →</a>
-          </div>
-        </div>
-        <div class="sidebar-box"><h4>Связанные ценности</h4>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;">
-            ${VALUES.slice(0,5).map(v=>`<a class="chip" href="#/value/${v.id}" style="text-decoration:none;">♦ ${v.title}</a>`).join('')}
-          </div>
-        </div>
       </div>
     </div>
   </div>`;
