@@ -210,6 +210,31 @@ main{min-height:60vh;}
 .scenario h4{font-size:15px;margin-top:6px;}
 .scenario p{font-size:13px;color:var(--ink-soft);margin-top:6px;}
 
+/* Home cards grid */
+.home-card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media(max-width:900px){.home-card-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.home-card-grid{grid-template-columns:1fr;}}
+.home-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s;}
+.home-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--line-strong);}
+.hc-head{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px;}
+.home-card h3{font-size:16px;font-weight:600;}
+.home-card p{font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.5;flex:1;}
+.hc-links{font-size:12px;color:var(--navy);margin-top:10px;font-weight:500;}
+
+/* Use-cases grid */
+.use-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:900px){.use-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.use-grid{grid-template-columns:1fr;}}
+.use-item{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;}
+.use-num{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin-bottom:8px;}
+.use-item h4{font-size:15px;font-weight:600;}
+.use-item p{font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.5;}
+
+/* Home cases grid */
+.home-cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:900px){.home-cases-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.home-cases-grid{grid-template-columns:1fr;}}
+
 /* featured */
 .featured{margin-top:40px;background:var(--navy-deep);color:#EDEBE3;border-radius:16px;padding:34px;display:grid;grid-template-columns:1.3fr 1fr;gap:24px;}
 @media (max-width:800px){.featured{grid-template-columns:1fr;}}
@@ -3650,28 +3675,68 @@ function buildNav(activeKey){
    ============================================================ */
 function renderHome(){
   buildNav(null);
-  const order = Object.keys(SECTIONS);
-  const featured = byId(CASES,'muzeinyi-eksperiment');
+  const f1 = byId(CASES,'muzeinyi-eksperiment');
+  const f2 = byId(CASES,'otkrytyi-dvor');
+  const f3 = byId(CASES,'kuratorskaya-shkola');
+  const caseCount = CASES.length;
+  const toolCount = TOOLS.length;
+  const tplCount = TEMPLATES.length;
+  const methCount = METHODOLOGY.length;
+  const resCount = RESULTS_TREE.reduce((a,x)=>a+x.influenceAreas.reduce((b,y)=>b+y.results.length,0),0);
+  const faqCount = FAQ.reduce((a,g)=>a+g.items.length,0);
   document.getElementById('app').innerHTML = `
   <div class="hero"><div class="wrap hero-inner fade-in">
     <div class="eyebrow">creative-industries.su · база знаний</div>
-    <h1>База знаний по оценке<br>культурных проектов</h1>
-    <p class="lead">Кейсы, инструменты, методология и шаблоны — чтобы команда сама планировала и оценивала результаты, не дожидаясь консультации методолога.</p>
+    <h1>База знаний об оценке<br>творческих проектов</h1>
+    <p class="lead">Кейсы, инструменты, шаблоны, методики и банк результатов, которые помогают понять, какие изменения создаёт проект, как их оценивать и как использовать выводы.</p>
     <div class="audience-btns">
       <a class="audience-btn" data-nav="#/start"><span class="ab-icon">→</span><div><b>С чего начать</b><span>Ориентирующий путь для первого знакомства с оценкой</span></div></a>
-      <a class="audience-btn" data-nav="#/section/tools" data-audience="professional"><span class="ab-icon">⚙</span><div><b>Для экспертов / оценщиков</b><span>Инструменты, шаблоны, методология</span></div></a>
-      <a class="audience-btn" data-nav="#/section/all?type=cases" data-audience="foundation"><span class="ab-icon">◈</span><div><b>Для доноров / заказчиков</b><span>Кейсы, ценности, результаты</span></div></a>
+      <a class="audience-btn" data-nav="#/section/tools"><span class="ab-icon">⚙</span><div><b>Для экспертов / оценщиков</b><span>Инструменты, шаблоны, методики и кейсы</span></div></a>
+      <a class="audience-btn" data-nav="#/section/all?type=cases"><span class="ab-icon">◈</span><div><b>Для доноров / заказчиков</b><span>Кейсы, ценности и результаты</span></div></a>
     </div>
   </div></div>
 
-  <div class="wrap fade-in" style="padding-top:8px;">
+  <div class="wrap fade-in" style="padding:0 0 8px;">
+    <div class="hr"></div>
+    <div style="padding-top:36px;">
+      <h2 style="font-size:22px;">Что внутри базы</h2>
+      <div class="home-card-grid" style="margin-top:18px;">
+        <a class="home-card" data-nav="#/section/all" style="text-decoration:none;">
+          <div class="hc-head" style="background:var(--blue-bg);color:var(--blue);">📦</div>
+          <h3>Готовые материалы</h3>
+          <p>Кейсы проектов, инструменты оценки, шаблоны документов и методики — всё, что можно использовать в своей работе.</p>
+          <span class="hc-links">Все материалы · Кейсы · Инструменты · Шаблоны · Методики</span>
+        </a>
+        <a class="home-card" data-nav="#/results" style="text-decoration:none;">
+          <div class="hc-head" style="background:var(--green-bg);color:var(--green);">📊</div>
+          <h3>Банк результатов</h3>
+          <p>Формулировки социальных, культурных и ценностных результатов, примеры показателей и связи с материалами.</p>
+          <span class="hc-links">→ Открыть банк результатов</span>
+        </a>
+        <a class="home-card" data-nav="#/values" style="text-decoration:none;">
+          <div class="hc-head" style="background:var(--warm-bg);color:var(--warm);">💎</div>
+          <h3>Ценности</h3>
+          <p>Ценности, с которыми могут быть связаны результаты творческих проектов, кейсы и инструменты оценки.</p>
+          <span class="hc-links">→ Перейти к ценностям</span>
+        </a>
+        <a class="home-card" data-nav="#/faq" style="text-decoration:none;">
+          <div class="hc-head" style="background:var(--paper-sunk);color:var(--ink-soft);">📚</div>
+          <h3>Справочник</h3>
+          <p>Термины, ответы на вопросы, промты и вспомогательные материалы для работы с базой.</p>
+          <span class="hc-links">→ Открыть справочник</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap fade-in" style="padding:36px 0 8px;">
     <div class="hr"></div>
     <div style="padding-top:36px;">
       <h2 style="font-size:22px;">Как это использовать</h2>
       <div class="scenario-list" style="margin-top:16px;">
         <div class="scenario"><div class="num">01</div><h4>Найти похожий проект</h4><p>Отфильтруйте <a data-nav="#/section/cases" style="text-decoration:underline">кейсы</a> по типу проекта или аудитории, откройте карточку и посмотрите, как проект оценивали.</p></div>
         <div class="scenario"><div class="num">02</div><h4>Взять готовый инструмент</h4><p>Найдите <a data-nav="#/section/tools" style="text-decoration:underline">анкету или гайд</a> под свою аудиторию, скачайте файл и инструкцию по применению.</p></div>
-        <div class="scenario"><div class="num">03</div><h4>Разобраться в термине</h4><p>Откройте <a data-nav="#/glossary" style="text-decoration:underline">глоссарий</a>, посмотрите определение и перейдите к <a data-nav="#/section/methodology" style="text-decoration:underline">методологии</a>, где термин раскрыт подробнее.</p></div>
+        <div class="scenario"><div class="num">03</div><h4>Разобраться в термине</h4><p>Откройте <a data-nav="#/glossary" style="text-decoration:underline">глоссарий</a>, посмотрите определение и перейдите к <a data-nav="#/section/methodology" style="text-decoration:underline">методике</a>, где термин раскрыт подробнее.</p></div>
         <div class="scenario"><div class="num">04</div><h4>Скачать шаблон и применить у себя</h4><p>Возьмите <a data-nav="#/section/templates" style="text-decoration:underline">шаблон</a> плана оценки, ЛМП или отчёта — и адаптируйте под свой проект.</p></div>
       </div>
     </div>
@@ -3680,19 +3745,26 @@ function renderHome(){
   <div class="wrap fade-in" style="padding:36px 0 8px;">
     <div class="hr"></div>
     <div style="padding-top:36px;">
-      <div class="grid-sections">
-        ${order.map(k=>{
-          const s=SECTIONS[k];
-          const route = k==='values'?'#/values':k==='results'?'#/results':k==='faq'?'#/faq':k==='glossary'?'#/glossary':`#/section/${k}`;
-          const count = {cases:CASES.length,tools:TOOLS.length,methodology:METHODOLOGY.length,templates:TEMPLATES.length,values:VALUES.length,results:RESULTS_TREE.reduce((a,x)=>a+x.influenceAreas.reduce((b,y)=>b+y.results.length,0),0),faq:FAQ.reduce((a,g)=>a+g.items.length,0),glossary:GLOSSARY.length}[k];
-          return `<a class="sec-card" data-nav="${route}" style="text-decoration:none;">
-            <div class="spine" style="background:${s.color}"></div>
-            <div class="top"><div class="ico" style="background:${s.bg};color:${s.color}">${s.icon}</div></div>
-            <h3>${s.label}</h3>
-            <p>${s.desc}</p>
-            <div class="count">${count} материал${count===1?'':count<5?'а':'ов'}</div>
-          </a>`;
-        }).join('')}
+      <h2 style="font-size:22px;">Когда база может помочь</h2>
+      <div class="use-grid" style="margin-top:18px;">
+        <div class="use-item"><div class="use-num">01</div><h4>Вы готовите проект или пишете заявку</h4><p>Сформулировать ожидаемые результаты, выбрать приоритеты оценки и собрать черновик плана.</p><a data-nav="#/start" style="font-size:13px;color:var(--navy);text-decoration:underline;cursor:pointer;">Начать с проекта на старте →</a></div>
+        <div class="use-item"><div class="use-num">02</div><h4>Проект уже идёт</h4><p>Понять, какие данные уже есть, чего не хватает и что ещё можно успеть собрать.</p><a data-nav="#/start" style="font-size:13px;color:var(--navy);text-decoration:underline;cursor:pointer;">Разобраться с текущим проектом →</a></div>
+        <div class="use-item"><div class="use-num">03</div><h4>Нужно подвести итоги</h4><p>Понять, что можно сказать по имеющимся данным, какие есть ограничения и как использовать выводы.</p><a data-nav="#/start" style="font-size:13px;color:var(--navy);text-decoration:underline;cursor:pointer;">Подготовить итоги →</a></div>
+        <div class="use-item"><div class="use-num">04</div><h4>Вы оцениваете чужой проект</h4><p>Найти методики, инструменты, шаблоны и похожие кейсы для профессиональной оценки.</p><a data-nav="#/section/all" style="font-size:13px;color:var(--navy);text-decoration:underline;cursor:pointer;">Подобрать материалы для оценки →</a></div>
+        <div class="use-item"><div class="use-num">05</div><h4>Нужно понять результаты и вклад проекта</h4><p>Посмотреть, какие изменения создают творческие проекты и с какими ценностями они связаны.</p><a data-nav="#/results" style="font-size:13px;color:var(--navy);text-decoration:underline;cursor:pointer;">Исследовать результаты и ценности →</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap fade-in" style="padding:8px 0 0;">
+    <div class="hr"></div>
+    <div style="padding-top:36px;">
+      <div class="eyebrow">От мероприятий к изменениям</div>
+      <h2 style="font-size:22px;margin-top:8px;">Банк результатов и ценностей</h2>
+      <p style="font-size:14px;color:var(--ink-soft);max-width:680px;margin-top:10px;line-height:1.6;">Творческие проекты создают не только события и продукты. Они могут менять опыт участников, укреплять сообщества, развивать культурные практики. Банк результатов помогает назвать эти изменения, подобрать показатели, увидеть связанные ценности и найти материалы, где такие результаты уже проявлялись.</p>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+        <a class="btn btn-primary" data-nav="#/results">Открыть банк результатов →</a>
+        <a class="btn btn-ghost" data-nav="#/values">Перейти к ценностям</a>
       </div>
     </div>
   </div>
@@ -3700,33 +3772,47 @@ function renderHome(){
   <div class="wrap fade-in" style="padding:36px 0 8px;">
     <div class="hr"></div>
     <div style="padding-top:36px;">
-      <div class="eyebrow">Для AI-агентов</div>
-      <h2 style="font-size:20px;margin-top:6px;">Промты для AI</h2>
-      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-top:8px;">Готовые инструкции для AI-ассистентов на основе методологии ЯККИ. Скопируйте промт и используйте в любом AI-инструменте.</p>
+      <h2 style="font-size:22px;">Примеры из практики</h2>
+      <div class="home-cases-grid" style="margin-top:18px;">
+        ${[f1,f2,f3].filter(Boolean).map(c=>`
+          <a class="item-card" data-nav="#/card/case/${c.id}" style="text-decoration:none;">
+            <div class="spine" style="background:var(--blue);"></div>
+            <div class="card-body">
+              <div class="card-head"><h3 style="font-size:15px;">${c.title}</h3></div>
+              <div class="desc">${c.shortDesc}</div>
+              <div class="metarow">
+                <span class="tag">${c.projectType}</span>
+                <span class="tag">${c.evalStage}</span>
+                <span class="tag">${c.geo}</span>
+              </div>
+            </div>
+          </a>
+        `).join('')}
+      </div>
+      <div style="margin-top:16px;"><a class="btn btn-primary" data-nav="#/section/cases">Смотреть все кейсы →</a></div>
+    </div>
+  </div>
+
+  <div class="wrap fade-in" style="padding:36px 0 8px;">
+    <div class="hr"></div>
+    <div style="padding-top:36px;">
+      <h2 style="font-size:22px;">Материалы для работы с ИИ</h2>
+      <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-top:10px;line-height:1.55;">Промты, выгрузки и шаблоны, которые помогут использовать материалы базы в ИИ-инструментах: для подготовки плана оценки, формулировки результатов, подбора вопросов и анализа данных.</p>
       <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-        <a class="btn btn-primary" data-nav="#/prompts">Все промты →</a>
+        <a class="btn btn-primary" data-nav="#/prompts">Открыть материалы для ИИ →</a>
         <button class="btn btn-ghost" onclick="exportJSON()">Скачать JSON базы знаний</button>
       </div>
     </div>
   </div>
 
-  <div class="wrap fade-in" style="padding:8px 0 0;">
+  <div class="wrap fade-in" style="padding:36px 0 8px;">
     <div class="hr"></div>
-    <div class="featured" style="margin-top:36px;">
-      <div>
-        <div class="eyebrow">Пример из практики</div>
-        <h3>${featured.title}</h3>
-        <p>${featured.shortDesc}</p>
-        <div class="meta-list">
-          <span>${featured.projectType}</span><span>${featured.evalStage}</span><span>${featured.geo}</span>
-        </div>
-        <div style="margin-top:20px;"><a class="btn btn-primary" data-nav="#/card/case/${featured.id}">Открыть кейс →</a></div>
-      </div>
-      <div class="featured-side">
-        <div class="row"><span>Организация</span><b>${featured.org}</b></div>
-        <div class="row"><span>Период</span><b>${featured.period}</b></div>
-        <div class="row"><span>Инструментов</span><b>${featured.relatedTools.length}</b></div>
-        <div class="row"><span>Обновлено</span><b>${featured.updated}</b></div>
+    <div style="padding-top:36px;">
+      <h2 style="font-size:22px;">Куда перейти дальше</h2>
+      <div class="scenario-list" style="margin-top:16px;">
+        <div class="scenario"><div class="num">→</div><h4>С чего начать</h4><p>Если вы хотите понять общую логику оценки или разобраться со своим проектом.</p><a data-nav="#/start" style="font-size:13px;color:var(--navy);text-decoration:underline;cursor:pointer;">С чего начать →</a></div>
+        <div class="scenario"><div class="num">→</div><h4>База материалов</h4><p>Если вы ищете кейсы, инструменты, шаблоны или методики.</p><a data-nav="#/section/all" style="font-size:13px;color:var(--navy);text-decoration:underline;cursor:pointer;">Перейти в базу материалов →</a></div>
+        <div class="scenario"><div class="num">→</div><h4>Банк результатов</h4><p>Если вы хотите подобрать результаты, показатели и связанные ценности.</p><a data-nav="#/results" style="font-size:13px;color:var(--navy);text-decoration:underline;cursor:pointer;">Открыть банк результатов →</a></div>
       </div>
     </div>
   </div>
