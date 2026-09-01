@@ -975,7 +975,7 @@ const TOOLS = [
   instructions:['Адаптируйте оценочные вопросы под ваш проект перед использованием','Замените целевые аудитории и методы на актуальные для вашего контекста','Согласуйте график с командой проекта до начала сбора данных'],
   limitations:['План разработан для проектов с.SubElementdurationом 3–6 месяцев','Не подходит для разовых мероприятий без оценки «до/после»'],
   file:{name:'План оценки — Музейный эксперимент.pdf', ext:'PDF'},
-  examples:['muzeinyi-eksperiment'], related:['anketa-muzeinyi-eksperiment','theory-of-change'], relatedMethodology:['theory-of-change'], relatedTemplates:['tpl-plan'], updated:'15.10.2025'},
+  examples:['muzeinyi-eksperiment'], related:['anketa-muzeinyi-eksperiment'], relatedMethodology:['theory-of-change'], relatedTemplates:['tpl-plan'], updated:'15.10.2025'},
 
  {id:'plan-festival', title:'План оценки фестиваля уличного искусства', type:'План оценки', evalStage:'Планирование', status:'Черновик', values:['identity','creative-work'],
   shortDesc:'Шаблон плана оценки для однодневного или_WEEKENDного фестиваля: что измерять, какими методами, кого спрашивать.',
@@ -990,7 +990,7 @@ const TOOLS = [
   instructions:['Начните с заполнения столбца «Эффекты» — что изменится в долгосрочной перспективе','Для каждого результата подберите 1–2 измеримых индикатора','Укажите допущения и риски для каждого уровня'],
   limitations:['ЛМП — инструмент планирования, а не оценки. Используйте совместно с планом оценки.'],
   file:{name:'ЛМП — Арт-резиденция.xlsx', ext:'XLSX'},
-  examples:['otkrytye-masterskie'], related:['tpl-lmp'], relatedMethodology:['logframe','theory-of-change'], relatedTemplates:['tpl-lmp'], updated:'10.07.2026'},
+  examples:['otkrytye-masterskie'], related:[], relatedMethodology:['logframe','theory-of-change'], relatedTemplates:['tpl-lmp'], updated:'10.07.2026'},
 
  {id:'logframe-museum', title:'Логическая модель для проекта с наследием', type:'Логические модели', evalStage:'Планирование', status:'Протестирован', values:['historical-memory','patriotism'],
   shortDesc:'ЛМП для проектов, связанных с историческим наследием, музеями и передачей памяти поколениям.',
@@ -4546,15 +4546,15 @@ function renderToolDetail(id){
       <div>
         <div class="block"><h2>Развёрнутое описание</h2><p style="font-size:14px;line-height:1.6;">${t.fullDesc}</p></div>
         ${t.situation ? `<div class="block"><h2>Ситуация применения</h2><p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);">${t.situation}</p></div>` : ''}
-        <div class="block"><h2>Инструкция по применению</h2><ul class="plain">${t.instructions.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        ${t.instructions&&t.instructions.length ? `<div class="block"><h2>Инструкция по применению</h2><ul class="plain">${t.instructions.map(x=>`<li>${x}</li>`).join('')}</ul></div>` : ''}
         ${t.prep ? `<div class="block"><h2>Подготовка к применению</h2><p style="font-size:13.5px;line-height:1.55;color:var(--ink-soft);">${t.prep}</p></div>` : ''}
         ${(t.effort||t.timeEstimate) ? `<div class="block"><h2>Ресурсы</h2><dl class="kv">${t.effort?`<dt>Трудоёмкость</dt><dd>${t.effort}</dd>`:''}${t.timeEstimate?`<dt>Ориентировочное время</dt><dd>${t.timeEstimate}</dd>`:''}</dl></div>` : ''}
-        <div class="block"><h2>Ограничения и риски</h2><ul class="plain">${t.limitations.map(x=>`<li>${x}</li>`).join('')}</ul></div>
-        <div class="block"><h2>Таблица связи «вопрос → индикатор → вопрос инструмента»</h2>
+        ${t.limitations&&t.limitations.length ? `<div class="block"><h2>Ограничения и риски</h2><ul class="plain">${t.limitations.map(x=>`<li>${x}</li>`).join('')}</ul></div>` : ''}
+        ${t.table&&t.table.length ? `<div class="block"><h2>Таблица связи «вопрос → индикатор → вопрос инструмента»</h2>
           <table class="qtable"><thead><tr><th>Оценочный вопрос</th><th>Индикатор</th><th>Вопрос инструмента</th></tr></thead>
           <tbody>${t.table.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table>
-        </div>
-        <div class="block"><h2>Файл инструмента</h2><div class="filelist">${fileRow(t.file)}</div></div>
+        </div>` : ''}
+        ${t.file ? `<div class="block"><h2>Файл инструмента</h2><div class="filelist">${fileRow(t.file)}</div></div>` : ''}
       </div>
       <div>
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${t.updated}</div></div>
@@ -4596,10 +4596,10 @@ function renderMethodologyDetail(id){
       </div>
       <div>
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${m.updated}</div></div>
-        ${relatedBlockHtml('Инструменты', m.related.tools, 'tool')}
-        ${relatedBlockHtml('Кейсы', m.related.cases, 'case')}
-        ${relatedBlockHtml('Шаблоны', m.related.templates, 'template')}
-        ${relatedBlockHtml('Обучающие материалы', m.related.learning, 'learning')}
+        ${relatedBlockHtml('Инструменты', m.related?m.related.tools:null, 'tool')}
+        ${relatedBlockHtml('Кейсы', m.related?m.related.cases:null, 'case')}
+        ${relatedBlockHtml('Шаблоны', m.related?m.related.templates:null, 'template')}
+        ${relatedBlockHtml('Обучающие материалы', m.related?m.related.learning:null, 'learning')}
       </div>
     </div>
     <a class="back-link" href="#/section/methodology">← Ко всей методологии</a>
@@ -4626,10 +4626,10 @@ function renderTemplateDetail(id){
       </div>
       <div>
         <div class="sidebar-box"><h4>Обновлено</h4><div class="updated-note" style="margin:0;">${t.updated}</div></div>
-        ${relatedBlockHtml('Методики', t.related.methodology, 'methodology')}
-        ${relatedBlockHtml('Примеры кейсов', t.related.cases, 'case')}
-        ${relatedBlockHtml('Инструменты', t.related.tools, 'tool')}
-        ${relatedBlockHtml('Обучающие материалы', t.related.learning, 'learning')}
+        ${relatedBlockHtml('Методики', t.related?t.related.methodology:null, 'methodology')}
+        ${relatedBlockHtml('Примеры кейсов', t.related?t.related.cases:null, 'case')}
+        ${relatedBlockHtml('Инструменты', t.related?t.related.tools:null, 'tool')}
+        ${relatedBlockHtml('Обучающие материалы', t.related?t.related.learning:null, 'learning')}
       </div>
     </div>
     <a class="back-link" href="#/section/templates">← Ко всем шаблонам</a>
