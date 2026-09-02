@@ -2032,28 +2032,24 @@ function renderSection(key){
   /* Apply type-specific filter params from URL to state.filters */
   if(typeParam && !state.filters[typeParam]) state.filters[typeParam] = {};
   if(typeParam){
-    const f = state.filters[typeParam];
-    const filterKeys = Object.keys(f).filter(k=>k!=='q');
-    /* Read known filter keys from URL */
+        const f = state.filters[typeParam];
     if(typeParam==='cases'){
-      f.projectType = params.get('projectType')||f.projectType||null;
-      f.stage = params.get('stage')||f.stage||null;
-      f.evalStage = params.get('evalStage')||f.evalStage||null;
-      f.value = params.get('value')||f.value||null;
-      f.foreign = params.get('foreign')==='1'||params.get('foreign')==='true'||f.foreign||null;
+      f.projectType = params.get('projectType')||null;
+      f.evalStage = params.get('evalStage')||null;
+      f.value = params.get('value')||null;
     } else if(typeParam==='tools'){
-      f.type = params.get('toolType')||f.type||null;
-      f.dataType = params.get('dataType')||f.dataType||null;
-      f.status = params.get('status')||f.status||null;
-      f.value = params.get('value')||f.value||null;
+      f.type = params.get('toolType')||null;
+      f.dataType = params.get('dataType')||null;
+      f.status = params.get('status')||null;
+      f.value = params.get('value')||null;
     } else if(typeParam==='methodology'){
-      f.sub = params.get('sub')||f.sub||null;
+      f.sub = params.get('sub')||null;
     } else if(typeParam==='templates'){
-      f.format = params.get('format')||f.format||null;
+      f.format = params.get('format')||null;
     } else if(typeParam==='assessmentDocs'){
-      f.docType = params.get('docType')||f.docType||null;
-      f.projectType = params.get('projectType')||f.projectType||null;
-      f.caseId = params.get('caseId')||f.caseId||null;
+      f.docType = params.get('docType')||null;
+      f.projectType = params.get('projectType')||null;
+      f.caseId = params.get('caseId')||null;
     }
   }
 
@@ -3204,9 +3200,10 @@ function searchToolsForResult(ai,ari,ri){
   const appr = RESULTS_TREE[ai];
   const area = appr.influenceAreas[ari];
   const result = area.results[ri];
-  state.resultsSel = {approach:ai, area:ari};
+  state.filters.tools = {type:null, evalStage:null, value:null, q:null};
   const relatedTools = TOOLS.filter(t=>t.values && t.values.some(v=>(result.values||[]).includes(v)));
   if(relatedTools.length > 0){
+    state.filters.tools.q = result.text;
     location.hash = '#/section/all?type=tools&q=' + encodeURIComponent(result.text);
   } else {
     location.hash = '#/section/all?type=tools';
