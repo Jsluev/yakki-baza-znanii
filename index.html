@@ -3205,7 +3205,12 @@ function searchToolsForResult(ai,ari,ri){
   const area = appr.influenceAreas[ari];
   const result = area.results[ri];
   state.resultsSel = {approach:ai, area:ari};
-  location.hash = '#/section/all?type=tools&q=' + encodeURIComponent(result.text);
+  const relatedTools = TOOLS.filter(t=>t.values && t.values.some(v=>(result.values||[]).includes(v)));
+  if(relatedTools.length > 0){
+    location.hash = '#/section/all?type=tools&q=' + encodeURIComponent(result.text);
+  } else {
+    location.hash = '#/section/all?type=tools';
+  }
 }
 
   if(parts.length===0){ renderHome(); return; }
