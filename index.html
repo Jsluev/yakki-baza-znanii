@@ -2914,24 +2914,27 @@ function renderValueDetail(id){
   const valAreaIdx = valApproachIdx>=0 ? RESULTS_TREE[valApproachIdx].influenceAreas.findIndex(a=>a.name===v.title) : -1;
   app.innerHTML = `<div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><a href="#/values">Ценности</a><span class="sep">/</span><span>${v.title}</span></div>
-    <div class="detail-head"><span class="badge" style="background:${SECTIONS.values.bg};color:${SECTIONS.values.color}">Ценность</span>
-      <div class="detail-titlebar"><div><h1>♦ ${v.title}</h1><p class="detail-sub">${v.desc}</p></div></div>
+    <div class="detail-head">
+      <div class="detail-titlebar"><div><h1 style="font-size:28px;">♦ ${v.title}</h1></div></div>
     </div>
-    <div class="section-pad" style="padding-top:24px;">
-      ${linkedResults.length ? `<div class="subhead">Ключевые результаты, связанные с этой ценностью</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+    ${v.desc ? `<div style="margin-top:20px;padding:24px 28px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);border-left:4px solid var(--navy);">
+      <p style="font-size:15px;line-height:1.7;color:var(--ink);margin:0;">${v.desc}</p>
+    </div>` : ''}
+    <div class="section-pad" style="padding-top:32px;">
+      ${linkedResults.length ? `<div class="subhead" style="font-size:16px;margin-bottom:12px;">Ключевые результаты</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
         ${linkedResults.slice(0,5).map(r=>`<a href="#/result/${r.ai}/${r.ari}/${r.ri}" style="text-decoration:none;color:inherit;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;display:block;transition:all .15s;" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--line)'">
           <div style="font-size:13.5px;font-weight:600;">${r.text}</div>
           <div style="font-size:11.5px;color:var(--ink-faint);margin-top:4px;">${r.approach} → ${r.area}</div>
         </a>`).join('')}
       </div>
-      ${linkedResults.length>5 ? `<div style="margin-bottom:24px;"><button class="btn btn-ghost btn-sm" onclick="goToResultsForValue('${v.title}')">Посмотреть все результаты (${linkedResults.length}) →</button></div>` : ''}` : ''}
-      ${bestCases.length ? `<div class="subhead">Кейсы с этой ценностью</div>
+      <div style="margin-bottom:32px;"><button class="btn btn-ghost btn-sm" onclick="goToResultsForValue('${v.title}')">Посмотреть все результаты (${linkedResults.length}) →</button></div>` : ''}
+      ${bestCases.length ? `<div class="subhead" style="font-size:16px;margin-bottom:12px;">Ключевые кейсы</div>
       <div class="card-list">${renderCardList('cases',bestCases)}</div>
-      ${cases.length>3 ? `<div style="margin-top:10px;"><a class="btn btn-ghost btn-sm" href="#/section/cases?value=${id}">Все кейсы (${cases.length}) →</a></div>` : ''}` : ''}
-      ${bestTools.length ? `<div class="subhead" style="margin-top:26px;">Инструменты, связанные с этой ценностью</div>
+      ${cases.length>3 ? `<div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" href="#/section/cases?value=${id}">Посмотреть все кейсы (${cases.length}) →</a></div>` : ''}` : ''}
+      ${bestTools.length ? `<div class="subhead" style="font-size:16px;margin-top:32px;margin-bottom:12px;">Ключевые инструменты</div>
       <div class="card-list">${renderCardList('tools',bestTools)}</div>
-      ${tools.length>3 ? `<div style="margin-top:10px;"><a class="btn btn-ghost btn-sm" href="#/section/all?type=tools&value=${id}">Все инструменты (${tools.length}) →</a></div>` : ''}` : ''}
+      ${tools.length>3 ? `<div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" href="#/section/all?type=tools&value=${id}">Посмотреть все инструменты (${tools.length}) →</a></div>` : ''}` : ''}
     </div>
     <a class="back-link" href="#/values">← Ко всем ценностям</a>
   </div>`;
