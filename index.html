@@ -840,7 +840,7 @@ const CASES = [
   criteria:['Эффективность','Воздействие','Устойчивость'],
   questions:['Как изменилось отношение жителей к своему двору и району после фестиваля?','Сформировались ли новые соседские связи и инициативные группы?'],
   effects:['Изменение отношения и ценностей','Формирование сообществ'],
-  values:['edinstvo'],
+  values:['edinstvo','grazhdanstvennost'],
   keyConclusion:'Фестиваль укрепляет локальную идентичность и соседские связи жителей района: совместное создание муралов и соседские маршруты, возникшие в его рамках, стали устойчивой практикой уже после завершения фестивального сезона.',
   docs:{
     planning:[{name:'План оценки', ext:'DOCX'}],
@@ -882,7 +882,7 @@ const CASES = [
   criteria:['Эффективность','Воздействие'],
   questions:['Насколько выросли профессиональные компетенции участников?','Применяют ли выпускники полученные инструменты в своих проектах спустя несколько месяцев?'],
   effects:['Развитие компетенций','Изменение отношения и ценностей'],
-  values:['sozidatelnyi-trud'],
+  values:['sozidatelnyi-trud','dignity'],
   keyConclusion:'Программа развивает профессиональные компетенции кураторов: наиболее ценным элементом участники называют менторские сессии и защиту итоговых проектов перед внешними экспертами.',
   docs:{
     planning:[{name:'План оценки', ext:'DOCX'},{name:'Дерево результатов', ext:'PDF'}],
@@ -931,7 +931,7 @@ const CASES = [
   criteria:['Актуальность','Результативность','Устойчивость'],
   questions:['Улучшились ли навыки общения у детей?','Снизилось ли количество конфликтов в классах после программы?'],
   effects:['Развитие компетенций','Изменение отношения и ценностей'],
-  values:['edinstvo','dignity','gumanizm'],
+  values:['edinstvo','dignity','gumanizm','miloserdie'],
   collectionMethods:[{type:'Анкета',detail:'Опрос педагогов до и после (n=15 классов)'},{type:'Интервью',detail:'Интервью с родителями (n=10)'}],
   docs:{planning:[],reporting:[]},
   relatedTools:['anketa-do-posle'], relatedMethodology:['content-analysis'], relatedTemplates:['tpl-report'],
@@ -944,7 +944,7 @@ const CASES = [
   criteria:['Актуальность','Воздействие','Устойчивость'],
   questions:['Изменилось ли отношение жителей к своему району?','Стала ли территория более привлекательной для прогулок и встреч?'],
   effects:['Трансформация пространства','Формирование сообществ','Локальная идентичность'],
-  values:['dignity','edinstvo','sozidatelnyi-trud'],
+  values:['dignity','edinstvo','sozidatelnyi-trud','dukhovnoe'],
   collectionMethods:[{type:'Интервью',detail:'Интервью с жителями до и после (n=20)'},{type:'Наблюдение',detail:'Подсчёт посетителей обновлённых территорий'},{type:'Фотофиксация',detail:'До/после с фиксацией изменений'}],
   docs:{planning:[{name:'План оценки — Паблик-арт.pdf',ext:'PDF'}],reporting:[{name:'Отчёт — Паблик-арт Екатеринбург.pdf',ext:'PDF'}]},
   relatedTools:['nabl-checklist','expert-form'], relatedMethodology:['realist-eval'], relatedTemplates:['tpl-plan','tpl-report'],
@@ -3028,10 +3028,11 @@ function renderSearch(q, type){
   METHODOLOGY.forEach(m=>{ if(match(m.title+m.shortDesc+m.sub)) results.push({type:'methodology', obj:m, route:'methodology'}); });
   TEMPLATES.forEach(t=>{ if(match(t.title+t.shortDesc+t.when)) results.push({type:'templates', obj:t, route:'template'}); });
   GLOSSARY.forEach(g=>{ if(match(g.term+g.def)) results.push({type:'glossary', obj:{title:g.term, shortDesc:g.def, id:g.term}, route:'glossary'}); });
+  VALUES.forEach(v=>{ if(match(v.title+v.desc)) results.push({type:'values', obj:{title:v.title, shortDesc:v.desc, id:v.id}, route:'value'}); });
 
   if(resolvedType!=='all') results = results.filter(r=>r.type===resolvedType);
 
-  const tabs = ['all',...CATALOG_SECTIONS,'glossary'];
+  const tabs = ['all',...CATALOG_SECTIONS,'values','glossary'];
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Поиск</span></div>
     <div class="catalog-head">
@@ -3172,17 +3173,14 @@ function renderResultDetail(apprIdx,areaIdx,resultIdx){
           </div>
         </details>` : ''}
         ${relatedCases.length ? `<div style="margin-top:32px;">
-          <div class="subhead" style="font-size:16px;margin-bottom:12px;">Ключевые кейсы</div>
-          <div class="card-list">${renderCardList('cases',relatedCases.slice(0,3))}</div>
-          ${relatedCases.length>3 ? `<div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" href="#/section/cases?q=${encodeURIComponent(resultText)}">Посмотреть все кейсы (${relatedCases.length}) →</a></div>` : ''}
+          <div class="subhead" style="font-size:16px;margin-bottom:12px;">Связанные кейсы</div>
+          <div class="card-list">${renderCardList('cases',relatedCases)}</div>
+          <div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" href="#/section/all?type=cases">Все кейсы →</a></div>
         </div>` : ''}
         ${relatedTools.length ? `<div style="margin-top:32px;">
           <div class="subhead" style="font-size:16px;margin-bottom:12px;">Связанные инструменты</div>
           <div class="card-list">${renderCardList('tools',relatedTools.slice(0,3))}</div>
-          <div style="margin-top:12px;display:flex;gap:10px;">
-            <a class="btn btn-ghost btn-sm" href="#/section/all?type=tools">Все инструменты →</a>
-            ${relatedTools.length>3 ? `<a class="btn btn-ghost btn-sm" href="#/section/all?type=tools&q=${encodeURIComponent(resultText)}">Посмотреть все (${relatedTools.length}) →</a>` : ''}
-          </div>
+          <div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" href="#/section/all?type=tools">Все инструменты →</a></div>
         </div>` : ''}
       </div>
       <div>
@@ -3208,6 +3206,7 @@ function renderResultDetail(apprIdx,areaIdx,resultIdx){
     if(b==='tool') return renderToolDetail(c);
     if(b==='methodology') return renderMethodologyDetail(c);
     if(b==='template') return renderTemplateDetail(c);
+    if(b==='value') return renderValueDetail(c);
     if(b==='glossary') return renderGlossaryTerm(decodeURIComponent(c));
   }
   if(a==='glossary'){ return b? renderGlossaryTerm(decodeURIComponent(b)) : renderGlossary(); }
