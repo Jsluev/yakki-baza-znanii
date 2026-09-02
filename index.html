@@ -3196,19 +3196,6 @@ function renderResultDetail(apprIdx,areaIdx,resultIdx){
     </div>
   </div>`;
 }
-function searchToolsForResult(ai,ari,ri){
-  const appr = RESULTS_TREE[ai];
-  const area = appr.influenceAreas[ari];
-  const result = area.results[ri];
-  state.filters.tools = {type:null, evalStage:null, value:null, q:null};
-  const relatedTools = TOOLS.filter(t=>t.values && t.values.some(v=>(result.values||[]).includes(v)));
-  if(relatedTools.length > 0){
-    state.filters.tools.q = result.text;
-    location.hash = '#/section/all?type=tools&q=' + encodeURIComponent(result.text);
-  } else {
-    location.hash = '#/section/all?type=tools';
-  }
-}
 
   if(parts.length===0){ renderHome(); return; }
   const [a,b,c] = parts;
@@ -3230,6 +3217,19 @@ function searchToolsForResult(ai,ari,ri){
   if(a==='prompts'){ return renderPrompts(); }
   if(a==='search'){ return renderSearch(query.q, query.type); }
   renderHome();
+}
+function searchToolsForResult(ai,ari,ri){
+  const appr = RESULTS_TREE[ai];
+  const area = appr.influenceAreas[ari];
+  const result = area.results[ri];
+  state.filters.tools = {type:null, evalStage:null, value:null, q:null};
+  const relatedTools = TOOLS.filter(t=>t.values && t.values.some(v=>(result.values||[]).includes(v)));
+  if(relatedTools.length > 0){
+    state.filters.tools.q = result.text;
+    location.hash = '#/section/all?type=tools&q=' + encodeURIComponent(result.text);
+  } else {
+    location.hash = '#/section/all?type=tools';
+  }
 }
 </script>
 </body>
