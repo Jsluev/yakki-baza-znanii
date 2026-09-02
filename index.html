@@ -3171,7 +3171,6 @@ function renderResultDetail(apprIdx,areaIdx,resultIdx){
             </ul>
           </div>
         </details>` : ''}
-        <div style="margin-top:16px;"><a class="btn btn-ghost btn-sm" href="#/section/all?type=tools">Все инструменты →</a></div>
         ${relatedCases.length ? `<div style="margin-top:32px;">
           <div class="subhead" style="font-size:16px;margin-bottom:12px;">Ключевые кейсы</div>
           <div class="card-list">${renderCardList('cases',relatedCases.slice(0,3))}</div>
@@ -3180,7 +3179,10 @@ function renderResultDetail(apprIdx,areaIdx,resultIdx){
         ${relatedTools.length ? `<div style="margin-top:32px;">
           <div class="subhead" style="font-size:16px;margin-bottom:12px;">Связанные инструменты</div>
           <div class="card-list">${renderCardList('tools',relatedTools.slice(0,3))}</div>
-          ${relatedTools.length>3 ? `<div style="margin-top:12px;"><a class="btn btn-ghost btn-sm" href="#/section/all?type=tools&q=${encodeURIComponent(resultText)}">Посмотреть все инструменты (${relatedTools.length}) →</a></div>` : ''}
+          <div style="margin-top:12px;display:flex;gap:10px;">
+            <a class="btn btn-ghost btn-sm" href="#/section/all?type=tools">Все инструменты →</a>
+            ${relatedTools.length>3 ? `<a class="btn btn-ghost btn-sm" href="#/section/all?type=tools&q=${encodeURIComponent(resultText)}">Посмотреть все (${relatedTools.length}) →</a>` : ''}
+          </div>
         </div>` : ''}
       </div>
       <div>
