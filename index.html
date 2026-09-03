@@ -1468,7 +1468,7 @@ function toggleMobileMenu(){
     if(!existing){
       const div = document.createElement('div');
       div.className = 'mobile-search';
-      div.innerHTML = `<input id="mobileSearchInput" placeholder="Поиск…" onkeydown="if(event.key==='Enter'){const v=this.value.trim();if(v)go('#/search?q='+encodeURIComponent(v));else go('#/section/all');}"><button onclick="const v=document.getElementById('mobileSearchInput').value.trim();if(v)go('#/search?q='+encodeURIComponent(v));else go('#/section/all');">Найти</button>`;
+      div.innerHTML = `<input id="mobileSearchInput" placeholder="Поиск…" onkeydown="if(event.key==='Enter'){const v=this.value.trim();if(v)go('#/section/all?q='+encodeURIComponent(v));else go('#/section/all');}"><button onclick="const v=document.getElementById('mobileSearchInput').value.trim();if(v)go('#/section/all?q='+encodeURIComponent(v));else go('#/section/all');">Найти</button>`;
       nav.prepend(div);
     }
   }
@@ -1544,7 +1544,7 @@ function downloadAsMarkdown(type, id){
 function doHeaderSearch(){
   const v = document.getElementById('headerSearchInput').value.trim();
   if(!v){go('#/section/all');return;}
-  go('#/search?q='+encodeURIComponent(v));
+  go('#/section/all?q='+encodeURIComponent(v));
 }
 
 window.addEventListener('hashchange', render);
@@ -3029,19 +3029,10 @@ function renderSearch(q, type){
   TEMPLATES.forEach(t=>{ if(match(t.title+t.shortDesc+t.when)) results.push({type:'templates', obj:t, route:'template'}); });
   GLOSSARY.forEach(g=>{ if(match(g.term+g.def)) results.push({type:'glossary', obj:{title:g.term, shortDesc:g.def, id:g.term}, route:'glossary'}); });
   VALUES.forEach(v=>{ if(match(v.title+v.desc)) results.push({type:'values', obj:{title:v.title, shortDesc:v.desc, id:v.id}, route:'value'}); });
-  RESULTS_TREE.forEach((appr,ai)=>{
-    appr.influenceAreas.forEach((area,ari)=>{
-      area.results.forEach((r,ri)=>{
-        const valNames = (r.values||[]).map(vid=>{const v=VALUES.find(x=>x.id===vid);return v?v.title:'';}).filter(Boolean).join(', ');
-        const searchText = r.text + ' ' + valNames + ' ' + appr.approach + ' ' + area.name;
-        if(match(searchText)) results.push({type:'results', obj:{title:r.text, shortDesc:appr.approach+' → '+area.name+(valNames?': '+valNames:''), id:`${ai}/${ari}/${ri}`}, route:'result'});
-      });
-    });
-  });
 
   if(resolvedType!=='all') results = results.filter(r=>r.type===resolvedType);
 
-  const tabs = ['all',...CATALOG_SECTIONS,'values','results','glossary'];
+  const tabs = ['all',...CATALOG_SECTIONS,'values','glossary'];
   document.getElementById('app').innerHTML = `<div class="wrap fade-in">
     <div class="crumbs"><a href="#/">База знаний</a><span class="sep">/</span><span>Поиск</span></div>
     <div class="catalog-head">
@@ -3062,8 +3053,7 @@ function renderSearch(q, type){
       ${results.length ? results.map(r=>{
         const s = SECTIONS[r.type];
         const routeKey = r.type==='cases'?'case':r.type;
-        const navHref = r.type==='results' ? `#/result/${r.obj.id}` : `#/card/${routeKey}/${encodeURIComponent(r.obj.id||r.obj.title)}`;
-        return `<a class="item-card" data-nav="${navHref}" style="text-decoration:none;">
+        return `<a class="item-card" data-nav="#/card/${routeKey}/${encodeURIComponent(r.obj.id||r.obj.title)}" style="text-decoration:none;">
           <div class="spine" style="background:${s.color}"></div>
           <div class="row1"><h3>${r.obj.title}</h3><span class="badge" style="background:${s.bg};color:${s.color}">${s.short}</span></div>
           <div class="desc">${r.obj.shortDesc}</div>
@@ -3075,7 +3065,7 @@ function renderSearch(q, type){
 function searchPageGo(){
   const v = document.getElementById('searchPageInput').value.trim();
   if(!v){go('#/section/all');return;}
-  go('#/search?q='+encodeURIComponent(v));
+  go('#/section/all?q='+encodeURIComponent(v));
 }
 
 /* ============================================================
