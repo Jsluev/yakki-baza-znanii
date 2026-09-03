@@ -1468,7 +1468,7 @@ function toggleMobileMenu(){
     if(!existing){
       const div = document.createElement('div');
       div.className = 'mobile-search';
-      div.innerHTML = `<input id="mobileSearchInput" placeholder="Поиск…" onkeydown="if(event.key==='Enter'){const v=this.value.trim();if(v)go('#/section/all?q='+encodeURIComponent(v));else go('#/section/all');}"><button onclick="const v=document.getElementById('mobileSearchInput').value.trim();if(v)go('#/section/all?q='+encodeURIComponent(v));else go('#/section/all');">Найти</button>`;
+      div.innerHTML = `<input id="mobileSearchInput" placeholder="Поиск…" onkeydown="if(event.key==='Enter'){const v=this.value.trim();if(v)go('#/search?q='+encodeURIComponent(v));else go('#/section/all');}"><button onclick="const v=document.getElementById('mobileSearchInput').value.trim();if(v)go('#/search?q='+encodeURIComponent(v));else go('#/section/all');">Найти</button>`;
       nav.prepend(div);
     }
   }
@@ -1544,7 +1544,7 @@ function downloadAsMarkdown(type, id){
 function doHeaderSearch(){
   const v = document.getElementById('headerSearchInput').value.trim();
   if(!v){go('#/section/all');return;}
-  go('#/section/all?q='+encodeURIComponent(v));
+  go('#/search?q='+encodeURIComponent(v));
 }
 
 window.addEventListener('hashchange', render);
@@ -3075,7 +3075,7 @@ function renderSearch(q, type){
 function searchPageGo(){
   const v = document.getElementById('searchPageInput').value.trim();
   if(!v){go('#/section/all');return;}
-  go('#/section/all?q='+encodeURIComponent(v));
+  go('#/search?q='+encodeURIComponent(v));
 }
 
 /* ============================================================
