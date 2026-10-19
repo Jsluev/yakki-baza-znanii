@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Банк результатов — мобильные варианты (демо)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF8F2; --paper-raised:#FFFFFF; --paper-sunk:#F3EEE3;
+  --ink:#2B271F; --ink-soft:#716C60; --ink-faint:#A29C8C;
+  --line:#E9E2D3; --line-strong:#D9CFB8;
+  --navy:#2B3868; --navy-deep:#181F3B; --navy-soft:#eef0f6;
+  --c-results:#1C8798; --c-results-bg:#E4F3F5;
+  --c-values:#BB3A78; --c-values-bg:#FBE7F0;
+  --radius:16px; --radius-sm:10px;
+  --shadow:0 2px 4px rgba(43,39,31,.04), 0 10px 28px -14px rgba(43,39,31,.14);
+  --font-display:'Unbounded',sans-serif; --font-body:'Manrope',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+  --tabs-h:54px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip;}
+body.noscroll{overflow:hidden;}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0;letter-spacing:-.005em;}
+p{margin:0;}
+a{color:inherit;text-decoration:none;}
+button{font-family:var(--font-body);cursor:pointer;}
+:focus-visible{outline:2.5px solid var(--navy);outline-offset:2px;border-radius:4px;}
+::selection{background:#F4D9AE;}
+mark{background:#F4D9AE;color:inherit;border-radius:3px;padding:0 1px;}
+.dwrap{max-width:760px;margin:0 auto;padding:0 16px;}
+
+.dtop{background:var(--navy-deep);color:#F3F0E8;padding:22px 0 24px;}
+.deyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#9BA3C4;}
+.dtop h1{font-size:23px;line-height:1.3;margin-top:10px;}
+.dlead{font-size:13.5px;color:#C7CBE0;line-height:1.65;margin-top:12px;max-width:620px;}
+.dstats{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+.dstat{font-family:var(--font-mono);font-size:11px;background:#3A4570;color:#E7E9F4;border-radius:20px;padding:4px 11px;white-space:nowrap;}
+.dacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.dactions .btn,.dacts .btn{font-size:12.5px;padding:8px 14px;}
+.dnote{margin-top:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:12px 14px;font-size:12.5px;color:#C7CBE0;line-height:1.6;}
+.dnote b{color:#fff;font-weight:600;}
+
+.btn{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:24px;border:1px solid transparent;background:none;}
+.btn-primary{background:#fff;color:var(--navy-deep);}
+.btn-primary:hover{background:var(--paper-sunk);}
+.btn-ghost{background:transparent;border-color:rgba(255,255,255,.35);color:#fff;}
+.btn-ghost:hover{background:rgba(255,255,255,.1);}
+.btn-soft{background:var(--paper-sunk);border-color:var(--line-strong);color:var(--ink);}
+.btn-soft:hover{background:var(--paper-raised);}
+
+.vtabs{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:1px solid var(--line);}
+.vtabs .dwrap{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;scrollbar-width:none;}
+.vtabs .dwrap::-webkit-scrollbar{display:none;}
+.vtab{border:1px solid var(--line-strong);background:var(--paper-raised);color:var(--ink-soft);border-radius:20px;padding:8px 13px;font-size:12.5px;font-weight:600;white-space:nowrap;transition:all .15s;}
+.vtab.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+main{padding:18px 0 60px;}
+.vsec{display:none;}
+.vsec.active{display:block;animation:fadein .18s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.vintro{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow);}
+.vintro h2{font-size:16.5px;line-height:1.35;}
+.vintro p{font-size:13px;color:var(--ink-soft);line-height:1.6;margin-top:8px;}
+.vlist{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:5px;}
+.vlist li{font-size:12.5px;line-height:1.5;color:var(--ink-soft);padding-left:18px;position:relative;}
+.vlist li::before{position:absolute;left:0;font-family:var(--font-mono);font-weight:500;}
+.vlist li.p::before{content:'+';color:#249368;}
+.vlist li.m::before{content:'−';color:#C94A54;}
+
+.vapp{position:relative;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:clip;max-width:430px;margin:0 auto 30px;scroll-margin-top:calc(var(--tabs-h) + 12px);}
+.vapp:last-child{margin-bottom:0;}
+
+.wsteps{display:flex;background:var(--paper-sunk);border-bottom:1px solid var(--line);}
+.wstep{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:46px;border:0;background:none;font-size:11px;font-weight:700;color:var(--ink-faint);border-bottom:2px solid transparent;padding:6px 4px;font-family:var(--font-body);}
+.wstep .wn{width:18px;height:18px;border-radius:50%;background:var(--line);color:var(--ink-soft);font-family:var(--font-mono);font-size:10px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.wstep.cur{color:var(--c-results);border-bottom-color:var(--c-results);background:var(--paper-raised);}
+.wstep.cur .wn{background:var(--c-results);color:#fff;}
+.wstep.done{color:var(--ink);}
+.wstep.done .wn{background:var(--c-results-bg);color:var(--c-results);}
+
+.whint{padding:12px 16px;font-size:12.5px;color:var(--ink-soft);background:var(--c-results-bg);line-height:1.55;}
+.wtop{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--paper-raised);position:sticky;top:0;z-index:5;}
+.wback{border:1px solid var(--line-strong);background:var(--paper-raised);border-radius:18px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--ink);flex-shrink:0;min-height:36px;}
+.wback:hover{background:var(--paper-sunk);}
+.wcur{font-size:12px;color:var(--ink-soft);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.wcur b{color:var(--ink);}
+
+.opts{display:flex;flex-direction:column;background:var(--paper-raised);}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 16px;min-height:62px;border:0;border-bottom:1px solid var(--line);background:var(--paper-raised);transition:background .12s;}
+.opt:last-child{border-bottom:0;}
+.opt:hover{background:var(--paper-sunk);}
+.opt:active{background:var(--paper-sunk);}
+.opt-main{min-width:0;flex:1;}
+.opt-title{display:block;font-size:14px;font-weight:700;line-height:1.35;}
+.opt-sub{display:block;font-size:11px;color:var(--ink-faint);font-family:var(--font-mono);margin-top:3px;line-height:1.45;overflow-wrap:anywhere;}
+.opt .chev{margin-left:auto;color:var(--ink-faint);font-size:17px;flex-shrink:0;}
+.opt.off{opacity:.55;cursor:default;}
+.opt.off:hover,.opt.off:active{background:var(--paper-raised);}
+.opt-tag{font-size:10.5px;font-family:var(--font-mono);color:var(--ink-faint);background:var(--paper-sunk);border-radius:20px;padding:2px 8px;flex-shrink:0;}
+
+.wsearch{display:flex;align-items:center;gap:8px;margin:12px 12px;background:var(--paper-sunk);border:1px solid var(--line);border-radius:10px;padding:0 12px;}
+.wsearch:focus-within{border-color:var(--navy);}
+.wsearch input{flex:1;border:0;background:none;outline:0;padding:11px 0;font-family:var(--font-body);font-size:13.5px;color:var(--ink);min-width:0;}
+.wsearch input::placeholder{color:var(--ink-faint);}
+.wsearch .ico{color:var(--ink-faint);flex-shrink:0;display:flex;}
+
+.wcount{padding:0 16px 10px;font-size:11.5px;color:var(--ink-faint);font-family:var(--font-mono);}
+.rlist{display:flex;flex-direction:column;}
+.rcard{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--paper-raised);padding:12px 16px;transition:background .12s;}
+.rcard:last-child{border-bottom:0;}
+.rcard:hover,.rcard:active{background:var(--paper-sunk);}
+.rt{display:block;font-size:13.5px;font-weight:600;line-height:1.45;}
+.rvals{display:block;font-size:11px;color:var(--c-values);font-family:var(--font-mono);margin-top:5px;line-height:1.45;overflow-wrap:anywhere;}
+.rmeta{display:block;font-size:10.5px;color:var(--ink-faint);font-family:var(--font-mono);margin-top:4px;}
+.rpath{display:block;font-size:10.5px;color:var(--c-results);font-family:var(--font-mono);margin-top:4px;}
+
+.empty{padding:30px 18px;text-align:center;}
+.empty b{display:block;font-size:14px;font-family:var(--font-display);font-weight:600;}
+.empty span{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:6px;line-height:1.55;}
+.empty .btn{margin-top:14px;}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;}
+.vchip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--c-values-bg);color:var(--c-values);white-space:nowrap;}
+
+.accgroup{border-bottom:8px solid var(--paper-sunk);}
+.accgroup:last-child{border-bottom:0;}
+.acc-h{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:var(--paper-raised);padding:14px 16px;min-height:58px;}
+.acc-h:hover{background:var(--paper-sunk);}
+.acc-h.open{background:var(--c-results-bg);}
+.acc-main{flex:1;min-width:0;}
+.acc-title{display:block;font-size:14px;font-weight:700;}
+.acc-sub{display:block;font-size:11px;color:var(--ink-faint);font-family:var(--font-mono);margin-top:3px;}
+.acc-h.open .acc-sub{color:var(--c-results);}
+.acc-chev{color:var(--ink-faint);font-size:15px;transition:transform .15s;flex-shrink:0;}
+.acc-h.open .acc-chev{transform:rotate(180deg);}
+.acc-body{border-top:1px solid var(--line);background:var(--paper-raised);}
+.acc-a{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--paper-raised);padding:11px 16px 11px 24px;min-height:50px;}
+.acc-a:last-child{border-bottom:0;}
+.acc-a:hover{background:var(--paper-sunk);}
+.acc-a.open{background:var(--c-results-bg);}
+.acc-aname{flex:1;min-width:0;font-size:13.5px;font-weight:600;line-height:1.35;}
+.acc-acnt{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);flex-shrink:0;}
+.acc-a.open .acc-acnt{color:var(--c-results);}
+.acc-results{border-top:1px solid var(--line);}
+.acc-results .rcard{padding-left:24px;}
+.anchor{scroll-margin-top:calc(var(--tabs-h) + 64px);}
+
+.sticky2{position:sticky;top:var(--tabs-h);z-index:30;background:var(--paper-raised);border-bottom:1px solid var(--line);padding:8px 12px;}
+.sticky2 .chips{gap:6px;}
+.schip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;background:var(--c-results-bg);color:var(--c-results);border:0;border-radius:20px;padding:5px 9px 5px 11px;max-width:100%;}
+.schip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.schip i{font-style:normal;opacity:.7;font-size:13px;line-height:1;}
+.schip.reset{background:var(--paper-sunk);color:var(--ink-soft);}
+
+.phone{display:flex;flex-direction:column;height:min(640px,72vh);position:relative;background:var(--paper-raised);}
+.phead{flex-shrink:0;display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:12px 16px 10px;border-bottom:1px solid var(--line);background:var(--paper-raised);}
+.phead b{font-size:13.5px;font-family:var(--font-display);font-weight:600;}
+.phead span{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);white-space:nowrap;}
+.feed{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+.feedhint{padding:12px 16px;font-size:12px;color:var(--ink-soft);line-height:1.55;background:var(--c-results-bg);}
+.fmore{padding:14px 16px 20px;}
+.fmore button{width:100%;border:1px dashed var(--line-strong);background:var(--paper-raised);border-radius:12px;padding:11px;font-size:12.5px;font-weight:600;color:var(--ink-soft);}
+.fmore button:hover{background:var(--paper-sunk);}
+.fbar{flex-shrink:0;display:flex;gap:6px;padding:9px 10px calc(9px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--paper-sunk);}
+.fbtn{flex:1;min-width:0;border:1px solid var(--line-strong);background:var(--paper-raised);border-radius:12px;padding:7px 9px;text-align:left;transition:all .12s;}
+.fbtn .fl{display:block;font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);}
+.fbtn .fv{display:block;font-size:12px;font-weight:700;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fbtn.on{border-color:var(--c-results);background:var(--c-results-bg);}
+.fbtn.on .fl{color:var(--c-results);}
+.fbtn[disabled]{opacity:.45;}
+.sheetwrap{position:absolute;inset:0;z-index:40;display:flex;align-items:flex-end;}
+.scrim{position:absolute;inset:0;background:rgba(24,31,59,.45);}
+.sheet{position:relative;width:100%;max-height:78%;background:var(--paper-raised);border-radius:16px 16px 0 0;display:flex;flex-direction:column;box-shadow:0 -12px 34px -18px rgba(24,31,59,.5);animation:up .18s ease;}
+@keyframes up{from{transform:translateY(26px);opacity:.4}to{transform:none;opacity:1}}
+.grip{width:36px;height:4px;border-radius:2px;background:var(--line-strong);margin:8px auto 0;flex-shrink:0;}
+.sheet-head{display:flex;align-items:center;gap:8px;padding:10px 16px 8px;flex-shrink:0;}
+.sheet-head b{font-size:14px;font-family:var(--font-display);font-weight:600;flex:1;}
+.sheet-x{border:0;background:var(--paper-sunk);border-radius:50%;width:30px;height:30px;font-size:16px;line-height:1;color:var(--ink-soft);flex-shrink:0;}
+.sheet-body{overflow-y:auto;overscroll-behavior:contain;padding-bottom:8px;}
+.sheet-note{padding:0 16px 10px;font-size:11.5px;color:var(--ink-faint);line-height:1.5;}
+.pick{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--paper-raised);padding:12px 16px;min-height:52px;}
+.pick:last-child{border-bottom:0;}
+.pick:hover{background:var(--paper-sunk);}
+.pick.sel{background:var(--c-results-bg);}
+.pick-main{flex:1;min-width:0;}
+.pick-t{display:block;font-size:13.5px;font-weight:600;line-height:1.35;}
+.pick-s{display:block;font-size:10.5px;font-family:var(--font-mono);color:var(--ink-faint);margin-top:3px;}
+.pick-mark{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line-strong);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;}
+.pick.sel .pick-mark{background:var(--c-results);border-color:var(--c-results);}
+.pick.off{opacity:.55;}
+.pick.off:hover{background:var(--paper-raised);}
+
+.facets{padding:12px 16px 4px;border-bottom:1px solid var(--line);background:var(--paper-raised);}
+.facet{margin-bottom:12px;}
+.facet-h{display:block;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);margin-bottom:7px;}
+.fchips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.fchips::-webkit-scrollbar{display:none;}
+.fchip{border:1px solid var(--line-strong);background:var(--paper-raised);color:var(--ink-soft);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;transition:all .12s;}
+.fchip.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+.fchip[disabled]{opacity:.45;}
+.fwrap{display:flex;gap:6px;flex-wrap:wrap;}
+.bigsearch{margin:12px 12px 4px;display:flex;align-items:center;gap:9px;background:var(--paper-sunk);border:1.5px solid var(--line-strong);border-radius:12px;padding:0 12px;}
+.bigsearch:focus-within{border-color:var(--navy);}
+.bigsearch input{flex:1;border:0;background:none;outline:0;padding:12px 0;font-size:14px;font-family:var(--font-body);color:var(--ink);min-width:0;}
+.bigsearch .ico{color:var(--ink-faint);display:flex;flex-shrink:0;}
+.qhint{padding:14px 16px 20px;}
+.qhint b{display:block;font-size:13.5px;font-family:var(--font-display);font-weight:600;}
+.qhint p{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin-top:6px;}
+.qhint .chips{margin-top:12px;}
+.sumline{display:flex;align-items:center;gap:10px;padding:12px 16px 8px;}
+.sumline span{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);}
+.sumline button{margin-left:auto;border:0;background:none;font-size:12px;font-weight:600;color:var(--navy);text-decoration:underline;padding:4px;}
+
+.st-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--paper-raised);}
+.st-note{font-size:11.5px;color:var(--ink-faint);font-family:var(--font-mono);line-height:1.45;flex:1;min-width:150px;}
+.st-acts{display:flex;gap:6px;flex-wrap:wrap;}
+.st-acts .btn{border-color:var(--line-strong);color:var(--ink);background:var(--paper-raised);font-size:11.5px;padding:6px 10px;}
+.st-acts .btn:hover{background:var(--paper-sunk);}
+.st-col{border-bottom:1px solid var(--line);scroll-margin-top:calc(var(--tabs-h) + 12px);}
+.st-col:last-child{border-bottom:0;}
+.st-col.st-off{opacity:.6;}
+.st-head{padding:10px 16px;font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);border-bottom:1px solid var(--line);background:var(--paper-sunk);}
+.st-body{padding:12px 14px;}
+.st-hint{font-size:12.5px;color:var(--ink-soft);line-height:1.5;}
+.st-select{display:block;width:100%;appearance:none;-webkit-appearance:none;border:1.5px solid var(--line-strong);border-radius:10px;background:var(--paper-raised) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23716C60' stroke-width='2.4'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;padding:11px 38px 11px 12px;font-family:var(--font-body);font-size:13.5px;color:var(--ink);text-overflow:ellipsis;}
+.st-select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(43,56,104,.1);}
+.st-select:disabled{background-color:var(--paper-sunk);color:var(--ink-faint);}
+.st-list{display:flex;flex-direction:column;border-top:1px solid var(--line);}
+.st-row{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--paper-raised);padding:11px 16px;transition:background .12s;}
+.st-row:last-child{border-bottom:0;}
+.st-row:hover,.st-row:active{background:var(--paper-sunk);}
+.st-row.sel{background:var(--c-results-bg);box-shadow:inset 3px 0 0 var(--c-results);}
+.st-row .rt{font-size:13px;}
+
+.modal{position:fixed;inset:0;z-index:120;display:flex;align-items:flex-end;justify-content:center;}
+.modal-back{position:absolute;inset:0;background:rgba(24,31,59,.52);}
+.modal-sheet{position:relative;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;background:var(--paper-raised);border-radius:18px 18px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom));animation:up .2s ease;}
+@media (min-width:640px){.modal{align-items:center;}.modal-sheet{border-radius:18px;max-height:82vh;}}
+.mclose{position:absolute;top:14px;right:14px;border:0;background:var(--paper-sunk);border-radius:50%;width:32px;height:32px;font-size:17px;color:var(--ink-soft);}
+.mbadge{display:inline-flex;font-family:var(--font-mono);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;background:var(--c-results-bg);color:var(--c-results);border-radius:6px;padding:4px 8px;}
+.mtitle{font-size:16.5px;line-height:1.4;margin-top:12px;padding-right:34px;}
+.mpath{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);margin-top:8px;line-height:1.5;}
+.mvals{margin-top:12px;}
+.mdet{margin-top:14px;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:clip;}
+.mdet summary{cursor:pointer;list-style:none;padding:11px 14px;font-size:13px;font-weight:700;background:var(--paper-sunk);}
+.mdet summary::-webkit-details-marker{display:none;}
+.mdet summary::after{content:'+';float:right;font-family:var(--font-mono);color:var(--ink-faint);}
+.mdet[open] summary::after{content:'−';}
+.mdet ul{margin:0;padding:12px 18px 14px 32px;font-size:12.5px;color:var(--ink-soft);line-height:1.6;}
+.mdet li{margin-bottom:6px;}
+.mothers{margin-top:16px;}
+.mothers b{display:block;font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.03em;color:var(--ink-faint);margin-bottom:8px;}
+.mothers button{display:block;width:100%;text-align:left;border:0;border-top:1px solid var(--line);background:none;padding:9px 0;font-size:12.5px;line-height:1.45;color:var(--ink-soft);}
+.mothers button:hover{color:var(--ink);}
+.macts{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;}
+.macts .btn-primary{background:var(--navy);color:#fff;}
+.macts .btn-primary:hover{background:var(--navy-deep);}
+.macts .btn-ghost{border-color:var(--line-strong);color:var(--ink);}
+.macts .btn-ghost:hover{background:var(--paper-sunk);}
+
+footer{border-top:1px solid var(--line);background:var(--paper-raised);padding:20px 0 28px;}
+.foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink-faint);line-height:1.6;}
+.foot a{color:var(--navy);text-decoration:underline;}
+
+@media (max-width:400px){
+  .dtop h1{font-size:20px;}
+  .vintro h2{font-size:15px;}
+  .fbtn .fv{font-size:11.5px;}
+}
+</style>
+</head>
+<body>
+
+<header class="dtop">
+  <div class="dwrap">
+    <div class="deyebrow">ЯККИ · База знаний · демонстрация</div>
+    <h1>Банк результатов: выбор на мобильном</h1>
+    <p class="dlead">Главная сложность банка — последовательный выбор: подход → область влияния → формулировка результата. Ниже пять рабочих вариантов этого выбора, собранных под телефон. Текущая страница и её дизайн не изменялись.</p>
+    <div class="dstats" id="dstats"></div>
+    <div class="dacts">
+      <button class="btn btn-primary" onclick="exportDemo()">Скачать JSON для ИИ</button>
+      <a class="btn btn-ghost" href="index.html#/results" target="_blank" rel="noopener">Текущая страница →</a>
+    </div>
+    <div class="dnote">
+      <b>Что не так с текущим мобильным вариантом.</b> Три колонки схлопываются в три отдельные прокрутки высотой 160–200 px: после выбора подхода следующий блок нужно искать на странице, часть списка скрыта во внутреннем скролле, а выбранное состояние теряется из виду. В каждом варианте ниже последовательный выбор решён по-своему — сравните на телефоне.
+    </div>
+  </div>
+</header>
+
+<nav class="vtabs" id="vtabs" role="tablist" aria-label="Варианты">
+  <div class="dwrap">
+    <button class="vtab active" role="tab" data-v="1">1 · Мастер</button>
+    <button class="vtab" role="tab" data-v="2">2 · Аккордеон</button>
+    <button class="vtab" role="tab" data-v="3">3 · Шторка</button>
+    <button class="vtab" role="tab" data-v="4">4 · Поиск и фильтры</button>
+    <button class="vtab" role="tab" data-v="5">5 · Селекты</button>
+  </div>
+</nav>
+
+<main class="dwrap">
+
+  <section class="vsec active" data-v="1">
+    <div class="vintro">
+      <h2>Вариант 1. Мастер: один экран — один шаг</h2>
+      <p>Три шага с прогресс-баром. Шаг 1 — подход, шаг 2 — область влияния выбранного подхода, шаг 3 — формулировки. Вернуться и поменять любой шаг можно нажатием на прогресс-бар. На длинных списках (например, 17 ценностей) появляется поиск.</p>
+      <ul class="vlist">
+        <li class="p">Всегда видно, где вы находитесь и что уже выбрано.</li>
+        <li class="p">Крупные зоны нажатия, нет вложенных скроллов и скрытых списков.</li>
+        <li class="p">Поиск по областям и по формулировкам внутри шага.</li>
+        <li class="m">Три перехода до результата — чуть больше тапов.</li>
+        <li class="m">Нет одновременного обзора всего дерева.</li>
+      </ul>
+    </div>
+    <div class="vapp" id="app1"></div>
+  </section>
+
+  <section class="vsec" data-v="2">
+    <div class="vintro">
+      <h2>Вариант 2. Аккордеон: дерево на одном экране</h2>
+      <p>Подходы — секции. Раскрыли подход — появились области влияния, раскрыли область — внутри развернулись формулировки. Открыта только одна ветка; сверху закреплена строка с текущим путём и быстрым сбросом. Есть сквозной поиск по всему банку.</p>
+      <ul class="vlist">
+        <li class="p">Контекст не теряется: всегда видно, где вы в структуре.</li>
+        <li class="p">Нет переключения экранов — один непрерывный список.</li>
+        <li class="p">Сквозной поиск сразу по 155 формулировкам.</li>
+        <li class="m">Длинные ветки дают длинную страницу.</li>
+        <li class="m">Нужен аккуратный сброс «гармошки», чтобы не запутаться.</li>
+      </ul>
+    </div>
+    <div class="vapp" id="app2"></div>
+  </section>
+
+  <section class="vsec" data-v="3">
+    <div class="vintro">
+      <h2>Вариант 3. Шторка: выбор внизу, результаты сразу</h2>
+      <p>Список формулировок всегда на экране и прокручивается внутри «экрана телефона». Внизу — три кнопки шагов: подход, область, результат. Выбор открывается шторкой снизу; после выбора шторка закрывается, и список мгновенно перестраивается.</p>
+      <ul class="vlist">
+        <li class="p">Результат виден сразу, сравнение формулировок не сбивается.</li>
+        <li class="p">Привычный мобильный паттерн: нижняя панель + шторка.</li>
+        <li class="p">Можно смотреть всё и постепенно сужать выбор.</li>
+        <li class="m">Активный выбор спрятан в шторке — меньше обзора уровней.</li>
+        <li class="m">Шторка и превью результата наслаиваются друг на друга.</li>
+      </ul>
+    </div>
+    <div class="vapp" id="app3"></div>
+  </section>
+
+  <section class="vsec" data-v="4">
+    <div class="vintro">
+      <h2>Вариант 4. Поиск и фильтры: без обязательных шагов</h2>
+      <p>Сверху — поиск по формулировкам, показателям и ценностям. Ниже — необязательные фильтры: подход → область влияния → ценность. Можно сразу написать запрос, а можно идти последовательно, как в остальных вариантах.</p>
+      <ul class="vlist">
+        <li class="p">Не заставляет проходить три шага: опытный пользователь попадает в цель быстрее.</li>
+        <li class="p">Классическая связка «поиск + фильтры», понятная без обучения.</li>
+        <li class="p">Фильтр по ценностям даёт ещё один вход в банк.</li>
+        <li class="m">Иерархия «подход → область» уходит на второй план.</li>
+        <li class="m">Новичку без запроса сложнее понять, с чего начать.</li>
+      </ul>
+    </div>
+    <div class="vapp" id="app4"></div>
+  </section>
+
+  <section class="vsec" data-v="5">
+    <div class="vintro">
+      <h2>Вариант 5. Как сейчас, но с выпадающими списками</h2>
+      <p>Минимальное отступление от текущей вёрстки: те же три блока с заголовками «Подход», «Область влияния», «Результаты». Выбор — в нативных выпадающих списках, результаты остаются списком и дополнительно доступны из третьего списка. На телефоне открывается привычный системный пикер.</p>
+      <ul class="vlist">
+        <li class="p">Сохраняет утверждённую структуру страницы почти без изменений.</li>
+        <li class="p">Нативный мобильный пикер вместо трёх вложенных скроллов.</li>
+        <li class="p">Список формулировок не теряется — остаётся на странице.</li>
+        <li class="m">Длинные названия в селекте обрезаются на узком экране.</li>
+        <li class="m">Три блока всё ещё требуют прокрутки страницы вниз.</li>
+      </ul>
+    </div>
+    <div class="vapp" id="app5"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="dwrap foot">
+    <span>Демонстрация вариантов мобильного выбора. Данные — снимок текущего банка результатов из прототипа. Откройте на телефоне или сузьте окно до ширины телефона.</span>
+    <a href="index.html#/results" target="_blank" rel="noopener">Сравнить с текущей страницей →</a>
+  </div>
+</footer>
+
+<div id="modalRoot"></div>
+
+<script src="mobile-results-demo-data.js"></script>
+<script>
+'use strict';
+
+const ALIASES = {
+  patriotism: 'patriotizm',
+  dignity: 'dostoinstvo',
+  dukhovnoe: 'prioritet-duhovnogo',
+  prava: 'prava-i-svobody',
+  'vysokie-idealy': 'vysokie-nravstvennye-idealy',
+  semya: 'krepykaya-semya',
+  edinstvo: 'edinstvo-narodov'
+};
+const VALUE_BY_ID = new Map(DEMO_VALUES.map(v => [v.id, v]));
+
+function valOf(id) {
+  const key = VALUE_BY_ID.has(id) ? id : ALIASES[id];
+  return VALUE_BY_ID.get(key) || null;
+}
+function valueIdsOf(result) {
+  const out = [];
+  (result.values || []).forEach(id => {
+    const v = valOf(id);
+    if (v && out.indexOf(v.id) < 0) out.push(v.id);
+  });
+  return out;
+}
+function valuesOf(result) {
+  return valueIdsOf(result).map(id => VALUE_BY_ID.get(id));
+}
+
+function flatResults() {
+  const out = [];
+  DEMO_RESULTS_TREE.forEach((appr, ai) => {
+    appr.influenceAreas.forEach((area, ari) => {
+      area.results.forEach((r, ri) => {
+        out.push({ ai, ari, ri, r, appr, area });
+      });
+    });
+  });
+  return out;
+}
+const FLAT = flatResults();
+
+function plural(n, forms) {
+  const a = Math.abs(n) % 100;
+  const b = a % 10;
+  if (a > 10 && a < 20) return forms[2];
+  if (b > 1 && b < 5) return forms[1];
+  if (b === 1) return forms[0];
+  return forms[2];
+}
+function count(n, forms) { return n + ' ' + plural(n, forms); }
+const AREA_FORMS = ['область', 'области', 'областей'];
+const RES_FORMS = ['формулировка', 'формулировки', 'формулировок'];
+const IND_FORMS = ['показатель', 'показателя', 'показателей'];
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function highlight(text, q) {
+  const t = esc(text);
+  const query = (q || '').trim();
+  if (!query) return t;
+  const lq = query.toLowerCase();
+  const lt = t.toLowerCase();
+  let out = '';
+  let i = 0;
+  while (true) {
+    const j = lt.indexOf(lq, i);
+    if (j < 0) { out += t.slice(i); break; }
+    out += t.slice(i, j) + '<mark>' + t.slice(j, j + lq.length) + '</mark>';
+    i = j + lq.length;
+  }
+  return out;
+}
+function statsOf(appr) {
+  const areas = appr.influenceAreas.length;
+  const withRes = appr.influenceAreas.filter(a => a.results.length > 0).length;
+  const results = appr.influenceAreas.reduce((s, a) => s + a.results.length, 0);
+  return { areas, withRes, results };
+}
+function valuesLine(result) {
+  const names = valuesOf(result).map(v => v.title);
+  return names.length ? '♦ ' + names.join(' · ') : '';
+}
+function termNamesOf(result) {
+  return valuesOf(result).map(v => v.title).join(' ');
+}
+function searchInResult(item, q) {
+  if (!q) return true;
+  const hay = (item.r.text + ' ' + item.appr.approach + ' ' + item.area.name + ' ' + termNamesOf(item.r) + ' ' + (item.r.indicators || []).join(' ')).toLowerCase();
+  return hay.indexOf(q) >= 0;
+}
+function resultCard(item, opts) {
+  const o = opts || {};
+  const ai = item.ai, ari = item.ari, ri = item.ri;
+  const vals = valuesLine(item.r);
+  const ind = item.r.indicators ? item.r.indicators.length : 0;
+  const path = o.path ? '<span class="rpath">' + esc(item.appr.approach) + ' → ' + esc(item.area.name) + '</span>' : '';
+  const meta = ind ? '<span class="rmeta">' + count(ind, IND_FORMS) + '</span>' : '';
+  return '<button class="rcard" onclick="openResult(' + ai + ',' + ari + ',' + ri + ')">'
+    + '<span class="rt">' + highlight(item.r.text, o.q || '') + '</span>'
+    + (vals ? '<span class="rvals">' + esc(vals) + '</span>' : '')
+    + meta + path
+    + '</button>';
+}
+function resultListHtml(items, q, withPath) {
+  if (!items.length) return emptyHtml('Ничего не найдено', 'Попробуйте изменить запрос или снять часть фильтров.');
+  return '<div class="rlist">' + items.map(it => resultCard(it, { q: q, path: withPath })).join('') + '</div>';
+}
+function emptyHtml(title, text) {
+  return '<div class="empty"><b>' + esc(title) + '</b><span>' + esc(text) + '</span></div>';
+}
+
+function openResult(ai, ari, ri) {
+  const appr = DEMO_RESULTS_TREE[ai];
+  const area = appr && appr.influenceAreas[ari];
+  const result = area && area.results[ri];
+  if (!result) return;
+  const vals = valuesOf(result);
+  const inds = result.indicators || [];
+  const others = area.results.map((r, i) => ({ r, i })).filter(o => o.i !== ri).slice(0, 6);
+  const root = document.getElementById('modalRoot');
+  root.innerHTML = '<div class="modal" role="dialog" aria-modal="true" aria-label="Результат">'
+    + '<div class="modal-back" onclick="closeResult()"></div>'
+    + '<div class="modal-sheet">'
+    + '<button class="mclose" onclick="closeResult()" aria-label="Закрыть">×</button>'
+    + '<span class="mbadge">Результат</span>'
+    + '<h3 class="mtitle">' + esc(result.text) + '</h3>'
+    + '<div class="mpath">' + esc(appr.approach) + ' → ' + esc(area.name) + ' · ' + (ri + 1) + ' из ' + area.results.length + ' в области</div>'
+    + (vals.length ? '<div class="mvals chips">' + vals.map(v => '<a class="vchip" href="index.html#/value/' + esc(v.id) + '" target="_blank" rel="noopener">♦ ' + esc(v.title) + '</a>').join('') + '</div>' : '')
+    + (inds.length ? '<details class="mdet"><summary>' + count(inds.length, IND_FORMS) + '</summary><ul>' + inds.map(i => '<li>' + esc(i) + '</li>').join('') + '</ul></details>' : '')
+    + (others.length ? '<div class="mothers"><b>Другие формулировки области</b>' + others.map(o => '<button onclick="openResult(' + ai + ',' + ari + ',' + o.i + ')">' + esc(o.r.text) + '</button>').join('') + '</div>' : '')
+    + '<div class="macts">'
+    + '<a class="btn btn-primary" href="index.html#/result/' + ai + '/' + ari + '/' + ri + '" target="_blank" rel="noopener">Открыть карточку результата →</a>'
+    + '<button class="btn btn-ghost" onclick="closeResult()">Закрыть</button>'
+    + '</div>'
+    + '</div></div>';
+  document.body.classList.add('noscroll');
+}
+function closeResult() {
+  document.getElementById('modalRoot').innerHTML = '';
+  document.body.classList.remove('noscroll');
+}
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') { closeResult(); if (typeof p3CloseSheet === 'function') p3CloseSheet(); }
+});
+function exportDemo() {
+  const data = JSON.stringify(DEMO_RESULTS_TREE, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'yakki-results-bank.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+(function initHeader() {
+  const areas = DEMO_RESULTS_TREE.reduce((s, a) => s + a.influenceAreas.length, 0);
+  const results = FLAT.length;
+  document.getElementById('dstats').innerHTML =
+    '<span class="dstat">' + count(DEMO_RESULTS_TREE.length, ['подход', 'подхода', 'подходов']) + '</span>' +
+    '<span class="dstat">' + count(areas, AREA_FORMS) + '</span>' +
+    '<span class="dstat">' + count(results, RES_FORMS) + '</span>';
+})();
+
+function showV(n, scroll) {
+  document.querySelectorAll('.vtab').forEach(t => {
+    const on = t.dataset.v === String(n);
+    t.classList.toggle('active', on);
+    t.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.querySelectorAll('.vsec').forEach(s => s.classList.toggle('active', s.dataset.v === String(n)));
+  try { history.replaceState(null, '', '#v' + n); } catch (err) {}
+  if (scroll) document.getElementById('vtabs').scrollIntoView({ block: 'start' });
+}
+document.querySelectorAll('.vtab').forEach(t => t.addEventListener('click', () => showV(t.dataset.v, true)));
+(function initVariant() {
+  const m = (location.hash || '').match(/^#v([1-5])$/);
+  if (m) showV(m[1], false);
+  const tabs = document.getElementById('vtabs');
+  function sync() { document.documentElement.style.setProperty('--tabs-h', tabs.offsetHeight + 'px'); }
+  sync();
+  window.addEventListener('resize', sync);
+})();
+
+const S1 = { step: 1, max: 1, ai: null, ari: null, q: '' };
+function v1AreasHtml() {
+  if (S1.q) {
+    const lt = S1.q.toLowerCase();
+    const appr = DEMO_RESULTS_TREE[S1.ai];
+    const items = appr.influenceAreas.map((a, i) => ({ a, i })).filter(o => o.a.name.toLowerCase().indexOf(lt) >= 0);
+    if (!items.length) return emptyHtml('Ничего не найдено', 'Попробуйте другое название области влияния.');
+    return items.map(o => areaOptHtml(o.a, S1.ai, o.i)).join('');
+  }
+  return DEMO_RESULTS_TREE[S1.ai].influenceAreas.map((a, i) => areaOptHtml(a, S1.ai, i)).join('');
+}
+function areaOptHtml(area, ai, i) {
+  const n = area.results.length;
+  if (!n) return '<div class="opt off"><span class="opt-main"><span class="opt-title">' + esc(area.name) + '</span><span class="opt-sub">пока нет формулировок</span></span></div>';
+  return '<button class="opt" onclick="w1SetArea(' + i + ')">'
+    + '<span class="opt-main"><span class="opt-title">' + esc(area.name) + '</span>'
+    + '<span class="opt-sub">' + count(n, RES_FORMS) + '</span></span>'
+    + '<span class="chev">→</span></button>';
+}
+function v1ResultsFiltered() {
+  const area = DEMO_RESULTS_TREE[S1.ai].influenceAreas[S1.ari];
+  const lt = S1.q.toLowerCase();
+  return area.results.map((r, ri) => ({ ai: S1.ai, ari: S1.ari, ri, r, appr: DEMO_RESULTS_TREE[S1.ai], area }))
+    .filter(it => !lt || searchInResult(it, lt));
+}
+function v1ResultsHtml() {
+  const items = v1ResultsFiltered();
+  if (!items.length) return emptyHtml('Ничего не найдено', 'Попробуйте изменить запрос.');
+  return items.map(it => resultCard(it, { q: S1.q })).join('');
+}
+function v1CountText() {
+  return count(v1ResultsFiltered().length, RES_FORMS);
+}
+function r1() {
+  const app = document.getElementById('app1');
+  const appr = S1.ai !== null ? DEMO_RESULTS_TREE[S1.ai] : null;
+  const area = appr && S1.ari !== null ? appr.influenceAreas[S1.ari] : null;
+  const steps = [
+    { n: 1, t: 'Подход' },
+    { n: 2, t: 'Область влияния' },
+    { n: 3, t: 'Результат' }
+  ];
+  let body = '';
+  if (S1.step === 1) {
+    body = '<div class="whint">С чего начнём: выберите подход — от него зависит список областей влияния.</div>'
+      + '<div class="opts">' + DEMO_RESULTS_TREE.map((a, i) => {
+        const st = statsOf(a);
+        const preview = a.influenceAreas.slice(0, 3).map(x => x.name).join(' · ');
+        const more = a.influenceAreas.length > 3 ? ' · +' + (a.influenceAreas.length - 3) : '';
+        return '<button class="opt" onclick="w1SetApproach(' + i + ')">'
+          + '<span class="opt-main"><span class="opt-title">' + esc(a.approach) + '</span>'
+          + '<span class="opt-sub">' + count(st.areas, AREA_FORMS) + ' · ' + count(st.results, RES_FORMS) + '</span>'
+          + '<span class="opt-sub">' + esc(preview + more) + '</span></span>'
+          + '<span class="chev">→</span></button>';
+      }).join('') + '</div>';
+  } else if (S1.step === 2) {
+    const needSearch = appr.influenceAreas.length > 7;
+    body = '<div class="wtop"><button class="wback" onclick="w1Step(1)">← Подходы</button><span class="wcur">Подход: <b>' + esc(appr.approach) + '</b></span></div>'
+      + (needSearch ? '<div class="wsearch"><span class="ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input value="' + esc(S1.q) + '" oninput="w1aSearch(this.value)" placeholder="Найти область влияния"></div>' : '')
+      + '<div class="opts" id="w1alist">' + v1AreasHtml() + '</div>';
+  } else {
+    body = '<div class="wtop"><button class="wback" onclick="w1Step(2)">← Области</button><span class="wcur">Область: <b>' + esc(area.name) + '</b></span></div>'
+      + '<div class="wsearch"><span class="ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input value="' + esc(S1.q) + '" oninput="w1rSearch(this.value)" placeholder="Найти формулировку результата"></div>'
+      + '<div class="wcount" id="w1rcount">' + v1CountText() + '</div>'
+      + '<div class="rlist" id="w1rlist">' + v1ResultsHtml() + '</div>';
+  }
+  app.innerHTML = '<div class="wsteps">' + steps.map(s => {
+    const cls = S1.step === s.n ? 'cur' : (S1.step > s.n ? 'done' : '');
+    return '<button class="wstep ' + cls + '" onclick="w1Step(' + s.n + ')"><span class="wn">' + s.n + '</span><span class="wt">' + s.t + '</span></button>';
+  }).join('') + '</div>' + body;
+}
+function w1Scroll() {
+  const el = document.getElementById('app1');
+  if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+}
+function w1SetApproach(i) { S1.ai = i; S1.ari = null; S1.q = ''; S1.step = 2; S1.max = Math.max(S1.max, 2); r1(); w1Scroll(); }
+function w1SetArea(i) { S1.ari = i; S1.q = ''; S1.step = 3; S1.max = Math.max(S1.max, 3); r1(); w1Scroll(); }
+function w1Step(n) {
+  if (n > S1.max) return;
+  if (n >= 2 && S1.ai === null) return;
+  if (n >= 3 && S1.ari === null) return;
+  S1.q = '';
+  S1.step = n;
+  r1();
+  w1Scroll();
+}
+function w1aSearch(v) { S1.q = v; document.getElementById('w1alist').innerHTML = v1AreasHtml(); }
+function w1rSearch(v) {
+  S1.q = v;
+  document.getElementById('w1rlist').innerHTML = v1ResultsHtml();
+  document.getElementById('w1rcount').textContent = v1CountText();
+}
+r1();
+
+const S2 = { ai: null, ari: null, q: '' };
+function v2CtxHtml() {
+  if (S2.ai === null) return '';
+  const appr = DEMO_RESULTS_TREE[S2.ai];
+  const area = S2.ari !== null ? appr.influenceAreas[S2.ari] : null;
+  return '<div class="sticky2"><div class="chips">'
+    + '<button class="schip" onclick="accResetA()"><span>' + esc(appr.approach) + '</span><i>×</i></button>'
+    + (area ? '<button class="schip" onclick="accResetI()"><span>' + esc(area.name) + '</span><i>×</i></button>' : '')
+    + '</div></div>';
+}
+function v2BodyHtml() {
+  const q = S2.q.trim().toLowerCase();
+  if (q) {
+    const items = FLAT.filter(it => searchInResult(it, q));
+    return '<div class="wcount">' + count(items.length, RES_FORMS) + '</div>' + resultListHtml(items, S2.q, true);
+  }
+  return DEMO_RESULTS_TREE.map((appr, ai) => {
+    const st = statsOf(appr);
+    const open = S2.ai === ai;
+    let sub = count(st.areas, AREA_FORMS) + ' · ' + count(st.results, RES_FORMS);
+    if (st.withRes < st.areas) sub += ' · с формулировками: ' + st.withRes;
+    let inner = '';
+    if (open) {
+      inner = '<div class="acc-body">' + appr.influenceAreas.map((area, ari) => {
+        const openArea = S2.ari === ari;
+        const n = area.results.length;
+        const head = '<button class="acc-a anchor ' + (openArea ? 'open' : '') + '" id="w2a' + ai + '_' + ari + '" aria-expanded="' + (openArea ? 'true' : 'false') + '" onclick="accToggleI(' + ai + ',' + ari + ')">'
+          + '<span class="acc-aname">' + esc(area.name) + '</span>'
+          + '<span class="acc-acnt">' + (n ? count(n, RES_FORMS) : 'нет формулировок') + '</span>'
+          + '<span class="acc-chev">⌄</span></button>';
+        if (!openArea || !n) return head;
+        const items = area.results.map((r, ri) => ({ ai, ari, ri, r, appr, area }));
+        return head + '<div class="acc-results">' + resultListHtml(items, '', false) + '</div>';
+      }).join('') + '</div>';
+    }
+    return '<div class="accgroup"><button class="acc-h ' + (open ? 'open' : '') + '" aria-expanded="' + (open ? 'true' : 'false') + '" onclick="accToggleA(' + ai + ')">'
+      + '<span class="acc-main"><span class="acc-title">' + esc(appr.approach) + '</span><span class="acc-sub">' + sub + '</span></span>'
+      + '<span class="acc-chev">⌄</span></button>' + inner + '</div>';
+  }).join('');
+}
+function r2body() { document.getElementById('w2body').innerHTML = v2BodyHtml(); }
+function r2ctx() { document.getElementById('w2ctx').innerHTML = v2CtxHtml(); }
+function r2() {
+  const app = document.getElementById('app2');
+  app.innerHTML = '<div class="wsearch"><span class="ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input value="' + esc(S2.q) + '" oninput="w2Search(this.value)" placeholder="Поиск по всему банку: формулировка, ценность, область"></div>'
+    + '<div id="w2ctx"></div><div id="w2body"></div>';
+  r2ctx();
+  r2body();
+}
+function w2Search(v) { S2.q = v; r2body(); }
+function accToggleA(ai) {
+  if (S2.ai === ai) { S2.ai = null; S2.ari = null; }
+  else { S2.ai = ai; S2.ari = null; }
+  r2ctx();
+  r2body();
+}
+function accToggleI(ai, ari) {
+  S2.ai = ai;
+  S2.ari = S2.ari === ari ? null : ari;
+  r2ctx();
+  r2body();
+  if (S2.ari === ari) {
+    const el = document.getElementById('w2a' + ai + '_' + ari);
+    if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+}
+function accResetA() { S2.ai = null; S2.ari = null; r2ctx(); r2body(); }
+function accResetI() { S2.ari = null; r2ctx(); r2body(); }
+r2();
+
+const S3 = { ai: null, ari: null, sheet: null, sheetQ: '', shown: 15 };
+function p3Filtered() {
+  return FLAT.filter(it => (S3.ai === null || it.ai === S3.ai) && (S3.ari === null || it.ari === S3.ari));
+}
+function p3ListHtml(items) {
+  if (!items.length) return emptyHtml('Ничего не найдено', 'Снимите фильтры или выберите другую область.');
+  return items.map(it => resultCard(it, { path: true })).join('');
+}
+function p3FeedHtml() {
+  const items = p3Filtered();
+  const shown = items.slice(0, S3.shown);
+  const hint = S3.ai === null
+    ? '<div class="feedhint">Показаны все формулировки. Сузьте выбор тремя кнопками внизу — подход, область, результат.</div>'
+    : '';
+  let more = '';
+  if (items.length > shown.length) {
+    more = '<div class="fmore"><button onclick="p3More()">Показать ещё ' + Math.min(20, items.length - shown.length) + ' из ' + (items.length - shown.length) + '</button></div>';
+  }
+  return hint + '<div class="rlist" id="p3list">' + p3ListHtml(shown) + '</div>' + more;
+}
+function p3FeedNode() { return document.getElementById('p3feed'); }
+function p3More() {
+  S3.shown += 20;
+  const feed = p3FeedNode();
+  if (!feed) return;
+  const keep = feed.scrollTop;
+  feed.innerHTML = p3FeedHtml();
+  feed.scrollTop = keep;
+}
+function p3BarHtml() {
+  const appr = S3.ai !== null ? DEMO_RESULTS_TREE[S3.ai] : null;
+  const area = appr && S3.ari !== null ? appr.influenceAreas[S3.ari] : null;
+  return '<button class="fbtn ' + (S3.ai !== null ? 'on' : '') + '" onclick="p3Sheet(\'approach\')">'
+    + '<span class="fl">Подход</span><span class="fv">' + (appr ? esc(appr.approach) : 'Все') + '</span></button>'
+    + '<button class="fbtn ' + (S3.ari !== null ? 'on' : '') + '" ' + (S3.ai === null ? 'disabled' : '') + ' onclick="p3Sheet(\'area\')">'
+    + '<span class="fl">Область</span><span class="fv">' + (area ? esc(area.name) : (appr ? 'Все' : '—')) + '</span></button>'
+    + '<button class="fbtn" ' + (S3.ai === null ? 'disabled' : '') + ' onclick="p3Sheet(\'result\')">'
+    + '<span class="fl">Результат</span><span class="fv">' + (S3.ai !== null ? 'Выбрать' : '—') + '</span></button>';
+}
+function p3SheetBodyHtml() {
+  const q = S3.sheetQ.trim().toLowerCase();
+  if (S3.sheet === 'approach') {
+    let html = '<button class="pick ' + (S3.ai === null ? 'sel' : '') + '" onclick="p3PickApproach(null)"><span class="pick-main"><span class="pick-t">Все подходы</span><span class="pick-s">' + count(FLAT.length, RES_FORMS) + '</span></span><span class="pick-mark">' + (S3.ai === null ? '✓' : '') + '</span></button>';
+    html += DEMO_RESULTS_TREE.map((a, i) => {
+      const st = statsOf(a);
+      return '<button class="pick ' + (S3.ai === i ? 'sel' : '') + '" onclick="p3PickApproach(' + i + ')">'
+        + '<span class="pick-main"><span class="pick-t">' + esc(a.approach) + '</span><span class="pick-s">' + count(st.areas, AREA_FORMS) + ' · ' + count(st.results, RES_FORMS) + '</span></span>'
+        + '<span class="pick-mark">' + (S3.ai === i ? '✓' : '') + '</span></button>';
+    }).join('');
+    return html;
+  }
+  if (S3.sheet === 'area') {
+    const appr = DEMO_RESULTS_TREE[S3.ai];
+    let html = '<button class="pick ' + (S3.ari === null ? 'sel' : '') + '" onclick="p3PickArea(null)"><span class="pick-main"><span class="pick-t">Все области влияния</span><span class="pick-s">' + count(statsOf(appr).results, RES_FORMS) + '</span></span><span class="pick-mark">' + (S3.ari === null ? '✓' : '') + '</span></button>';
+    html += appr.influenceAreas.map((a, i) => {
+      const n = a.results.length;
+      if (!n) return '<div class="pick off"><span class="pick-main"><span class="pick-t">' + esc(a.name) + '</span><span class="pick-s">пока нет формулировок</span></span><span class="pick-mark"></span></div>';
+      return '<button class="pick ' + (S3.ari === i ? 'sel' : '') + '" onclick="p3PickArea(' + i + ')">'
+        + '<span class="pick-main"><span class="pick-t">' + esc(a.name) + '</span><span class="pick-s">' + count(n, RES_FORMS) + '</span></span>'
+        + '<span class="pick-mark">' + (S3.ari === i ? '✓' : '') + '</span></button>';
+    }).join('');
+    return html;
+  }
+  const items = p3Filtered().filter(it => !q || searchInResult(it, q));
+  return '<div class="sheet-note">' + count(items.length, RES_FORMS) + (q ? ' по запросу' : ' в выбранном контексте') + '</div>'
+    + '<div id="s3list" class="rlist">' + (items.length ? items.map(it => resultCard(it, { q: S3.sheetQ, path: true })).join('') : emptyHtml('Ничего не найдено', 'Измените запрос.')) + '</div>';
+}
+function p3SheetHeadHtml() {
+  if (S3.sheet === 'approach') return '<b>Выберите подход</b>';
+  if (S3.sheet === 'area') return '<b>Область влияния</b>';
+  return '<b>Формулировки результата</b>';
+}
+function p3RenderSheet() {
+  const host = document.getElementById('p3sheet');
+  if (!host) return;
+  if (!S3.sheet) { host.innerHTML = ''; return; }
+  const searchRow = S3.sheet === 'result'
+    ? '<div class="wsearch"><span class="ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input value="' + esc(S3.sheetQ) + '" oninput="p3Search(this.value)" placeholder="Найти формулировку"></div>'
+    : '';
+  host.innerHTML = '<div class="sheetwrap">'
+    + '<div class="scrim" onclick="p3CloseSheet()"></div>'
+    + '<div class="sheet">'
+    + '<div class="grip"></div>'
+    + '<div class="sheet-head">' + p3SheetHeadHtml() + '<button class="sheet-x" onclick="p3CloseSheet()" aria-label="Закрыть">×</button></div>'
+    + '<div class="sheet-body" id="s3body">' + searchRow + p3SheetBodyHtml() + '</div>'
+    + '</div></div>';
+  if (S3.sheet === 'result') {
+    setTimeout(() => { const el = document.getElementById('s3body').querySelector('input'); if (el) el.focus(); }, 60);
+  }
+}
+function p3Sheet(kind) {
+  S3.sheet = kind;
+  S3.sheetQ = '';
+  p3RenderSheet();
+}
+function p3CloseSheet() {
+  S3.sheet = null;
+  p3RenderSheet();
+}
+function p3Search(v) {
+  S3.sheetQ = v;
+  const body = document.getElementById('s3body');
+  if (!body) return;
+  const live = body.querySelector('.sheet-note');
+  const list = document.getElementById('s3list');
+  const q = v.trim().toLowerCase();
+  const items = p3Filtered().filter(it => !q || searchInResult(it, q));
+  if (live) live.textContent = count(items.length, RES_FORMS) + (q ? ' по запросу' : ' в выбранном контексте');
+  if (list) list.innerHTML = items.length ? items.map(it => resultCard(it, { q: v, path: true })).join('') : emptyHtml('Ничего не найдено', 'Измените запрос.');
+}
+function p3PickApproach(i) {
+  S3.ai = i;
+  S3.ari = null;
+  S3.shown = 15;
+  S3.sheet = null;
+  S3.sheetQ = '';
+  r3();
+  if (i === null) return;
+  setTimeout(() => p3Sheet('area'), 200);
+}
+function p3PickArea(i) {
+  S3.ari = i;
+  S3.shown = 15;
+  S3.sheet = null;
+  S3.sheetQ = '';
+  r3();
+}
+function r3() {
+  const app = document.getElementById('app3');
+  const items = p3Filtered();
+  app.innerHTML = '<div class="vapp3">'
+    + '<div class="phone">'
+    + '<div class="phead"><b>Банк результатов</b><span>' + count(items.length, RES_FORMS) + '</span></div>'
+    + '<div class="feed" id="p3feed">' + p3FeedHtml() + '</div>'
+    + '<div class="fbar">' + p3BarHtml() + '</div>'
+    + '<div id="p3sheet"></div>'
+    + '</div></div>';
+  p3RenderSheet();
+}
+function p3GlobalClose() {
+  if (S3.sheet) p3CloseSheet();
+}
+r3();
+
+const S4 = { q: '', ai: null, ari: null, vid: null, all: false };
+const EXAMPLES = ['здоровье', 'экология', 'сообщество', 'молодёжь', 'туризм', 'семья'];
+function s4Filtered() {
+  const q = S4.q.trim().toLowerCase();
+  return FLAT.filter(it => {
+    if (S4.ai !== null && it.ai !== S4.ai) return false;
+    if (S4.ari !== null && it.ari !== S4.ari) return false;
+    if (S4.vid && valueIdsOf(it.r).indexOf(S4.vid) < 0) return false;
+    if (q && !searchInResult(it, q)) return false;
+    return true;
+  });
+}
+function s4Active() { return S4.q.trim() || S4.ai !== null || S4.vid !== null || S4.all; }
+function s4BodyHtml() {
+  if (!s4Active()) return '';
+  const items = s4Filtered();
+  let html = '<div class="sumline"><span>' + count(items.length, RES_FORMS) + '</span>'
+    + '<button onclick="s4Reset()">Сбросить всё</button></div>';
+  if (!items.length) return html + emptyHtml('Ничего не найдено', 'Измените запрос или снимите фильтры.');
+  html += '<div class="rlist">' + items.map(it => resultCard(it, { q: S4.q, path: true })).join('') + '</div>';
+  return html;
+}
+function s4HintHtml() {
+  return '<div class="qhint"><b>Начните с запроса или задайте контекст</b>'
+    + '<p>Поиск идёт по формулировкам, показателям, областям влияния и ценностям. Фильтры ниже — необязательные, их можно комбинировать в любом порядке.</p>'
+    + '<div class="chips">' + EXAMPLES.map(x => '<button class="fchip" onclick="s4Example(\'' + x + '\')">' + esc(x) + '</button>').join('')
+    + '<button class="fchip" onclick="s4All()">Показать все ' + FLAT.length + '</button></div></div>';
+}
+function s4FacetsHtml() {
+  const appr = S4.ai !== null ? DEMO_RESULTS_TREE[S4.ai] : null;
+  let html = '<div class="facets">'
+    + '<div class="facet"><span class="facet-h">Подход</span><div class="fchips">'
+    + '<button class="fchip ' + (S4.ai === null ? 'on' : '') + '" onclick="s4Approach(null)">Все</button>'
+    + DEMO_RESULTS_TREE.map((a, i) => '<button class="fchip ' + (S4.ai === i ? 'on' : '') + '" onclick="s4Approach(' + i + ')">' + esc(a.approach) + '</button>').join('')
+    + '</div></div>';
+  if (appr) {
+    html += '<div class="facet"><span class="facet-h">Область влияния · ' + esc(appr.approach) + '</span><div class="fchips">'
+      + '<button class="fchip ' + (S4.ari === null ? 'on' : '') + '" onclick="s4Area(null)">Все области</button>'
+      + appr.influenceAreas.map((a, i) => {
+        const n = a.results.length;
+        return '<button class="fchip ' + (S4.ari === i ? 'on' : '') + '" ' + (n ? '' : 'disabled') + ' onclick="s4Area(' + i + ')">' + esc(a.name) + (n ? ' · ' + n : '') + '</button>';
+      }).join('')
+      + '</div></div>';
+  }
+  html += '<div class="facet"><span class="facet-h">Ценность</span><div class="fwrap">'
+    + '<button class="fchip ' + (S4.vid === null ? 'on' : '') + '" onclick="s4Value(null)">Все</button>'
+    + DEMO_VALUES.map(v => '<button class="fchip ' + (S4.vid === v.id ? 'on' : '') + '" onclick="s4Value(\'' + esc(v.id) + '\')">' + esc(v.title) + '</button>').join('')
+    + '</div></div>'
+    + '</div>';
+  return html;
+}
+function r4body() {
+  document.getElementById('w4body').innerHTML = s4Active() ? s4BodyHtml() : s4HintHtml();
+}
+function r4() {
+  const app = document.getElementById('app4');
+  app.innerHTML = '<div class="bigsearch"><span class="ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>'
+    + '<input id="w4q" value="' + esc(S4.q) + '" oninput="w4Search(this.value)" placeholder="Найти результат: здоровье, сообщество, экология…"></div>'
+    + s4FacetsHtml()
+    + '<div id="w4body"></div>';
+  r4body();
+}
+function w4Search(v) { S4.q = v; r4body(); }
+function s4Approach(i) {
+  S4.ai = i;
+  S4.ari = null;
+  r4();
+}
+function s4Area(i) { S4.ari = i; r4(); }
+function s4Value(id) { S4.vid = id; r4(); }
+function s4Example(x) { S4.q = x; r4(); }
+function s4All() { S4.all = true; r4body(); }
+function s4Reset() {
+  S4.q = ''; S4.ai = null; S4.ari = null; S4.vid = null; S4.all = false;
+  r4();
+}
+r4();
+
+const S5 = { ai: null, ari: null, ri: null };
+function s5RowHtml(ai, ari, ri, r) {
+  const vals = valuesLine(r);
+  return '<button class="st-row ' + (S5.ri === ri ? 'sel' : '') + '" onclick="s5Open(' + ai + ',' + ari + ',' + ri + ')">'
+    + '<span class="rt">' + esc(r.text) + '</span>'
+    + (vals ? '<span class="rvals">' + esc(vals) + '</span>' : '')
+    + '</button>';
+}
+function r5() {
+  const app = document.getElementById('app5');
+  const appr = S5.ai !== null ? DEMO_RESULTS_TREE[S5.ai] : null;
+  const area = appr && S5.ari !== null ? appr.influenceAreas[S5.ari] : null;
+  const apOpts = DEMO_RESULTS_TREE.map((a, i) => {
+    const st = statsOf(a);
+    return '<option value="' + i + '"' + (S5.ai === i ? ' selected' : '') + '>' + esc(a.approach) + ' — ' + count(st.results, RES_FORMS) + '</option>';
+  }).join('');
+  let areaBody;
+  if (!appr) {
+    areaBody = '<div class="st-hint">Сначала выберите подход — список областей обновится.</div>';
+  } else {
+    areaBody = '<select class="st-select" onchange="s5SetArea(this.value)">'
+      + '<option value="">— выберите область влияния —</option>'
+      + appr.influenceAreas.map((a, i) => {
+        const n = a.results.length;
+        return '<option value="' + i + '"' + (S5.ari === i ? ' selected' : '') + (n ? '' : ' disabled') + '>'
+          + esc(a.name) + (n ? ' — ' + count(n, RES_FORMS) : ' — нет формулировок') + '</option>';
+      }).join('')
+      + '</select>';
+  }
+  let resBody;
+  let resList = '';
+  if (!area) {
+    resBody = '<div class="st-hint">Сначала выберите область влияния.</div>';
+  } else if (!area.results.length) {
+    resBody = '<div class="st-hint">В этой области пока нет формулировок — выберите другую.</div>';
+  } else {
+    resBody = '<select class="st-select" onchange="s5OpenSel(this.value)">'
+      + '<option value="">— выберите формулировку —</option>'
+      + area.results.map((r, ri) => '<option value="' + ri + '"' + (S5.ri === ri ? ' selected' : '') + '>' + esc(r.text) + '</option>').join('')
+      + '</select>';
+    resList = '<div class="st-list">' + area.results.map((r, ri) => s5RowHtml(S5.ai, S5.ari, ri, r)).join('') + '</div>';
+  }
+  app.innerHTML = '<div class="st-top">'
+    + '<span class="st-note">Три блока как на текущей странице — выбор в выпадающих списках.</span>'
+    + '<span class="st-acts">'
+    + (S5.ai !== null ? '<button class="btn" onclick="s5Reset()">Сбросить</button>' : '')
+    + '<button class="btn" onclick="exportDemo()">Скачать для ИИ (JSON)</button>'
+    + '</span></div>'
+    + '<div class="st-tree">'
+    + '<div class="st-col" id="st5a"><div class="st-head">Подход</div><div class="st-body">'
+    + '<select class="st-select" onchange="s5SetApproach(this.value)"><option value="">— выберите подход —</option>' + apOpts + '</select>'
+    + '</div></div>'
+    + '<div class="st-col' + (appr ? '' : ' st-off') + '" id="st5i"><div class="st-head">Область влияния</div><div class="st-body">' + areaBody + '</div></div>'
+    + '<div class="st-col' + (area ? '' : ' st-off') + '" id="st5r"><div class="st-head">Результаты' + (area ? ' (' + area.results.length + ')' : '') + '</div><div class="st-body">' + resBody + '</div>' + resList + '</div>'
+    + '</div>';
+}
+function s5Scroll(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+}
+function s5SetApproach(v) {
+  S5.ai = v === '' ? null : parseInt(v, 10);
+  S5.ari = null;
+  S5.ri = null;
+  r5();
+  if (S5.ai !== null) s5Scroll('st5i');
+}
+function s5SetArea(v) {
+  S5.ari = v === '' ? null : parseInt(v, 10);
+  S5.ri = null;
+  r5();
+  if (S5.ari !== null) s5Scroll('st5r');
+}
+function s5OpenSel(v) {
+  if (v === '') return;
+  S5.ri = parseInt(v, 10);
+  r5();
+  openResult(S5.ai, S5.ari, S5.ri);
+}
+function s5Open(ai, ari, ri) {
+  S5.ai = ai;
+  S5.ari = ari;
+  S5.ri = ri;
+  r5();
+  openResult(ai, ari, ri);
+}
+function s5Reset() {
+  S5.ai = null;
+  S5.ari = null;
+  S5.ri = null;
+  r5();
+}
+r5();
+</script>
+</body>
+</html>
